@@ -13,5 +13,16 @@ class AppAssets {
   static String outlinedPersonIcon = 'assets/images/outline_person_icon.svg';
   //app logo
   static String appLogoIcon = 'assets/images/app_logo.png';
-
+  //onboarding images
+  static String onboardingImage1 = 'assets/images/onboarding_image_1.png';
+  static String onboardingImage2 = 'assets/images/onboarding_image_2.png';
+  //person image
+  static String personImage='assets/images/person_image.png';
+  static String googleImage='assets/images/google_image.png';
+  static String appleImage='assets/images/apple_image.png';
+  static String locationImage='assets/images/location_icon.png';
+  static String walletImage='assets/images/wallet_image.png';
+  static String notificationImage='assets/images/notification_icon.png';
+  static String specialOfferImage='assets/images/special_offer.png';
+  static String serviceImage='assets/images/service_image.png';
 }

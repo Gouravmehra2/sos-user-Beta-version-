@@ -1,0 +1,211 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:get/get.dart';
+import 'package:squadonsite/auth/sign_up_screen/sign_up_controller.dart';
+import 'package:squadonsite/constant/app_assets/app_assets.dart';
+import 'package:squadonsite/constant/app_color/app_color.dart';
+import 'package:squadonsite/constant/common_widgets/common_auth_header.dart';
+import 'package:squadonsite/constant/common_widgets/common_button.dart';
+import 'package:squadonsite/constant/common_widgets/common_country_code_picker.dart';
+import 'package:squadonsite/constant/common_widgets/common_text_form_field.dart';
+import 'package:squadonsite/constant/common_widgets/my_scaffold.dart';
+import 'package:squadonsite/constant/common_widgets/social_login_button.dart';
+import 'package:squadonsite/core/services/social_auth_service.dart';
+
+class SignUpScreen extends StatelessWidget {
+  const SignUpScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return GetBuilder<SignUpController>(
+      init: SignUpController(),
+      builder: (controller) {
+        return AnnotatedRegion<SystemUiOverlayStyle>(
+          value: SystemUiOverlayStyle.light,
+          child: MyScaffold(
+            useSafeArea: true,
+            backgroundColor: AppColor.blackShade2,
+            body: AuthLayout(
+              imagePath: AppAssets.personImage,
+              body: _signUpPanel(controller),
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
+Widget _signUpPanel(SignUpController controller) {
+  return Container(
+    height: Get.height*0.648,
+    decoration: const BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.only(
+        topRight: Radius.circular(20),
+        topLeft: Radius.circular(20),
+      ),
+    ),
+    child: Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24),
+      child: Form(
+        key: controller.formKey,
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const SizedBox(height: 28),
+
+              /// Title
+              const Text(
+                'Sign Up',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: AppColor.blackShade1,
+                ),
+              ),
+              const SizedBox(height: 6),
+
+              /// Subtitle
+              Text(
+                controller.subtitleText,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: 13,
+                  color: AppColor.coolGrayText,
+                  height: 1.5,
+                ),
+              ),
+              const SizedBox(height: 24),
+
+              /// Input — email field in email mode, phone picker row otherwise
+              if (controller.isEmailMode)
+                CommonTextFormField(
+                  controller: controller.emailController,
+                  hintText: 'Enter your email',
+                  keyboardType: TextInputType.emailAddress,
+                  textInputAction: TextInputAction.done,
+                  autocorrect: false,
+                  enableSuggestions: false,
+                  validator: controller.emailValidator,
+                )
+              else
+                /// Phone Number Row — rebuilds when country or live error changes
+                Obx(() {
+                  controller.selectedCountry.value;
+                  final phoneErr = controller.phoneError.value;
+
+                  return Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      /// Country code picker
+                      CommonCountryCodePicker(
+                        onChanged: controller.onCountryChanged,
+                        initialSelection:
+                            controller.selectedCountry.value.code ?? 'IN',
+                        backgroundColor: Colors.white,
+                        borderColor: AppColor.lightGreyColor,
+                      ),
+                      const SizedBox(width: 10),
+
+                      /// Phone number field
+                      Expanded(
+                        child: CommonTextFormField(
+                          controller: controller.phoneController,
+                          hintText: 'Phone Number',
+                          keyboardType: TextInputType.phone,
+                          textInputAction: TextInputAction.done,
+                          inputFormatters: controller.phoneFormatters,
+                          validator: controller.validatePhone,
+                          onChanged: controller.onPhoneChanged,
+                          errorText: phoneErr.isEmpty ? null : phoneErr,
+                        ),
+                      ),
+                    ],
+                  );
+                }),
+
+              const SizedBox(height: 20),
+
+              /// Continue Button
+              CommonButton(
+                label: 'Continue',
+                onTap: controller.handleContinue,
+              ),
+              const SizedBox(height: 16),
+
+              /// OR divider
+              Row(
+                children: [
+                  Expanded(
+                    child: Divider(
+                        color: AppColor.lightGreyColor, thickness: 1),
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 12),
+                    child: Text(
+                      'or',
+                      style: TextStyle(
+                          fontSize: 13, color: AppColor.coolGrayText),
+                    ),
+                  ),
+                  Expanded(
+                    child: Divider(
+                        color: AppColor.lightGreyColor, thickness: 1),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              /// Social sign-up buttons
+              Row(
+                children: [
+                  Expanded(
+                    child: SocialLoginButton(
+                      onTap: () {},
+                      icon: Image.asset(AppAssets.appleImage,height: 20,)
+                    ),
+                  ),
+                  const SizedBox(width: 20),
+                  Expanded(
+                    child: SocialLoginButton(
+                      onTap: () {
+                        SocialAuthService().signInWithGoogle();
+                      },
+                      icon:Image.asset(AppAssets.googleImage,height: 20,)
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
+              /// Sign In link
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    'Already having an account? ',
+                    style: TextStyle(
+                        fontSize: 13, color: AppColor.coolGrayText),
+                  ),
+                  GestureDetector(
+                    onTap: controller.navigateToLogin,
+                    child: const Text(
+                      'Sign In',
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w700,
+                        color: AppColor.brownAccentPrimary,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 24),
+            ],
+          ),
+        ),
+      ),
+    ),
+  );
+}
+

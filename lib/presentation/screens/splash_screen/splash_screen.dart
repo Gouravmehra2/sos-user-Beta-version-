@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:squadonsite/core/app_assets/app_assets.dart';
+import 'package:squadonsite/constant/app_assets/app_assets.dart';
 import 'package:squadonsite/presentation/screens/splash_screen/splash_controller.dart';
 
 class SplashScreen extends StatelessWidget {

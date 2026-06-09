@@ -1,0 +1,163 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:get/get.dart';
+import 'package:squadonsite/auth/otp_screen/otp_controller.dart';
+import 'package:squadonsite/constant/app_assets/app_assets.dart';
+import 'package:squadonsite/constant/app_color/app_color.dart';
+import 'package:squadonsite/constant/common_widgets/common_auth_header.dart';
+import 'package:squadonsite/constant/common_widgets/common_button.dart';
+import 'package:squadonsite/constant/common_widgets/common_pin_input_field.dart';
+import 'package:squadonsite/constant/common_widgets/my_scaffold.dart';
+
+class OtpScreen extends StatelessWidget {
+  const OtpScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return GetBuilder<OtpController>(
+      builder: (controller) {
+        return AnnotatedRegion<SystemUiOverlayStyle>(
+          value: SystemUiOverlayStyle.light,
+          child: MyScaffold(
+            useSafeArea: true,
+            backgroundColor: AppColor.blackShade2,
+            body: AuthLayout(
+              imagePath: AppAssets.personImage,
+              body: _OtpPanel(controller: controller),
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
+// ─── OTP panel ────────────────────────────────────────────────────────────────
+
+class _OtpPanel extends StatelessWidget {
+  final OtpController controller;
+
+  const _OtpPanel({required this.controller});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: Get.height * 0.648,
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(20),
+          topRight: Radius.circular(20),
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 24),
+        child: Form(
+          key: controller.formKey,
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const SizedBox(height: 32),
+
+                // ── Title — adapts to phone / email mode ───────────────────
+                Text(
+                  controller.titleText,
+                  style: const TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: AppColor.blackShade1,
+                  ),
+                ),
+                const SizedBox(height: 8),
+
+                // ── Subtitle ───────────────────────────────────────────────
+                Text(
+                  controller.subtitleText,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontSize: 13,
+                    color: AppColor.coolGrayText,
+                    height: 1.5,
+                  ),
+                ),
+                const SizedBox(height: 28),
+
+                // ── PIN input ──────────────────────────────────────────────
+                CommonPinInputField(
+                  length: 6,
+                  controller: controller.pinController,
+                  onChanged: controller.onOtpChanged,
+                  onCompleted: controller.onOtpCompleted,
+                  cellSize: 50,
+                  borderRadius: 50,
+                  spacing: 8,
+                  borderColor: AppColor.lightGreyColor,
+                  focusedBorderColor: AppColor.brownAccentPrimary,
+                  filledBorderColor: AppColor.blackShade1,
+                  errorBorderColor: Colors.red,
+                ),
+                const SizedBox(height: 28),
+
+                // ── Verify & Continue button ───────────────────────────────
+                CommonButton(
+                  label: 'Verify & Continue',
+                  onTap: controller.handleVerify,
+                ),
+                const SizedBox(height: 20),
+
+                // ── Resend + countdown ─────────────────────────────────────
+                Obx(() {
+                  final canResend = controller.canResend.value;
+                  final countdown = controller.countdownText;
+
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text(
+                        "Didn't receive an OTP? ",
+                        style: TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                          color: AppColor.blackShade1,
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: canResend ? controller.handleResend : null,
+                        child: Text(
+                          canResend
+                              ? 'Resend Code'
+                              : 'Resend Code in $countdown',
+                          style: const TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600,
+                            color: AppColor.brownAccentPrimary,
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
+                }),
+                const SizedBox(height: 12),
+
+                // ── Change number / email — label adapts to mode ───────────
+                GestureDetector(
+                  onTap: controller.handleChangeDestination,
+                  child: Text(
+                    controller.changeLinkText,
+                    style: const TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      color: AppColor.brownAccentPrimary,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 28),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
