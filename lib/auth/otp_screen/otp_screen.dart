@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:squadonsite/auth/otp_screen/otp_controller.dart';
 import 'package:squadonsite/constant/app_assets/app_assets.dart';
@@ -7,7 +6,6 @@ import 'package:squadonsite/constant/app_color/app_color.dart';
 import 'package:squadonsite/constant/common_widgets/common_auth_header.dart';
 import 'package:squadonsite/constant/common_widgets/common_button.dart';
 import 'package:squadonsite/constant/common_widgets/common_pin_input_field.dart';
-import 'package:squadonsite/constant/common_widgets/my_scaffold.dart';
 
 class OtpScreen extends StatelessWidget {
   const OtpScreen({super.key});
@@ -16,17 +14,10 @@ class OtpScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetBuilder<OtpController>(
       builder: (controller) {
-        return AnnotatedRegion<SystemUiOverlayStyle>(
-          value: SystemUiOverlayStyle.light,
-          child: MyScaffold(
-            useSafeArea: true,
-            backgroundColor: AppColor.blackShade2,
-            body: AuthLayout(
-              imagePath: AppAssets.personImage,
+        return AuthLayout(
+              imagePath: AppAssets.verifyNumber,
               body: _OtpPanel(controller: controller),
-            ),
-          ),
-        );
+            );
       },
     );
   }
@@ -42,7 +33,6 @@ class _OtpPanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: Get.height * 0.648,
       decoration: const BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.only(
@@ -101,7 +91,7 @@ class _OtpPanel extends StatelessWidget {
 
                 // ── Verify & Continue button ───────────────────────────────
                 CommonButton(
-                  label: 'Verify & Continue',
+                  label: 'otp_verify_btn'.tr,
                   onTap: controller.handleVerify,
                 ),
                 const SizedBox(height: 20),
@@ -114,9 +104,9 @@ class _OtpPanel extends StatelessWidget {
                   return Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text(
-                        "Didn't receive an OTP? ",
-                        style: TextStyle(
+                      Text(
+                        'otp_no_code'.tr,
+                        style: const TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w600,
                           color: AppColor.blackShade1,
@@ -126,8 +116,8 @@ class _OtpPanel extends StatelessWidget {
                         onTap: canResend ? controller.handleResend : null,
                         child: Text(
                           canResend
-                              ? 'Resend Code'
-                              : 'Resend Code in $countdown',
+                              ? 'otp_resend'.tr
+                              : 'otp_resend_countdown'.trArgs([countdown]),
                           style: const TextStyle(
                             fontSize: 13,
                             fontWeight: FontWeight.w600,

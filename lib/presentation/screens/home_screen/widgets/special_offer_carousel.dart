@@ -25,8 +25,8 @@ class SpecialOfferCarousel extends StatelessWidget {
               final offer = controller.specialOffers[index];
               return Padding(
                 padding: EdgeInsets.only(
-                  left: index == 0 ? 20 : 6,
-                  right: index == controller.specialOffers.length - 1 ? 20 : 6,
+                  left: index == 0 ? 16 : 6,
+                  right: index == controller.specialOffers.length - 1 ? 16 : 6,
                 ),
                 child: GestureDetector(
                   onTap: () => controller.onSpecialOfferBookNow(offer),

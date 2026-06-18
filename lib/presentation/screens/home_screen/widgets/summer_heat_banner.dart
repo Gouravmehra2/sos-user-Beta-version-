@@ -1,131 +1,93 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:squadonsite/constant/app_color/app_color.dart';
 import 'package:squadonsite/constant/app_text_style/app_text_style.dart';
 import 'package:squadonsite/presentation/screens/home_screen/home_controller.dart';
 
-class SummerHeatBanner extends StatelessWidget {
+/// Auto-scrolling carousel of summer/seasonal promotion banners.
+class SummerHeatBanner extends StatefulWidget {
   final HomeController controller;
 
   const SummerHeatBanner({super.key, required this.controller});
 
   @override
+  State<SummerHeatBanner> createState() => _SummerHeatBannerState();
+}
+
+class _SummerHeatBannerState extends State<SummerHeatBanner> {
+  int _currentIndex = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    final banners = widget.controller.summerBanners;
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        CarouselSlider.builder(
+          itemCount: banners.length,
+          options: CarouselOptions(
+            // height: ,
+            viewportFraction: 1.0,
+            autoPlay: true,
+            autoPlayInterval: const Duration(seconds: 4),
+            autoPlayAnimationDuration: const Duration(milliseconds: 600),
+            autoPlayCurve: Curves.easeInOut,
+            enlargeCenterPage: false,
+            onPageChanged: (index, _) =>
+                setState(() => _currentIndex = index),
+          ),
+          itemBuilder: (context, index, _) {
+            final banner = banners[index];
+            return _BannerSlide(
+              banner: banner,
+              onTap: banner.onTap ?? widget.controller.onSummerHeatBannerTapped,
+            );
+          },
+        ),
+
+        const SizedBox(height: 10),
+
+        // Dot indicators
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: List.generate(banners.length, (index) {
+            final bool isActive = index == _currentIndex;
+            return AnimatedContainer(
+              duration: const Duration(milliseconds: 300),
+              margin: const EdgeInsets.symmetric(horizontal: 4),
+              width: isActive ? 20 : 7,
+              height: 7,
+              decoration: BoxDecoration(
+                color: isActive
+                    ? AppColor.brownAccentPrimary
+                    : AppColor.brownAccentPrimary.withValues(alpha: 0.3),
+                borderRadius: BorderRadius.circular(4),
+              ),
+            );
+          }),
+        ),
+      ],
+    );
+  }
+}
+
+class _BannerSlide extends StatelessWidget {
+  final SummerBanner banner;
+  final VoidCallback onTap;
+
+  const _BannerSlide({required this.banner, required this.onTap});
+
+  @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: controller.onSummerHeatBannerTapped,
-      child: Container(
-        height: 130,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(18),
-          boxShadow: [
-            BoxShadow(
-              color: AppColor.shadowGrey.withValues(alpha: 0.4),
-              blurRadius: 12,
-              offset: const Offset(0, 4),
-            ),
-          ],
-        ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(18),
-          child: Stack(
-            fit: StackFit.expand,
-            children: [
-              // Background gradient
-              Container(
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [Color(0xFFFFBB5E), Color(0xFFFFA726)],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                ),
-              ),
-
-              // Service image on right
-              Positioned(
-                right: 0,
-                bottom: 0,
-                top: 0,
-                child: Image.asset(
-                  'assets/images/onboarding_image_2.png',
-                  width: 140,
-                  fit: BoxFit.cover,
-                ),
-              ),
-
-              // Overlay gradient for readability
-              Positioned(
-                left: 0,
-                top: 0,
-                bottom: 0,
-                width: 200,
-                child: Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        const Color(0xFFFFBB5E).withValues(alpha: 1.0),
-                        const Color(0xFFFFBB5E).withValues(alpha: 0.0),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-
-              // Text content
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16, 14, 130, 14),
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Beat the',
-                            style: AppTextStyle.titleSmallSemiBold.copyWith(
-                              color: AppColor.blackShade1,
-                            ),
-                          ),
-                          Text(
-                            'Summer Heat',
-                            style: AppTextStyle.titleLargeBold.copyWith(
-                              color: AppColor.blackShade1,
-                            ),
-                          ),
-                        ],
-                      ),
-                      Text(
-                        'Cooling issues fixed by\nthe professionals.',
-                        style: AppTextStyle.bodySmallRegular.copyWith(
-                          color: AppColor.blackShade1,
-                        ),
-                      ),
-                      GestureDetector(
-                        onTap: controller.onSummerHeatBannerTapped,
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 14,
-                            vertical: 7,
-                          ),
-                          decoration: BoxDecoration(
-                            color: AppColor.blackColor,
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Text(
-                            'Book Now',
-                            style: AppTextStyle.buttonSmall.copyWith(
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
+      onTap: onTap,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(20),
+        child: Image.asset(
+          banner.imagePath,
+          fit: BoxFit.cover,
         ),
       ),
     );

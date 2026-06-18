@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:squadonsite/auth/sign_up_screen/sign_up_controller.dart';
 import 'package:squadonsite/constant/app_assets/app_assets.dart';
@@ -8,7 +7,6 @@ import 'package:squadonsite/constant/common_widgets/common_auth_header.dart';
 import 'package:squadonsite/constant/common_widgets/common_button.dart';
 import 'package:squadonsite/constant/common_widgets/common_country_code_picker.dart';
 import 'package:squadonsite/constant/common_widgets/common_text_form_field.dart';
-import 'package:squadonsite/constant/common_widgets/my_scaffold.dart';
 import 'package:squadonsite/constant/common_widgets/social_login_button.dart';
 import 'package:squadonsite/core/services/social_auth_service.dart';
 
@@ -20,17 +18,10 @@ class SignUpScreen extends StatelessWidget {
     return GetBuilder<SignUpController>(
       init: SignUpController(),
       builder: (controller) {
-        return AnnotatedRegion<SystemUiOverlayStyle>(
-          value: SystemUiOverlayStyle.light,
-          child: MyScaffold(
-            useSafeArea: true,
-            backgroundColor: AppColor.blackShade2,
-            body: AuthLayout(
-              imagePath: AppAssets.personImage,
+        return AuthLayout(
+              imagePath: AppAssets.signUpImage,
               body: _signUpPanel(controller),
-            ),
-          ),
-        );
+            );
       },
     );
   }
@@ -38,7 +29,6 @@ class SignUpScreen extends StatelessWidget {
 
 Widget _signUpPanel(SignUpController controller) {
   return Container(
-    height: Get.height*0.648,
     decoration: const BoxDecoration(
       color: Colors.white,
       borderRadius: BorderRadius.only(
@@ -57,9 +47,9 @@ Widget _signUpPanel(SignUpController controller) {
               const SizedBox(height: 28),
 
               /// Title
-              const Text(
-                'Sign Up',
-                style: TextStyle(
+              Text(
+                'signup_title'.tr,
+                style: const TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
                   color: AppColor.blackShade1,
@@ -83,7 +73,7 @@ Widget _signUpPanel(SignUpController controller) {
               if (controller.isEmailMode)
                 CommonTextFormField(
                   controller: controller.emailController,
-                  hintText: 'Enter your email',
+                  hintText: 'signup_hint_email'.tr,
                   keyboardType: TextInputType.emailAddress,
                   textInputAction: TextInputAction.done,
                   autocorrect: false,
@@ -113,7 +103,7 @@ Widget _signUpPanel(SignUpController controller) {
                       Expanded(
                         child: CommonTextFormField(
                           controller: controller.phoneController,
-                          hintText: 'Phone Number',
+                          hintText: 'login_hint_phone'.tr,
                           keyboardType: TextInputType.phone,
                           textInputAction: TextInputAction.done,
                           inputFormatters: controller.phoneFormatters,
@@ -130,7 +120,7 @@ Widget _signUpPanel(SignUpController controller) {
 
               /// Continue Button
               CommonButton(
-                label: 'Continue',
+                label: 'signup_continue_btn'.tr,
                 onTap: controller.handleContinue,
               ),
               const SizedBox(height: 16),
@@ -182,16 +172,16 @@ Widget _signUpPanel(SignUpController controller) {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text(
-                    'Already having an account? ',
-                    style: TextStyle(
+                  Text(
+                    'signup_have_account'.tr,
+                    style: const TextStyle(
                         fontSize: 13, color: AppColor.coolGrayText),
                   ),
                   GestureDetector(
                     onTap: controller.navigateToLogin,
-                    child: const Text(
-                      'Sign In',
-                      style: TextStyle(
+                    child: Text(
+                      'signup_sign_in_link'.tr,
+                      style: const TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w700,
                         color: AppColor.brownAccentPrimary,

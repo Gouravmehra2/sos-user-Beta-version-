@@ -13,7 +13,7 @@ class ServiceCategoriesRow extends StatelessWidget {
     final categories = controller.serviceCategories;
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
+      padding: const EdgeInsets.symmetric(horizontal: 16),
       child: GridView.builder(
         padding: EdgeInsets.zero,
         shrinkWrap: true,
@@ -23,7 +23,7 @@ class ServiceCategoriesRow extends StatelessWidget {
           crossAxisCount: 2,
           crossAxisSpacing: 8,
           mainAxisSpacing: 8,
-          childAspectRatio: 2.7,
+          childAspectRatio: 3.0,
         ),
         itemBuilder: (context, index) {
           final category = categories[index];
@@ -54,32 +54,31 @@ class _ServiceCategoryTile extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
         decoration: BoxDecoration(
           color: AppColor.neutral2,
           borderRadius: BorderRadius.circular(50),
-          border: Border.all(color:Color(0xffF2F2F2),width: 1.0),
+          border: Border.all(color: const Color(0xffF2F2F2), width: 1.0),
           boxShadow: [
             BoxShadow(
               color: AppColor.grey1Color.withValues(alpha: 0.15),
               blurRadius: 2,
-              offset: const Offset(0, 2)
+              offset: const Offset(0, 2),
             ),
           ],
         ),
         child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(
-              padding: EdgeInsets.all(6),
+              padding: const EdgeInsets.all(6),
               decoration: const BoxDecoration(
                 color: Color(0xfff2f2f2),
                 shape: BoxShape.circle,
               ),
-              child: Center(
-                child: Image.asset(icon,height: 24,),
-              ),
+              child: Image.asset(icon, height: 20, width: 20, fit: BoxFit.contain),
             ),
-            const SizedBox(width: 10),
+            const SizedBox(width: 6),
             Expanded(
               child: Text(
                 label,
@@ -87,14 +86,14 @@ class _ServiceCategoryTile extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
                 style: AppTextStyle.titleMediumMedium.copyWith(
                   color: AppColor.blackShade1,
-                  fontSize: 14, height: 1.4,
+                  fontSize: 12,
+                  height: 1.3,
                 ),
               ),
             ),
-            const SizedBox(width: 4),
             const Icon(
               Icons.chevron_right,
-              size: 24,
+              size: 18,
               color: AppColor.brownAccentPrimary,
             ),
           ],

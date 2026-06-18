@@ -35,38 +35,35 @@ class OnboardingController extends GetxController {
     }
   }
 
-  RxList<OnboardingStepModel> onboardingStepList = [
+  RxList<OnboardingStepModel> get onboardingStepList => [
     OnboardingStepModel(
       imagePath: AppAssets.onboardingImage1,
-      title: 'Instant\nExpert Help',
-      description:
-          'Book trusted technicians and home\nservices anytime, anywhere.',
+      titleKey: 'onboarding_slide1_title',
+      descriptionKey: 'onboarding_slide1_desc',
     ),
     OnboardingStepModel(
       imagePath: AppAssets.onboardingImage2,
-      title: 'Verified Service\nExperts',
-      description:
-          'Every professional is background-\nverified and quality-checked.',
+      titleKey: 'onboarding_slide2_title',
+      descriptionKey: 'onboarding_slide2_desc',
     ),
     OnboardingStepModel(
       imagePath: AppAssets.onboardingImage1,
-      title: 'One App.\nEvery Service.',
-      description:
-          'From appliance repair to emergency\nsupport — Squad On Site has you\ncovered.',
+      titleKey: 'onboarding_slide3_title',
+      descriptionKey: 'onboarding_slide3_desc',
     ),
   ].obs;
 }
 
 class OnboardingStepModel {
   String? imagePath;
-  String? title;
-  String? description;
+  String? titleKey;
+  String? descriptionKey;
   Widget? widget;
 
   OnboardingStepModel({
     this.imagePath,
-    this.description,
-    this.title,
+    this.descriptionKey,
+    this.titleKey,
     this.widget,
   });
 }

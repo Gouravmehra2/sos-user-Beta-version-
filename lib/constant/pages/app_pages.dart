@@ -20,6 +20,10 @@ import 'package:squadonsite/presentation/screens/location_permission_screen/loca
 import 'package:squadonsite/presentation/screens/location_permission_screen/location_permission_screen.dart';
 import 'package:squadonsite/presentation/screens/onboarding_screen/onboarding_binding.dart';
 import 'package:squadonsite/presentation/screens/onboarding_screen/onboarding_screen.dart';
+import 'package:squadonsite/presentation/screens/select_location_screen/select_location_binding.dart';
+import 'package:squadonsite/presentation/screens/select_location_screen/select_location_screen.dart';
+import 'package:squadonsite/presentation/screens/profile_screen/profile_binding.dart';
+import 'package:squadonsite/presentation/screens/profile_screen/profile_screen.dart';
 import 'package:squadonsite/presentation/screens/splash_screen/splash_binding.dart';
 import 'package:squadonsite/presentation/screens/splash_screen/splash_screen.dart';
 
@@ -88,6 +92,18 @@ class AppPages {
       name: AppRoutes.mapScreen,
       page: () => const MapScreen(),
       binding: MapBinding(),
+      transition: Transition.rightToLeftWithFade,
+    ),
+    GetPage(
+      name: AppRoutes.selectLocationScreen,
+      page: () => const SelectLocationScreen(),
+      binding: SelectLocationBinding(),
+      transition: Transition.rightToLeftWithFade,
+    ),
+    GetPage(
+      name: AppRoutes.profileScreen,
+      page: () => ProfileScreen(),
+      binding: ProfileBinding(),
       transition: Transition.rightToLeftWithFade,
     ),
   ];

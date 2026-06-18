@@ -9,6 +9,14 @@ class AppTextStyle {
 
   // ─── Display ────────────────────────────────────────────────────────────────
 
+  /// Hero display style — Inter ExtraBold 800, 60px, line-height 56px
+  static const TextStyle displayHeroExtraBold = TextStyle(
+    fontFamily: _fontFamily,
+    fontWeight: FontWeight.w800,
+    fontSize: 60,
+    height: 0.933, // 56px / 60px
+  );
+
   static const TextStyle displayLargeBold = TextStyle(
     fontFamily: _fontFamily,
     fontWeight: FontWeight.w700,

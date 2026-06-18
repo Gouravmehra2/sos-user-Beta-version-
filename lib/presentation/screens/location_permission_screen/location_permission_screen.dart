@@ -46,7 +46,7 @@ class LocationPermissionScreen extends StatelessWidget {
                   children: [
                     // ── Title ───────────────────────────────────────────
                     Text(
-                      'Enable Location Access',
+                      'location_perm_title'.tr,
                       textAlign: TextAlign.center,
                       style: AppTextStyle.headlineLargeBold.copyWith(
                         color: AppColor.blackShade1,
@@ -56,7 +56,7 @@ class LocationPermissionScreen extends StatelessWidget {
 
                     // ── Subtitle ────────────────────────────────────────
                     Text(
-                      'Allow location access to get accurate\nservice in your area.',
+                      'location_perm_subtitle'.tr,
                       textAlign: TextAlign.center,
                       style: AppTextStyle.bodyMediumRegular.copyWith(
                         color: AppColor.grey1Color,
@@ -66,7 +66,7 @@ class LocationPermissionScreen extends StatelessWidget {
 
                     // ── Allow button ────────────────────────────────────
                     CommonButton(
-                      label: 'Allow Location Access',
+                      label: 'location_perm_allow_btn'.tr,
                       onTap: _onAllowTapped,
                       backgroundColor: AppColor.blackColor,
                       foregroundColor: Colors.white,
@@ -80,11 +80,11 @@ class LocationPermissionScreen extends StatelessWidget {
 
                     // ── Enter Manually button ───────────────────────────
                     CommonButton(
-                      label: 'Enter Manually',
+                      label: 'location_perm_manual_btn'.tr,
                       onTap: _onEnterManuallyTapped,
                       backgroundColor: AppColor.lightGrey2Color,
                       foregroundColor: AppColor.blackShade1,
-                      border: Border.all(color: Color(0xffCFC4C5)),
+                      border: Border.all(color: const Color(0xffCFC4C5)),
                       boxShadow: const [],
                     ),
                   ],

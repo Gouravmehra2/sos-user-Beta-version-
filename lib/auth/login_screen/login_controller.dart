@@ -118,7 +118,7 @@ class LoginController extends GetxController {
   /// currently selected country. Returns an error string or null.
   String?validatePhone(String? value) {
     if (value == null || value.trim().isEmpty) {
-      return 'Phone number is required';
+      return 'validation_phone_required'.tr;
     }
 
     final digits = value.replaceAll(RegExp(r'\D'), '');
@@ -184,7 +184,7 @@ class LoginController extends GetxController {
         // TODO: send user.idToken to your backend, then navigate
         debugPrint('[Login] Apple user: ${user.uid}');
       },
-      onFailure: (msg) => Get.snackbar('Sign-in failed', msg),
+      onFailure: (msg) => Get.snackbar('sign_in_failed'.tr, msg),
       onCancelled: () {},
     );
   }
@@ -196,7 +196,7 @@ class LoginController extends GetxController {
         // TODO: send user.idToken to your backend, then navigate
         debugPrint('[Login] Google user: ${user.email}');
       },
-      onFailure: (msg) => Get.snackbar('Sign-in failed', msg),
+      onFailure: (msg) => Get.snackbar('sign_in_failed'.tr, msg),
       onCancelled: () {},
     );
   }

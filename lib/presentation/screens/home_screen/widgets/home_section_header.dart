@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:squadonsite/constant/app_color/app_color.dart';
 import 'package:squadonsite/constant/app_text_style/app_text_style.dart';
 
@@ -34,13 +35,12 @@ class HomeSectionHeader extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
-                  'View All',
+                  'home_view_all'.tr,
                   style: AppTextStyle.bodySmallMedium.copyWith(
                     color: AppColor.blackColor1,
                     fontSize: 13,
-                  ),
-                ),
-                const SizedBox(width: 4),
+                  ),),
+                 SizedBox(width: 4),
                 const Icon(
                   Icons.arrow_forward_ios_rounded,
                   size: 12,

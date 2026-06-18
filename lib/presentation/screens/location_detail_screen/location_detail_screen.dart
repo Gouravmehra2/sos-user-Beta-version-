@@ -83,7 +83,7 @@ class LocationDetailScreen extends StatelessWidget {
 
   Widget _buildTitle() {
     return Text(
-      'Enter Your Location',
+      'location_detail_title'.tr,
       style: AppTextStyle.headlineMediumSemiBold.copyWith(
         color: AppColor.blackShade1,
         fontSize: 20
@@ -99,7 +99,7 @@ class LocationDetailScreen extends StatelessWidget {
         Get.toNamed(AppRoutes.mapScreen);
       },
       controller: controller.searchController,
-      hintText: 'Search for area, street, or landmark',
+      hintText: 'location_detail_search_hint'.tr,
       keyboardType: TextInputType.streetAddress,
       textInputAction: TextInputAction.search,
       prefixIcon: Icons.search_rounded,
@@ -125,7 +125,7 @@ class LocationDetailScreen extends StatelessWidget {
           ),
           const SizedBox(width: 8),
           Text(
-            'Use Current Location',
+            'location_detail_use_current'.tr,
             style: AppTextStyle.titleSmallSemiBold.copyWith(
               color: AppColor.brownAccentPrimary,
             ),
@@ -142,13 +142,13 @@ class LocationDetailScreen extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Enter Details',
+          'location_detail_enter_details'.tr,
           style: AppTextStyle.titleLargeBold.copyWith(
             color: AppColor.blackShade1,
           ),
         ),
         const SizedBox(height: 14),
-        _buildFieldLabel('House / Flat / Block No.'),
+        _buildFieldLabel('location_detail_house_label'.tr),
         const SizedBox(height: 6),
         CommonTextFormField(
           controller: controller.houseController,
@@ -157,11 +157,11 @@ class LocationDetailScreen extends StatelessWidget {
           backgroundColor: Colors.white,
           borderColor: Colors.transparent,
           validator: CommonValidators.required(
-            message: 'House / Flat / Block No. is required',
+            message: 'location_detail_house_required'.tr,
           ),
         ),
         const SizedBox(height: 14),
-        _buildFieldLabel('Apartment / Road / Area'),
+        _buildFieldLabel('location_detail_apartment_label'.tr),
         const SizedBox(height: 6),
         CommonTextFormField(
           controller: controller.apartmentController,
@@ -170,11 +170,11 @@ class LocationDetailScreen extends StatelessWidget {
           backgroundColor: Colors.white,
           borderColor: Colors.transparent,
           validator: CommonValidators.required(
-            message: 'Apartment / Road / Area is required',
+            message: 'location_detail_apartment_required'.tr,
           ),
         ),
         const SizedBox(height: 14),
-        _buildFieldLabel('Landmark (Optional)'),
+        _buildFieldLabel('location_detail_landmark_label'.tr),
         const SizedBox(height: 6),
         CommonTextFormField(
           controller: controller.landmarkController,
@@ -193,7 +193,7 @@ class LocationDetailScreen extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildFieldLabel('Save as'),
+        _buildFieldLabel('location_detail_save_as'.tr),
         const SizedBox(height: 10),
         Obx(() => _SaveAsRow(
               selected: controller.selectedSaveAs.value,
@@ -207,7 +207,7 @@ class LocationDetailScreen extends StatelessWidget {
 
   Widget _buildConfirmButton(LocationDetailController controller) {
     return CommonButton(
-      label: 'Confirm Location',
+      label: 'location_detail_confirm_btn'.tr,
       onTap: controller.confirmLocation,
       backgroundColor: AppColor.blackColor,
       foregroundColor: Colors.white,
@@ -239,7 +239,7 @@ class _SaveAsRow extends StatelessWidget {
     return Row(
       children: [
         _SaveAsChip(
-          label: 'Home',
+          label: 'location_detail_save_home'.tr,
           icon: Icons.home_outlined,
           type: SaveAsType.home,
           selected: selected,
@@ -247,7 +247,7 @@ class _SaveAsRow extends StatelessWidget {
         ),
         const SizedBox(width: 10),
         _SaveAsChip(
-          label: 'Office',
+          label: 'location_detail_save_office'.tr,
           icon: Icons.work_outline_rounded,
           type: SaveAsType.office,
           selected: selected,
@@ -255,7 +255,7 @@ class _SaveAsRow extends StatelessWidget {
         ),
         const SizedBox(width: 10),
         _SaveAsChip(
-          label: 'Other',
+          label: 'location_detail_save_other'.tr,
           icon: Icons.location_on_outlined,
           type: SaveAsType.other,
           selected: selected,

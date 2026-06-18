@@ -1,6 +1,5 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:squadonsite/constant/app_assets/app_assets.dart';
 import 'package:squadonsite/constant/app_color/app_color.dart';
 
@@ -43,21 +42,19 @@ class _CircularOrbitWidgetState extends State<CircularOrbitWidget>
     super.dispose();
   }
 
-  Widget orbitItem(IconData icon) {
+  Widget orbitItem(IconData icon, double itemSize) {
     return Container(
-      width: 50,
-      height: 50,
+      width: itemSize,
+      height: itemSize,
       decoration: BoxDecoration(
         color: Colors.white,
         shape: BoxShape.circle,
-        border: Border.all(
-          color: Colors.grey.shade200,
-        ),
+        border: Border.all(color: Colors.grey.shade200),
       ),
       child: Center(
         child: Icon(
           icon,
-          size: 22,
+          size: itemSize * 0.44,
           color: const Color(0xff111827),
         ),
       ),
@@ -66,10 +63,21 @@ class _CircularOrbitWidgetState extends State<CircularOrbitWidget>
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.sizeOf(context).width;
+    // base size drives all proportions; clamped so it looks good on tiny & large screens
+    final double s = (screenWidth * 0.85).clamp(260.0, 420.0);
+    final double outerR = s * 0.5;       // orbit radius (centre to icon centre)
+    final double middleR = s * 0.343;    // ~120/350 ratio
+    final double outerRingD = s;         // outer ring diameter
+    final double middleRingD = s * 0.686;
+    final double centerD = s * 0.40;
+    final double logoD = centerD * 0.71;
+    final double itemSize = s * 0.143;   // ~50/350
+
     return Center(
       child: SizedBox(
-        width: Get.width,
-        // height: 400,
+        width: screenWidth,
+        height: s,
         child: AnimatedBuilder(
           animation: controller,
           builder: (context, child) {
@@ -78,43 +86,37 @@ class _CircularOrbitWidgetState extends State<CircularOrbitWidget>
               children: [
                 /// OUTER CIRCLE
                 Container(
-                  width: 350,
-                  height: 350,
+                  width: outerRingD,
+                  height: outerRingD,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    border: Border.all(
-                      color: Colors.grey.shade300,
-                      width: 1,
-                    ),
+                    border: Border.all(color: Colors.grey.shade300, width: 1),
                   ),
                 ),
 
                 /// MIDDLE CIRCLE
                 Container(
-                  width: 240,
-                  height: 240,
+                  width: middleRingD,
+                  height: middleRingD,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    border: Border.all(
-                      color: Colors.grey.shade300,
-                      width: 1,
-                    ),
+                    border: Border.all(color: Colors.grey.shade300, width: 1),
                   ),
                 ),
 
-                /// CENTER LOGO WITH GRADIENT BORDER
+                /// CENTER LOGO
                 Container(
-                  width: 140,
-                  height: 140,
+                  width: centerD,
+                  height: centerD,
                   padding: const EdgeInsets.all(4),
-                  decoration:  BoxDecoration(
+                  decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     boxShadow: [
                       BoxShadow(
                         color: AppColor.brownAccentPrimary.withValues(alpha: 0.60),
                         blurStyle: BlurStyle.outer,
                         blurRadius: 20.0,
-                      )
+                      ),
                     ],
                   ),
                   child: Container(
@@ -125,60 +127,37 @@ class _CircularOrbitWidgetState extends State<CircularOrbitWidget>
                     child: Center(
                       child: Image.asset(
                         AppAssets.appLogoIcon,
-                        width: 100,
-                        height: 100,
+                        width: logoD,
+                        height: logoD,
                       ),
-
-                      // OR
-                      // child: FlutterLogo(size: 60),
                     ),
                   ),
                 ),
 
                 /// OUTER ORBIT
-                ...List.generate(
-                  outerIcons.length,
-                      (index) {
-                    final angle =
-                        (2 * pi / outerIcons.length) * index +
-                            controller.value * 2 * pi;
-
-                    final dx = 175 * cos(angle);
-                    final dy = 175 * sin(angle);
-
-                    return Transform.translate(
-                      offset: Offset(dx, dy),
-                      child: orbitItem(
-                        outerIcons[index],
-                      ),
-                    );
-                  },
-                ),
+                ...List.generate(outerIcons.length, (index) {
+                  final angle = (2 * pi / outerIcons.length) * index +
+                      controller.value * 2 * pi;
+                  return Transform.translate(
+                    offset: Offset(outerR * cos(angle), outerR * sin(angle)),
+                    child: orbitItem(outerIcons[index], itemSize),
+                  );
+                }),
 
                 /// INNER ORBIT
-                ...List.generate(
-                  middleIcons.length,
-                      (index) {
-                    final angle =
-                        (2 * pi / middleIcons.length) * index -
-                            controller.value * 2 * pi;
-
-                    final dx = 120 * cos(angle);
-                    final dy = 120 * sin(angle);
-
-                    return Transform.translate(
-                      offset: Offset(dx, dy),
-                      child: orbitItem(
-                        middleIcons[index],
-                      ),
-                    );
-                  },
-                ),
+                ...List.generate(middleIcons.length, (index) {
+                  final angle = (2 * pi / middleIcons.length) * index -
+                      controller.value * 2 * pi;
+                  return Transform.translate(
+                    offset: Offset(middleR * cos(angle), middleR * sin(angle)),
+                    child: orbitItem(middleIcons[index], itemSize),
+                  );
+                }),
               ],
             );
           },
         ),
       ),
-    ).paddingSymmetric(horizontal: 10);
+    );
   }
 }

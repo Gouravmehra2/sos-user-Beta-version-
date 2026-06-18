@@ -116,8 +116,8 @@ class SignUpController extends GetxController {
   bool get isEmailMode => mode == SignUpMode.email;
 
   String get subtitleText => isEmailMode
-      ? "We'll send a code to verify your email."
-      : "We'll send a code to verify your account.";
+      ? 'signup_subtitle_email'.tr
+      : 'signup_subtitle_phone'.tr;
 
   // ── Controllers ───────────────────────────────────────────────────────────
 
@@ -153,7 +153,7 @@ class SignUpController extends GetxController {
 
   String? validatePhone(String? value) {
     if (value == null || value.trim().isEmpty) {
-      return 'Phone number is required';
+      return 'validation_phone_required'.tr;
     }
     final digits = value.replaceAll(RegExp(r'\D'), '');
     final lengths = _digitLengths;
@@ -183,8 +183,8 @@ class SignUpController extends GetxController {
   // ── Email-only ────────────────────────────────────────────────────────────
 
   FormFieldValidator<String> get emailValidator => CommonValidators.compose([
-        CommonValidators.required(message: 'Email is required'),
-        CommonValidators.email(),
+        CommonValidators.required(message: 'validation_email_required'.tr),
+        CommonValidators.email(message: 'validation_email'.tr),
       ]);
 
   // ── Continue ──────────────────────────────────────────────────────────────
@@ -219,7 +219,7 @@ class SignUpController extends GetxController {
         // TODO: send user.idToken to your backend, then navigate
         debugPrint('[SignUp] Apple user: ${user.uid}');
       },
-      onFailure: (msg) => Get.snackbar('Sign-up failed', msg),
+      onFailure: (msg) => Get.snackbar('signup_failed'.tr, msg),
       onCancelled: () {},
     );
   }
@@ -231,7 +231,7 @@ class SignUpController extends GetxController {
         // TODO: send user.idToken to your backend, then navigate
         debugPrint('[SignUp] Google user: ${user.email}');
       },
-      onFailure: (msg) => Get.snackbar('Sign-up failed', msg),
+      onFailure: (msg) => Get.snackbar('signup_failed'.tr, msg),
       onCancelled: () {},
     );
   }

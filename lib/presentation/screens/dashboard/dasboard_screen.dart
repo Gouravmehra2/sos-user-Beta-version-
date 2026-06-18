@@ -5,6 +5,7 @@ import 'package:squadonsite/constant/common_widgets/my_scaffold.dart';
 import 'package:squadonsite/presentation/screens/dashboard/dashboard_controller.dart';
 import 'package:squadonsite/presentation/screens/dashboard/widgets/custom_bottom_navigation_tab.dart';
 import 'package:squadonsite/presentation/screens/home_screen/home_screen.dart';
+import 'package:squadonsite/presentation/screens/profile_screen/profile_screen.dart';
 import 'package:squadonsite/presentation/screens/splash_screen/splash_screen.dart';
 
 class DashboardScreen extends StatelessWidget {
@@ -21,7 +22,7 @@ class DashboardScreen extends StatelessWidget {
             HomeScreen(),
             SplashScreen(),
             SplashScreen(),
-            SplashScreen(),
+            ProfileScreen(),
           ]);
         },
       ),

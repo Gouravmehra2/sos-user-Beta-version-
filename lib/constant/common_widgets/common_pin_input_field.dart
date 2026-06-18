@@ -283,32 +283,39 @@ class _CommonPinInputFieldState extends State<CommonPinInputField> {
           mainAxisSize: MainAxisSize.min,
           children: [
             // ── PIN cells ──────────────────────────────────────────────────
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: List.generate(widget.length, (index) {
-                final isLast = index == widget.length - 1;
+            LayoutBuilder(
+              builder: (context, constraints) {
+                final totalSpacing = widget.spacing * (widget.length - 1);
+                final maxCellSize = (constraints.maxWidth - totalSpacing) / widget.length;
+                final cellSize = maxCellSize < widget.cellSize ? maxCellSize : widget.cellSize;
                 return Row(
-                  children: [
-                    _PinCell(
-                      controller: _controllers[index],
-                      focusNode: _focusNodes[index],
-                      size: widget.cellSize,
-                      borderRadius: widget.borderRadius,
-                      borderWidth: widget.borderWidth,
-                      borderColor: _borderColor(index),
-                      backgroundColor: widget.backgroundColor,
-                      digitStyle: resolvedDigitStyle,
-                      obscureText: widget.obscureText,
-                      obscuringCharacter: widget.obscuringCharacter,
-                      enabled: widget.enabled,
-                      keyboardType: widget.keyboardType,
-                      onChanged: (v) => _onChanged(index, v),
-                      onKeyEvent: (e) => _onKeyEvent(index, e),
-                    ),
-                    if (!isLast) SizedBox(width: widget.spacing),
-                  ],
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: List.generate(widget.length, (index) {
+                    final isLast = index == widget.length - 1;
+                    return Row(
+                      children: [
+                        _PinCell(
+                          controller: _controllers[index],
+                          focusNode: _focusNodes[index],
+                          size: cellSize,
+                          borderRadius: widget.borderRadius,
+                          borderWidth: widget.borderWidth,
+                          borderColor: _borderColor(index),
+                          backgroundColor: widget.backgroundColor,
+                          digitStyle: resolvedDigitStyle,
+                          obscureText: widget.obscureText,
+                          obscuringCharacter: widget.obscuringCharacter,
+                          enabled: widget.enabled,
+                          keyboardType: widget.keyboardType,
+                          onChanged: (v) => _onChanged(index, v),
+                          onKeyEvent: (e) => _onKeyEvent(index, e),
+                        ),
+                        if (!isLast) SizedBox(width: widget.spacing),
+                      ],
+                    );
+                  }),
                 );
-              }),
+              },
             ),
 
             // ── Error text ─────────────────────────────────────────────────

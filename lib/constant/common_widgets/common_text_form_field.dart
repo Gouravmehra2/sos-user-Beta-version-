@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:squadonsite/constant/app_color/app_color.dart';
 import 'package:squadonsite/constant/app_text_style/app_text_style.dart';
 
@@ -373,7 +374,7 @@ class CommonTextFormField extends StatefulWidget {
       CommonTextFormField(
         key: key,
         label: label,
-        hintText: hintText,
+        hintText: hintText.tr,
         controller: controller,
         focusNode: focusNode,
         keyboardType: TextInputType.phone,
@@ -413,7 +414,7 @@ class CommonTextFormField extends StatefulWidget {
       CommonTextFormField(
         key: key,
         label: label,
-        hintText: hintText,
+        hintText: hintText.tr,
         controller: controller,
         focusNode: focusNode,
         keyboardType: TextInputType.emailAddress,

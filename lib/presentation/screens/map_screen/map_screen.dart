@@ -78,7 +78,7 @@ class MapScreen extends StatelessWidget {
                 ),
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  'Select a Location',
+                  'map_search_placeholder'.tr,
                   style: AppTextStyle.bodyMediumRegular.copyWith(
                     color: AppColor.coolGrayText,
                   ),
@@ -147,7 +147,7 @@ class MapScreen extends StatelessWidget {
             ),
 
             Text(
-              'Selected Location',
+              'map_selected_location_label'.tr,
               style: AppTextStyle.titleSmallSemiBold.copyWith(
                 color: AppColor.coolGrayText,
               ),
@@ -159,7 +159,7 @@ class MapScreen extends StatelessWidget {
               return Text(
                 pos != null
                     ? '${pos.latitude.toStringAsFixed(5)}, ${pos.longitude.toStringAsFixed(5)}'
-                    : 'Tap on the map to select a location',
+                    : 'map_tap_hint'.tr,
                 style: AppTextStyle.titleMediumSemiBold.copyWith(
                   color: AppColor.blackShade1,
                 ),
@@ -169,7 +169,7 @@ class MapScreen extends StatelessWidget {
             const SizedBox(height: 20),
 
             CommonButton(
-              label: 'Confirm Location',
+              label: 'map_confirm_btn'.tr,
               onTap: controller.confirmLocation,
               backgroundColor: AppColor.blackColor,
               foregroundColor: Colors.white,

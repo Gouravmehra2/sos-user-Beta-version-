@@ -57,7 +57,7 @@ class LoginBottomSheet extends StatelessWidget {
 
             // ── Headline ──────────────────────────────────────────────────
             Text(
-              'Explore Now',
+              'login_sheet_headline'.tr,
               style: AppTextStyle.displayMediumBold.copyWith(
                 color: AppColor.blackShade1,
               ),
@@ -67,7 +67,7 @@ class LoginBottomSheet extends StatelessWidget {
 
             // ── Sub-headline ──────────────────────────────────────────────
             Text(
-              'Book trusted technicians and\nprofessional home services in minutes.',
+              'login_sheet_subheadline'.tr,
               style: AppTextStyle.bodyLargeRegular.copyWith(
                 color: AppColor.coolGrayText,
               ),
@@ -77,7 +77,7 @@ class LoginBottomSheet extends StatelessWidget {
 
             // ── Guest ─────────────────────────────────────────────────────
             CommonButton(
-              label: 'Login as Guest',
+              label: 'login_sheet_guest_btn'.tr,
               onTap: () =>Get.toNamed(AppRoutes.locationPermissionScreen),
               backgroundColor: AppColor.blackColor,
               foregroundColor: Colors.white,
@@ -89,7 +89,7 @@ class LoginBottomSheet extends StatelessWidget {
             CommonButton(
               backgroundColor: AppColor.shadowGrey,
               foregroundColor: AppColor.blackColor,
-              label: 'Continue with Phone',
+              label: 'login_sheet_phone_btn'.tr,
               onTap: (){
                 Get.toNamed(AppRoutes.loginScreen);
               },
@@ -106,7 +106,7 @@ class LoginBottomSheet extends StatelessWidget {
             CommonButton(
               backgroundColor: AppColor.shadowGrey,
               foregroundColor: AppColor.blackColor,
-              label: 'Continue with Email',
+              label: 'login_sheet_email_btn'.tr,
               onTap: () {
                 Get.toNamed(AppRoutes.emailLoginScreen);
               },

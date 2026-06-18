@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:squadonsite/auth/email_login_screen/email_login_controller.dart';
 import 'package:squadonsite/constant/app_assets/app_assets.dart';
@@ -7,7 +6,6 @@ import 'package:squadonsite/constant/app_color/app_color.dart';
 import 'package:squadonsite/constant/common_widgets/common_auth_header.dart';
 import 'package:squadonsite/constant/common_widgets/common_button.dart';
 import 'package:squadonsite/constant/common_widgets/common_text_form_field.dart';
-import 'package:squadonsite/constant/common_widgets/my_scaffold.dart';
 import 'package:squadonsite/constant/common_widgets/social_login_button.dart';
 
 class EmailLoginScreen extends StatelessWidget {
@@ -17,17 +15,10 @@ class EmailLoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetBuilder<EmailLoginController>(
       builder: (controller) {
-        return AnnotatedRegion<SystemUiOverlayStyle>(
-          value: SystemUiOverlayStyle.light,
-          child: MyScaffold(
-            useSafeArea: true,
-            backgroundColor: AppColor.blackShade2,
-            body: AuthLayout(
-              imagePath: AppAssets.personImage,
+        return AuthLayout(
+              imagePath: AppAssets.signInImage,
               body: _EmailLoginPanel(controller: controller),
-            ),
-          ),
-        );
+            );
       },
     );
   }
@@ -43,7 +34,7 @@ class _EmailLoginPanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: Get.height * 0.648,
+      // height: Get.height * 0.6,
       decoration: const BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.only(
@@ -62,9 +53,9 @@ class _EmailLoginPanel extends StatelessWidget {
                 const SizedBox(height: 20),
 
                 // ── Title ──────────────────────────────────────────────────
-                const Text(
-                  'Sign In',
-                  style: TextStyle(
+                Text(
+                  'login_title'.tr,
+                  style: const TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
                     color: AppColor.blackShade1,
@@ -73,10 +64,10 @@ class _EmailLoginPanel extends StatelessWidget {
                 const SizedBox(height: 6),
 
                 // ── Subtitle ───────────────────────────────────────────────
-                const Text(
-                  'Enter your details to continue\nwith Squad On Site',
+                Text(
+                  'login_subtitle'.tr,
                   textAlign: TextAlign.center,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 13,
                     color: AppColor.coolGrayText,
                     height: 1.5,
@@ -87,7 +78,7 @@ class _EmailLoginPanel extends StatelessWidget {
                 // ── Email field ────────────────────────────────────────────
                 CommonTextFormField(
                   controller: controller.emailController,
-                  hintText: 'Enter your Email',
+                  hintText: 'email_login_hint_email'.tr,
                   keyboardType: TextInputType.emailAddress,
                   textInputAction: TextInputAction.next,
                   autocorrect: false,
@@ -100,7 +91,7 @@ class _EmailLoginPanel extends StatelessWidget {
                 Obx(
                   () => CommonTextFormField.password(
                     controller: controller.passwordController,
-                    hintText: 'Password',
+                    hintText: 'login_hint_password'.tr,
                     obscureText: !controller.isPasswordVisible.value,
                     onToggleObscure: controller.togglePasswordVisibility,
                     validator: controller.passwordValidator,
@@ -117,9 +108,9 @@ class _EmailLoginPanel extends StatelessWidget {
                       padding: EdgeInsets.zero,
                       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     ),
-                    child: const Text(
-                      'Forgot Password?',
-                      style: TextStyle(
+                    child: Text(
+                      'login_forgot_password'.tr,
+                      style: const TextStyle(
                         color: AppColor.brownAccentPrimary,
                         fontSize: 13,
                         fontWeight: FontWeight.w600,
@@ -132,7 +123,7 @@ class _EmailLoginPanel extends StatelessWidget {
                 // ── Sign In button ─────────────────────────────────────────
                 Obx(
                   () => CommonButton(
-                    label: 'Sign In',
+                    label: 'login_sign_in_btn'.tr,
                     onTap: controller.handleLogin,
                     isLoading: controller.isLoading.value,
                   ),
@@ -186,16 +177,16 @@ class _EmailLoginPanel extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text(
-                      "Don't have an account? ",
-                      style: TextStyle(
+                    Text(
+                      'login_no_account'.tr,
+                      style: const TextStyle(
                           fontSize: 13, color: AppColor.coolGrayText),
                     ),
                     GestureDetector(
                       onTap: controller.navigateToSignUp,
-                      child: const Text(
-                        'Sign Up',
-                        style: TextStyle(
+                      child: Text(
+                        'login_sign_up_link'.tr,
+                        style: const TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w700,
                           color: AppColor.brownAccentPrimary,

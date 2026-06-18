@@ -80,15 +80,15 @@ class OtpController extends GetxController {
       isEmailMode ? email : '$dialCode ${_formatPhone(phone)}';
 
   /// Title text adapts to mode.
-  String get titleText => isEmailMode ? 'Verify Email' : 'Verify Number';
+  String get titleText => isEmailMode ? 'otp_title_email'.tr : 'otp_title_phone'.tr;
 
   /// Subtitle text adapts to mode.
   String get subtitleText =>
-      'We sent a 6-digit code to $maskedDestination';
+      'otp_subtitle'.trArgs([maskedDestination]);
 
   /// Bottom link label adapts to mode.
   String get changeLinkText =>
-      isEmailMode ? 'Change Email?' : 'Change Number?';
+      isEmailMode ? 'otp_change_email'.tr : 'otp_change_number'.tr;
 
   // ── Pin input ─────────────────────────────────────────────────────────────
 

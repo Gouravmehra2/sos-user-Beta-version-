@@ -31,13 +31,13 @@ class EmailLoginController extends GetxController {
   // ── Validators ────────────────────────────────────────────────────────────
 
   FormFieldValidator<String> get emailValidator => CommonValidators.compose([
-    CommonValidators.required(message: 'Email is required'),
-    CommonValidators.email(),
+    CommonValidators.required(message: 'validation_email_required'.tr),
+    CommonValidators.email(message: 'validation_email'.tr),
   ]);
 
   FormFieldValidator<String> get passwordValidator => CommonValidators.compose([
-    CommonValidators.required(message: 'Password is required'),
-    CommonValidators.strongPassword(),
+    CommonValidators.required(message: 'validation_password_required'.tr),
+    CommonValidators.strongPassword(message: 'validation_password_strength'.tr),
   ]);
 
   // ── Login ─────────────────────────────────────────────────────────────────
@@ -68,7 +68,7 @@ class EmailLoginController extends GetxController {
         // TODO: send user.idToken to your backend, then navigate
         debugPrint('[EmailLogin] Apple user: ${user.uid}');
       },
-      onFailure: (msg) => Get.snackbar('Sign-in failed', msg),
+      onFailure: (msg) => Get.snackbar('sign_in_failed'.tr, msg),
       onCancelled: () {},
     );
   }
@@ -80,7 +80,7 @@ class EmailLoginController extends GetxController {
         // TODO: send user.idToken to your backend, then navigate
         debugPrint('[EmailLogin] Google user: ${user.email}');
       },
-      onFailure: (msg) => Get.snackbar('Sign-in failed', msg),
+      onFailure: (msg) => Get.snackbar('sign_in_failed'.tr, msg),
       onCancelled: () {},
     );
   }

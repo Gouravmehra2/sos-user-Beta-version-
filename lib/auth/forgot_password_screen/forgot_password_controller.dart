@@ -77,13 +77,14 @@ class ForgotPasswordController extends GetxController {
 
   /// UI strings that adapt to mode.
   String get subtitleText => isEmailMode
-      ? "Enter your email and we'll send you a\nrecovery link."
-      : "Enter your phone number and we'll send you a\nrecovery link.";
+      ? 'forgot_subtitle_email'.tr
+      : 'forgot_subtitle_phone'.tr;
 
-  String get fieldHintText =>
-      isEmailMode ? 'Enter your email' : 'Enter your phone number';
+  String get fieldHintText => isEmailMode
+      ? 'forgot_hint_email'.tr
+      : 'forgot_hint_phone'.tr;
 
-  String get buttonLabel => 'Get Recovery Link';
+  String get buttonLabel => 'forgot_btn'.tr;
 
   // ── Form ──────────────────────────────────────────────────────────────────
 
@@ -123,13 +124,13 @@ class ForgotPasswordController extends GetxController {
   String? validateInput(String? value) {
     if (isEmailMode) {
       return CommonValidators.compose([
-        CommonValidators.required(message: 'Email is required'),
+        CommonValidators.required(message: 'validation_email_required'.tr),
         CommonValidators.email(),
       ])(value);
     }
     // Phone validation
     if (value == null || value.trim().isEmpty) {
-      return 'Phone number is required';
+      return 'validation_phone_required'.tr;
     }
     final digits = value.replaceAll(RegExp(r'\D'), '');
     final lengths = _digitLengths;

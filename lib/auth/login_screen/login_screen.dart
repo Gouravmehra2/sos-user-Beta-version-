@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:squadonsite/auth/login_screen/login_controller.dart';
 import 'package:squadonsite/constant/app_assets/app_assets.dart';
@@ -8,7 +7,6 @@ import 'package:squadonsite/constant/common_widgets/common_auth_header.dart';
 import 'package:squadonsite/constant/common_widgets/common_button.dart';
 import 'package:squadonsite/constant/common_widgets/common_country_code_picker.dart';
 import 'package:squadonsite/constant/common_widgets/common_text_form_field.dart';
-import 'package:squadonsite/constant/common_widgets/my_scaffold.dart';
 import 'package:squadonsite/constant/common_widgets/social_login_button.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -19,17 +17,10 @@ class LoginScreen extends StatelessWidget {
     return GetBuilder<LoginController>(
       init: LoginController(),
       builder: (controller) {
-        return AnnotatedRegion<SystemUiOverlayStyle>(
-          value: SystemUiOverlayStyle.light,
-          child: MyScaffold(
-            useSafeArea: true,
-            backgroundColor: AppColor.blackShade2,
-            body: AuthLayout(
-              imagePath: AppAssets.personImage,
+        return AuthLayout(
+              imagePath: AppAssets.signInImage,
               body: loginPanel(controller),
-            ),
-          ),
-        );
+            );
       },
     );
   }
@@ -37,7 +28,6 @@ class LoginScreen extends StatelessWidget {
 
 Widget loginPanel(LoginController controller) {
   return Container(
-    height: Get.height * 0.648,
     decoration: const BoxDecoration(
       color: Colors.white,
       borderRadius: BorderRadius.only(
@@ -56,9 +46,9 @@ Widget loginPanel(LoginController controller) {
               const SizedBox(height: 20),
 
               /// Title
-              const Text(
-                'Sign In',
-                style: TextStyle(
+              Text(
+                'login_title'.tr,
+                style: const TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
                   color: AppColor.blackShade1,
@@ -67,10 +57,10 @@ Widget loginPanel(LoginController controller) {
               const SizedBox(height: 6),
 
               /// Subtitle
-              const Text(
-                'Enter your details to continue\nwith Squad On Site',
+              Text(
+                'login_subtitle'.tr,
                 textAlign: TextAlign.center,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 13,
                   color: AppColor.coolGrayText,
                   height: 1.5,
@@ -102,7 +92,7 @@ Widget loginPanel(LoginController controller) {
                     Expanded(
                       child: CommonTextFormField(
                         controller: controller.phoneController,
-                        hintText: 'Phone Number',
+                        hintText: 'login_hint_phone'.tr,
                         keyboardType: TextInputType.phone,
                         textInputAction: TextInputAction.next,
                         inputFormatters: controller.phoneFormatters,
@@ -121,12 +111,12 @@ Widget loginPanel(LoginController controller) {
               Obx(
                 () => CommonTextFormField.password(
                   controller: controller.passwordController,
-                  hintText: 'Password',
+                  hintText: 'login_hint_password'.tr,
                   obscureText: !controller.isPasswordVisible.value,
                   onToggleObscure: controller.togglePasswordVisibility,
                   validator: CommonValidators.compose([
                     CommonValidators.required(
-                        message: 'Password is required'),
+                        message: 'validation_password_required'.tr),
                     CommonValidators.strongPassword(),
                   ]),
                   textInputAction: TextInputAction.done,
@@ -138,9 +128,9 @@ Widget loginPanel(LoginController controller) {
                 alignment: Alignment.centerRight,
                 child: TextButton(
                   onPressed: controller.navigateToForgotPassword,
-                  child: const Text(
-                    'Forgot Password?',
-                    style: TextStyle(
+                  child: Text(
+                    'login_forgot_password'.tr,
+                    style: const TextStyle(
                       color: AppColor.brownAccentPrimary,
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
@@ -151,7 +141,7 @@ Widget loginPanel(LoginController controller) {
 
               /// Sign In Button
               CommonButton(
-                label: 'Sign In',
+                label: 'login_sign_in_btn'.tr,
                 onTap: controller.handleLogin,
               ),
               const SizedBox(height: 16),
@@ -163,11 +153,11 @@ Widget loginPanel(LoginController controller) {
                     child: Divider(
                         color: AppColor.lightGreyColor, thickness: 1),
                   ),
-                  const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 12),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
                     child: Text(
-                      'or',
-                      style: TextStyle(
+                      'login_or_divider'.tr,
+                      style: const TextStyle(
                           fontSize: 13, color: AppColor.coolGrayText),
                     ),
                   ),
@@ -203,16 +193,16 @@ Widget loginPanel(LoginController controller) {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text(
-                    "Don't have an account? ",
-                    style: TextStyle(
+                  Text(
+                    'login_no_account'.tr,
+                    style: const TextStyle(
                         fontSize: 13, color: AppColor.coolGrayText),
                   ),
                   GestureDetector(
                     onTap: controller.navigateToSignUp,
-                    child: const Text(
-                      'Sign Up',
-                      style: TextStyle(
+                    child: Text(
+                      'login_sign_up_link'.tr,
+                      style: const TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w700,
                         color: AppColor.brownAccentPrimary,

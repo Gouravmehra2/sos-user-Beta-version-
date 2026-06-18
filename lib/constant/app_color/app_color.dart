@@ -21,6 +21,7 @@ class AppColor {
   static const Color coolGrayText = Color(0xFF6B7280);
   static const Color grey1Color = Color(0xff4C4546);
   static const Color grey2Color = Color(0xff555555);
+  static const Color grey3Color = Color(0xff444444);
 
   //light gray color
   static const Color lightGreyColor = Color(0xffEAEAEA);
@@ -35,6 +36,7 @@ class AppColor {
   static const Color brownColor = Color(0xffD97706);
   //button color
   static const Color blackColor = Color(0xff111111);
+  static const Color blackColor2 = Color(0xff1A1C1C);
 
   //background-gradient-color
   static const LinearGradient backgroundGradient = LinearGradient(
@@ -70,6 +72,24 @@ class AppColor {
     ],
 
   );
+
+  static const LinearGradient subscriptionCardGradient =LinearGradient(
+      begin: Alignment.topCenter,
+      end: Alignment.bottomCenter,
+      colors: [
+        Color(0xffA5732F),
+        Color(0xff936421),
+        Color(0xff4E3616),
+      ]);
+
+
+
+  static const Color borderColor = Color(0xff777777);
+  static const Color purpleColor = Color(0xff935DED);
+  static const Color darkBrown = Color(0xff5A2600);
+  static const Color greenColor = Color(0xff34C759);
+  static const Color green2Color = Color(0xff229D4F);
+  static const Color lightGreen1Color = Color(0xffDBF4E4);
 
 
 }

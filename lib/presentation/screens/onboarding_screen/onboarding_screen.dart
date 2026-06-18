@@ -5,9 +5,8 @@ import 'package:squadonsite/constant/app_text_style/app_text_style.dart';
 import 'package:squadonsite/constant/common_widgets/common_bottom_sheet.dart';
 import 'package:squadonsite/constant/common_widgets/common_button.dart';
 import 'package:squadonsite/constant/common_widgets/common_orbit_design.dart';
-import 'package:squadonsite/constant/common_widgets/common_soft_blob_gradient.dart';
 import 'package:squadonsite/constant/common_widgets/common_worm_effect.dart';
-import 'package:squadonsite/constant/common_widgets/my_scaffold.dart';
+import 'package:squadonsite/core/services/language_service.dart';
 import 'package:squadonsite/presentation/screens/onboarding_screen/onboarding_controller.dart';
 import 'package:squadonsite/presentation/screens/onboarding_screen/widget/login_bottom_sheet.dart';
 
@@ -15,53 +14,148 @@ class OnboardingScreen extends StatelessWidget {
   OnboardingScreen({super.key});
 
   final controller = Get.put(OnboardingController());
+  final languageService = LanguageService.to;
 
   @override
   Widget build(BuildContext context) {
-    return MyScaffold(
-      useSafeArea: true,
-      body: Stack(
-        clipBehavior: Clip.none,
-        children: [
-          // ── Background blobs ──────────────────────────────────────────────
-          Positioned(
-            top: 0,
-            left: 0,
-            child: CommonSoftBlobGradient(color: AppColor.blueColor),
-          ),
-          Positioned(
-            right: -20,
-            top: Get.height / 3,
-            child: CommonSoftBlobGradient(
-              color: AppColor.brownColor,
-              opacity: 0.50,
-              boxShape: BoxShape.rectangle,
+    final size = MediaQuery.sizeOf(context);
+    final bottomPadding = MediaQuery.paddingOf(context).bottom;
+
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(kToolbarHeight),
+        child: Obx(() {
+          final current = languageService.currentLanguage.value;
+          final showBack = controller.currentPage.value > 0;
+          return AppBar(
+            backgroundColor: Colors.white,
+            elevation: 0,
+            scrolledUnderElevation: 0,
+            automaticallyImplyLeading: false,
+            leading: showBack
+                ? InkWell(
+                    onTap: controller.backPage,
+                    borderRadius: BorderRadius.circular(50),
+                    child: Container(
+                      margin: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: AppColor.darkGray.withValues(alpha: 0.05),
+                      ),
+                      child: const Icon(Icons.arrow_back_ios_rounded, size: 20),
+                    ),
+                  )
+                : const SizedBox.shrink(),
+            title: DropdownButtonHideUnderline(
+              child: DropdownButton<AppLanguage>(
+                value: current,
+                dropdownColor: Colors.white,
+                items: [
+                  DropdownMenuItem(
+                    value: AppLanguage.english,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Text('🇺🇸 '),
+                        const SizedBox(width: 6),
+                        Text(
+                          'language_english'.tr,
+                          style: AppTextStyle.titleMediumMedium.copyWith(
+                            fontSize: 14,
+                            color: AppColor.darkGray,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  DropdownMenuItem(
+                    value: AppLanguage.spanish,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Text('🇪🇸 '),
+                        const SizedBox(width: 6),
+                        Text(
+                          'language_spanish'.tr,
+                          style: AppTextStyle.titleMediumMedium.copyWith(
+                            fontSize: 14,
+                            color: AppColor.darkGray,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+                onChanged: (val) => val == AppLanguage.spanish
+                    ? languageService.setSpanish()
+                    : languageService.setEnglish(),
+              ),
             ),
+            centerTitle: true,
+            actions: [
+              GestureDetector(
+                onTap: () => CommonBottomSheet.show(child: LoginBottomSheet()),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Center(
+                    child: Text(
+                      'onboarding_skip'.tr,
+                      style: AppTextStyle.titleMediumMedium.copyWith(
+                        fontSize: 16,
+                        color: AppColor.darkGray,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          );
+        }),
+      ),
+
+      // ── Next button — Scaffold places this before body, so body never hides behind it
+      bottomNavigationBar: Padding(
+        padding: EdgeInsets.fromLTRB(20, 12, 20, bottomPadding + 12),
+        child: CommonButton(
+          label: 'onboarding_next'.tr,
+          onTap: controller.nextPage,
+          trailingIcon: Icon(
+            Icons.arrow_forward,
+            color: AppColor.brownAccentPrimary,
           ),
+        ),
+      ),
 
-          // ── PageView ──────────────────────────────────────────────────────
-          Obx(() {
-            final currentIndex = controller.currentPage.value;
-
-            return PageView.builder(
-              controller: controller.pageController,
-              onPageChanged: controller.onPageChanged,
-              itemCount: controller.onboardingStepList.length,
-              itemBuilder: (context, index) {
-                final data = controller.onboardingStepList[index];
-
-                return SizedBox(
-                  width: Get.width,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      // ── Animated image / widget ───────────────────────────
-                      AnimatedSwitcher(
-                        duration: const Duration(milliseconds: 400),
-                        switchInCurve: Curves.easeOut,
-                        switchOutCurve: Curves.easeIn,
-                        transitionBuilder: (child, animation) {
-                          return FadeTransition(
+      body: Obx(() {
+        final currentIndex = controller.currentPage.value;
+        return PageView.builder(
+          controller: controller.pageController,
+          onPageChanged: controller.onPageChanged,
+          itemCount: controller.onboardingStepList.length,
+          itemBuilder: (context, index) {
+            final data = controller.onboardingStepList[index];
+            return LayoutBuilder(
+              builder: (context, constraints) {
+                final imgHeight = (constraints.maxHeight * 0.42).clamp(140.0, 320.0);
+                return SingleChildScrollView(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: size.width * 0.06,
+                    vertical: constraints.maxHeight * 0.04,
+                  ),
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      minHeight: constraints.maxHeight * 0.92,
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        // ── Image / orbit ─────────────────────────────────
+                        AnimatedSwitcher(
+                          duration: const Duration(milliseconds: 400),
+                          switchInCurve: Curves.easeOut,
+                          switchOutCurve: Curves.easeIn,
+                          transitionBuilder: (child, animation) => FadeTransition(
                             opacity: animation,
                             child: SlideTransition(
                               position: Tween<Offset>(
@@ -70,33 +164,33 @@ class OnboardingScreen extends StatelessWidget {
                               ).animate(animation),
                               child: child,
                             ),
-                          );
-                        },
-                        child: index == 2
-                            ? const CircularOrbitWidget(key: ValueKey('orbit'))
-                            : Image.asset(
-                                data.imagePath ?? '',
-                                key: ValueKey(data.imagePath),
-                              ),
-                      ),
+                          ),
+                          child: index == 2
+                              ? const CircularOrbitWidget(key: ValueKey('orbit'))
+                              : Image.asset(
+                                  data.imagePath ?? '',
+                                  key: ValueKey(data.imagePath),
+                                  height: imgHeight,
+                                  fit: BoxFit.contain,
+                                ),
+                        ),
 
-                      const SizedBox(height: 50),
+                        SizedBox(height: constraints.maxHeight * 0.04),
 
-                      // ── Worm indicator ────────────────────────────────────
-                      CommonWormIndicator(
-                        count: controller.onboardingStepList.length,
-                        currentIndex: currentIndex,
-                      ),
+                        // ── Worm indicator ────────────────────────────────
+                        CommonWormIndicator(
+                          count: controller.onboardingStepList.length,
+                          currentIndex: currentIndex,
+                        ),
 
-                      const SizedBox(height: 10),
+                        SizedBox(height: constraints.maxHeight * 0.02),
 
-                      // ── Animated title + description ──────────────────────
-                      AnimatedSwitcher(
-                        duration: const Duration(milliseconds: 350),
-                        switchInCurve: Curves.easeOut,
-                        switchOutCurve: Curves.easeIn,
-                        transitionBuilder: (child, animation) {
-                          return FadeTransition(
+                        // ── Title + description ───────────────────────────
+                        AnimatedSwitcher(
+                          duration: const Duration(milliseconds: 350),
+                          switchInCurve: Curves.easeOut,
+                          switchOutCurve: Curves.easeIn,
+                          transitionBuilder: (child, animation) => FadeTransition(
                             opacity: animation,
                             child: SlideTransition(
                               position: Tween<Offset>(
@@ -105,103 +199,39 @@ class OnboardingScreen extends StatelessWidget {
                               ).animate(animation),
                               child: child,
                             ),
-                          );
-                        },
-                        child: Column(
-                          key: ValueKey(index),
-                          spacing: 20,
-                          children: [
-                            Text(
-                              data.title ?? '',
-                              textAlign: TextAlign.center,
-                              style: AppTextStyle.titleLargeBold.copyWith(
-                                fontSize: 28,
+                          ),
+                          child: Column(
+                            key: ValueKey(index),
+                            children: [
+                              Text(
+                                data.titleKey?.tr ?? '',
+                                textAlign: TextAlign.center,
+                                style: AppTextStyle.titleLargeBold.copyWith(
+                                  fontSize: (size.width * 0.068).clamp(22, 32),
+                                ),
                               ),
-                            ),
-                            Text(
-                              data.description ?? '',
-                              textAlign: TextAlign.center,
-                              style: AppTextStyle.titleSmallMedium.copyWith(
-                                fontSize: 16,
-                                color: AppColor.coolGrayText,
-                                fontWeight: FontWeight.w400,
+                              SizedBox(height: constraints.maxHeight * 0.018),
+                              Text(
+                                data.descriptionKey?.tr ?? '',
+                                textAlign: TextAlign.center,
+                                style: AppTextStyle.titleSmallMedium.copyWith(
+                                  fontSize: (size.width * 0.038).clamp(13, 18),
+                                  color: AppColor.coolGrayText,
+                                  fontWeight: FontWeight.w400,
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 );
               },
             );
-          }),
-
-          // ── Next button ───────────────────────────────────────────────────
-          Positioned(
-            bottom: 5,
-            left: 0,
-            right: 0,
-            child: CommonButton(
-              label: 'Next',
-              onTap: controller.nextPage,
-              trailingIcon: Icon(
-                Icons.arrow_forward,
-                color: AppColor.brownAccentPrimary,
-              ),
-            ).paddingSymmetric(horizontal: 20),
-          ),
-          //app bar (back icon && skip button)
-          Positioned(
-            top: 0,
-            left: 20,
-            right: 20,
-            child: Obx(
-                  () => Stack(
-                children: [
-                  if (controller.currentPage.value > 0)
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: InkWell(
-                        onTap: controller.backPage,
-                        child: Container(
-                          padding: const EdgeInsets.all(12),
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: AppColor.darkGray.withValues(alpha: 0.05),
-                          ),
-                          child: const Icon(
-                            Icons.arrow_back_ios_rounded,
-                            size: 20,
-                          ),
-                        ),
-                      ),
-                    ),
-
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: GestureDetector(
-                      onTap: () {
-                        CommonBottomSheet.show(child: LoginBottomSheet());
-                      },
-                      child: Container(
-                        padding: EdgeInsets.all(12),
-                        child: Text(
-                          "Skip",
-                          style: AppTextStyle.titleMediumMedium.copyWith(
-                            fontSize: 16,
-                            color: AppColor.darkGray,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          )
-        ],
-      ),
+          },
+        );
+      }),
     );
   }
 }

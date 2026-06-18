@@ -1,5 +1,6 @@
 class AppRoutes {
 
+  static String selectLocationScreen = '/selectLocationScreen';
   static String splashScreen = '/splashScreen';
   static String onboardingScreen = '/onboardingScreen';
   static String dashboardScreen = '/dashboardScreen';
@@ -11,5 +12,6 @@ class AppRoutes {
   static String locationPermissionScreen = '/locationPermissionScreen';
   static String locationDetailScreen = '/locationDetailScreen';
   static String mapScreen = '/mapScreen';
+  static String profileScreen = '/profileScreen';
 
 }

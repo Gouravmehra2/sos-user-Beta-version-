@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:squadonsite/auth/forgot_password_screen/forgot_password_controller.dart';
 import 'package:squadonsite/constant/app_assets/app_assets.dart';
@@ -8,7 +7,6 @@ import 'package:squadonsite/constant/common_widgets/common_auth_header.dart';
 import 'package:squadonsite/constant/common_widgets/common_button.dart';
 import 'package:squadonsite/constant/common_widgets/common_country_code_picker.dart';
 import 'package:squadonsite/constant/common_widgets/common_text_form_field.dart';
-import 'package:squadonsite/constant/common_widgets/my_scaffold.dart';
 
 class ForgotPasswordScreen extends StatelessWidget {
   const ForgotPasswordScreen({super.key});
@@ -17,17 +15,10 @@ class ForgotPasswordScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetBuilder<ForgotPasswordController>(
       builder: (controller) {
-        return AnnotatedRegion<SystemUiOverlayStyle>(
-          value: SystemUiOverlayStyle.light,
-          child: MyScaffold(
-            useSafeArea: true,
-            backgroundColor: AppColor.blackShade2,
-            body: AuthLayout(
-              imagePath: AppAssets.personImage,
+        return AuthLayout(
+              imagePath: AppAssets.forgotPassword,
               body: _ForgotPasswordPanel(controller: controller),
-            ),
-          ),
-        );
+            );
       },
     );
   }
@@ -43,7 +34,6 @@ class _ForgotPasswordPanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: Get.height * 0.648,
       decoration: const BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.only(
@@ -62,9 +52,9 @@ class _ForgotPasswordPanel extends StatelessWidget {
                 const SizedBox(height: 28),
 
                 // ── Title ──────────────────────────────────────────────────
-                const Text(
-                  'Forgot Password?',
-                  style: TextStyle(
+                Text(
+                  'forgot_title'.tr,
+                  style: const TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
                     color: AppColor.blackShade1,
@@ -185,9 +175,9 @@ class _ForgotPasswordPanel extends StatelessWidget {
                 // ── Back to Login ──────────────────────────────────────────
                 GestureDetector(
                   onTap: controller.navigateBack,
-                  child: const Text(
-                    'Back to Login',
-                    style: TextStyle(
+                  child: Text(
+                    'forgot_back_to_login'.tr,
+                    style: const TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
                       color: AppColor.brownAccentPrimary,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:squadonsite/constant/app_assets/app_assets.dart';
+import 'package:squadonsite/core/services/language_service.dart';
 
 /// Model for a service category tile
 class ServiceCategory {
@@ -45,12 +46,31 @@ class PopularService {
   });
 }
 
-/// Model for a user story card
-class UserStory {
+/// Model for a summer-heat banner slide
+class SummerBanner {
   final String imagePath;
+  final VoidCallback? onTap;
+
+  const SummerBanner({
+    required this.imagePath,
+    this.onTap,
+  });
+}
+
+/// Model for a user story card – supports both image and video assets.
+class UserStory {
+  final String mediaPath;
   final String title;
 
-  const UserStory({required this.imagePath, required this.title});
+  /// When [isVideo] is true, [mediaPath] points to an asset video file.
+  /// Otherwise it is treated as an image asset.
+  final bool isVideo;
+
+  const UserStory({
+    required this.mediaPath,
+    required this.title,
+    this.isVideo = false,
+  });
 }
 
 class HomeController extends GetxController {
@@ -66,76 +86,93 @@ class HomeController extends GetxController {
 
   // ── Data ─────────────────────────────────────────────────────────────────────
 
-  final List<ServiceCategory> serviceCategories = const [
+  List<ServiceCategory> get serviceCategories => [
     ServiceCategory(
       icon: 'assets/images/smart.png',
-      label: 'Smart Home Installations',
+      label: 'home_cat_smart_home'.tr,
     ),
     ServiceCategory(
       icon: 'assets/images/tv_mountain.png',
-      label: 'TV\nMounting',
+      label: 'home_cat_tv_mount'.tr,
     ),
     ServiceCategory(
       icon: 'assets/images/wifi_icon.png',
-      label: 'WiFi &\nNetworking',
+      label: 'home_cat_wifi'.tr,
     ),
     ServiceCategory(
       icon: 'assets/images/computer_device_support.png',
-      label: 'Computer & Device Support',
+      label: 'home_cat_computer'.tr,
     ),
     ServiceCategory(
       icon: 'assets/images/security.png',
-      label: 'Security & Surveillance',
+      label: 'home_cat_security'.tr,
     ),
     ServiceCategory(
       icon: 'assets/images/video.png',
-      label: 'Audio & Video\nDevice Setup',
+      label: 'home_cat_audio_video'.tr,
     ),
   ];
 
-  final List<OfferBanner> specialOffers = const [
+  List<OfferBanner> get specialOffers => [
     OfferBanner(
-      tag: 'EXCLUSIVE DEAL',
-      title: 'Summer Offer\n20% Off AC\nServices',
+      tag: 'home_offer_tag_exclusive'.tr,
+      title: 'home_offer1_title'.tr,
       subtitle: '',
-      buttonLabel: 'Book Now',
-      bgColor: Color(0xFFFFBB5E),
+      buttonLabel: 'home_offer_book_now'.tr,
+      bgColor: const Color(0xFFFFBB5E),
     ),
     OfferBanner(
-      tag: 'LIMITED TIME',
-      title: 'Winter Offer\n15% Off\nHeating Setup',
+      tag: 'home_offer_tag_limited'.tr,
+      title: 'home_offer2_title'.tr,
       subtitle: '',
-      buttonLabel: 'Book Now',
-      bgColor: Color(0xFFADD8E6),
+      buttonLabel: 'home_offer_book_now'.tr,
+      bgColor: const Color(0xFFADD8E6),
     ),
   ];
 
-  final List<PopularService> popularServices =  [
+  List<PopularService> get popularServices => [
     PopularService(
       imagePath: AppAssets.serviceImage,
       title: 'TV Mount AC',
-      buttonLabel: 'Book a Service',
+      buttonLabel: 'home_popular_book_service'.tr,
     ),
     PopularService(
       imagePath: AppAssets.serviceImage,
       title: 'TV Mount AC',
-      buttonLabel: 'Book a Service',
+      buttonLabel: 'home_popular_book_service'.tr,
     ),
     PopularService(
       imagePath: AppAssets.serviceImage,
       title: 'TV Mount AC',
-      buttonLabel: 'Book a Service',
+      buttonLabel: 'home_popular_book_service'.tr,
     ),
   ];
 
-  final List<UserStory> userStories = const [
+  final List<SummerBanner> summerBanners = [
+    SummerBanner(
+      imagePath: AppAssets.bannerImage1,
+    ),
+    SummerBanner(
+      imagePath: AppAssets.bannerImage2,
+    ),
+    SummerBanner(
+      imagePath: AppAssets.bannerImage3,
+    ),
+  ];
+
+  List<UserStory> get userStories => [
     UserStory(
-      imagePath: 'assets/images/onboarding_image_2.png',
-      title: 'Got cleaned water\nheater fixed',
+      mediaPath: 'assets/images/service_video.mp4',
+      title: 'home_story1_title'.tr,
+      isVideo: true,
     ),
     UserStory(
-      imagePath: 'assets/images/onboarding_image_1.png',
-      title: 'Got their home\nRepairs &...',
+      mediaPath: 'assets/images/onboarding_image_2.png',
+      title: 'home_story2_title'.tr,
+    ),
+    UserStory(
+      mediaPath: 'assets/images/onboarding_image_1.png',
+      title: 'home_story3_title'.tr,
     ),
   ];
 
@@ -143,9 +180,9 @@ class HomeController extends GetxController {
 
   String get greeting {
     final hour = DateTime.now().hour;
-    if (hour < 12) return 'Good Morning';
-    if (hour < 17) return 'Good Afternoon';
-    return 'Good Evening';
+    if (hour < 12) return 'home_greeting_morning'.tr;
+    if (hour < 17) return 'home_greeting_afternoon'.tr;
+    return 'home_greeting_evening'.tr;
   }
 
   void onSearchChanged(String value) {
