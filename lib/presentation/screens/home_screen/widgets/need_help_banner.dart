@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:squadonsite/constant/app_color/app_color.dart';
 import 'package:squadonsite/constant/app_text_style/app_text_style.dart';
+import 'package:squadonsite/constant/routes/app_routes.dart';
 import 'package:squadonsite/presentation/screens/home_screen/home_controller.dart';
 
 class NeedHelpBanner extends StatelessWidget {
@@ -70,30 +72,34 @@ class NeedHelpBanner extends StatelessWidget {
               ),
 
               /// SOS Button
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 15,vertical: 8),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFB8860B),
-                  borderRadius: BorderRadius.circular(100),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Icon(
-                      Icons.warning,
-                      color: Colors.black,
-                      size: 28,
-                    ),
-                    const SizedBox(width: 10),
-                    Text(
-                      'SOS',
-                      style: AppTextStyle.titleMediumSemiBold.copyWith(
-                        color: AppColor.blackColor1,
-                        fontWeight: FontWeight.w700,
-
+              InkWell(onTap:(){
+                Get.toNamed(AppRoutes.sosScreen);
+              },
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 15,vertical: 8),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFB8860B),
+                    borderRadius: BorderRadius.circular(100),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(
+                        Icons.warning,
+                        color: Colors.black,
+                        size: 28,
                       ),
-                    ),
-                  ],
+                      const SizedBox(width: 10),
+                      Text(
+                        'SOS',
+                        style: AppTextStyle.titleMediumSemiBold.copyWith(
+                          color: AppColor.blackColor1,
+                          fontWeight: FontWeight.w700,
+
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],

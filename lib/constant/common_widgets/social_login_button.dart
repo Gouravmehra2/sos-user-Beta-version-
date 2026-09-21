@@ -66,6 +66,15 @@ import 'package:squadonsite/constant/app_color/app_color.dart';
 ///   height: 52,
 /// )
 /// ```
+///
+/// 7. With loading state:
+/// ```dart
+/// SocialLoginButton(
+///   onTap: controller.handleGoogleLogin,
+///   icon: Image.asset(AppAssets.googleImage, height: 20),
+///   isLoading: controller.isGoogleLoading.value,
+/// )
+/// ```
 class SocialLoginButton extends StatefulWidget {
   // ── Content ──────────────────────────────────────────────────────────────
 
@@ -97,6 +106,9 @@ class SocialLoginButton extends StatefulWidget {
   // ── Interaction ───────────────────────────────────────────────────────────
 
   final VoidCallback onTap;
+
+  /// Shows a spinner and blocks interaction.
+  final bool isLoading;
 
   /// Disables the button entirely (no tap, dimmed appearance).
   final bool enabled;
@@ -144,6 +156,14 @@ class SocialLoginButton extends StatefulWidget {
   /// Override the default label text style.
   final TextStyle? labelStyle;
 
+  // ── Spinner ───────────────────────────────────────────────────────────────
+
+  /// Size of the loading spinner. Defaults to 22.
+  final double loaderSize;
+
+  /// Stroke width of the loading spinner. Defaults to 2.5.
+  final double loaderStrokeWidth;
+
   const SocialLoginButton({
     super.key,
     required this.onTap,
@@ -155,6 +175,7 @@ class SocialLoginButton extends StatefulWidget {
     this.iconNetworkFallback,
     this.label,
     this.iconLabelSpacing = 10,
+    this.isLoading = false,
     this.enabled = true,
     this.fullWidth = true,
     this.width,
@@ -167,6 +188,8 @@ class SocialLoginButton extends StatefulWidget {
     this.border,
     this.boxShadow,
     this.labelStyle,
+    this.loaderSize = 22,
+    this.loaderStrokeWidth = 2.5,
   }) : assert(
          child != null ||
              icon != null ||
@@ -182,7 +205,7 @@ class SocialLoginButton extends StatefulWidget {
 class _SocialLoginButtonState extends State<SocialLoginButton> {
   bool _pressed = false;
 
-  bool get _isInteractive => widget.enabled;
+  bool get _isInteractive => widget.enabled && !widget.isLoading;
 
   void _onTapDown(TapDownDetails _) {
     if (_isInteractive) setState(() => _pressed = true);
@@ -260,9 +283,11 @@ class _SocialLoginButtonState extends State<SocialLoginButton> {
 
     final double opacity = !widget.enabled
         ? 0.45
-        : _pressed
-            ? 0.82
-            : 1.0;
+        : widget.isLoading
+            ? 0.75
+            : _pressed
+                ? 0.82
+                : 1.0;
 
     final double scale = _pressed && _isInteractive ? 0.975 : 1.0;
 
@@ -293,9 +318,49 @@ class _SocialLoginButtonState extends State<SocialLoginButton> {
               border: widget.border ?? defaultBorder,
               boxShadow: widget.boxShadow,
             ),
-            child: Center(child: _buildContent()),
+            child: Center(
+              child: AnimatedSwitcher(
+                duration: const Duration(milliseconds: 200),
+                child: widget.isLoading
+                    ? _Loader(
+                        key: const ValueKey('loader'),
+                        size: widget.loaderSize,
+                        strokeWidth: widget.loaderStrokeWidth,
+                        color: widget.foregroundColor,
+                      )
+                    : KeyedSubtree(
+                        key: const ValueKey('content'),
+                        child: _buildContent(),
+                      ),
+              ),
+            ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _Loader extends StatelessWidget {
+  final double size;
+  final double strokeWidth;
+  final Color color;
+
+  const _Loader({
+    super.key,
+    required this.size,
+    required this.strokeWidth,
+    required this.color,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: size,
+      height: size,
+      child: CircularProgressIndicator(
+        strokeWidth: strokeWidth,
+        valueColor: AlwaysStoppedAnimation<Color>(color),
       ),
     );
   }

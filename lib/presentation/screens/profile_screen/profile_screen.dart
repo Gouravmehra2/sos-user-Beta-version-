@@ -5,6 +5,7 @@ import 'package:squadonsite/constant/app_assets/app_assets.dart';
 import 'package:squadonsite/constant/app_color/app_color.dart';
 import 'package:squadonsite/constant/app_text_style/app_text_style.dart';
 import 'package:squadonsite/constant/common_widgets/my_scaffold.dart';
+import 'package:squadonsite/constant/routes/app_routes.dart';
 import 'profile_controller.dart';
 
 class ProfileScreen extends GetView<ProfileController> {
@@ -107,27 +108,27 @@ class ProfileScreen extends GetView<ProfileController> {
             child: Image.asset(AppAssets.onboardingImage2),
           ),
         ),
-        Positioned(
-          bottom: -(profileSize * 0.40),
-          left: 0,
-          right: 0,
-          child: Container(
-            padding: EdgeInsets.all(6),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              shape: BoxShape.circle,
-              border: Border.all(
-                color: AppColor.brownAccentPrimary,
-                width: 1.5,
-              ),
-            ),
-            child: Icon(
-              Icons.edit,
-              size: 15,
-              color: AppColor.brownAccentPrimary,
-            ),
-          ),
-        ),
+        // Positioned(
+        //   bottom: -(profileSize * 0.40),
+        //   left: 0,
+        //   right: 0,
+        //   child: Container(
+        //     padding: EdgeInsets.all(6),
+        //     decoration: BoxDecoration(
+        //       color: Colors.white,
+        //       shape: BoxShape.circle,
+        //       border: Border.all(
+        //         color: AppColor.brownAccentPrimary,
+        //         width: 1.5,
+        //       ),
+        //     ),
+        //     child: Icon(
+        //       Icons.edit,
+        //       size: 15,
+        //       color: AppColor.brownAccentPrimary,
+        //     ),
+        //   ),
+        // ),
       ],
     );
   }
@@ -144,7 +145,7 @@ class _QuickActions extends StatelessWidget {
       _ActionItem(icon: Icons.calendar_today_outlined, labelKey: 'profile_quick_bookings'),
       _ActionItem(icon: Icons.payment_outlined, labelKey: 'profile_quick_payment'),
       _ActionItem(icon: Icons.location_on_outlined, labelKey: 'profile_quick_addresses'),
-      _ActionItem(icon: Icons.headset_mic_outlined, labelKey: 'profile_quick_support'),
+      _ActionItem(icon: Icons.headset_mic_outlined, labelKey: 'profile_quick_support', route: AppRoutes.supportScreen),
     ];
 
     return Row(
@@ -157,13 +158,14 @@ class _QuickActions extends StatelessWidget {
 class _ActionItem extends StatelessWidget {
   final IconData icon;
   final String labelKey;
+  final String? route;
 
-  const _ActionItem({required this.icon, required this.labelKey});
+  const _ActionItem({required this.icon, required this.labelKey, this.route});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {},
+      onTap: () { if (route != null) Get.toNamed(route!); },
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -317,7 +319,9 @@ class _WalletCouponRow extends GetView<ProfileController> {
                   ),
                 ),
               ),
-              onTap: () {},
+              onTap: () {
+                Get.toNamed(AppRoutes.walletScreen);
+              },
             ),
           ),
           const SizedBox(width: 12),
@@ -333,7 +337,9 @@ class _WalletCouponRow extends GetView<ProfileController> {
                   ),
                 ),
               ),
-              onTap: () {},
+              onTap: () {
+                Get.toNamed(AppRoutes.couponScreen);
+              },
             ),
           ),
         ],
@@ -393,7 +399,9 @@ class _SettingsCard extends GetView<ProfileController> {
             icon: Icons.person_outline,
             label: 'profile_settings_personal'.tr,
             trailing: const Icon(Icons.chevron_right, color: AppColor.brownAccentPrimary, size: 20),
-            onTap: () {},
+            onTap: () {
+              Get.toNamed(AppRoutes.personalInformationScreen);
+            },
           ),
           _buildDivider(),
           _SettingsTile(
@@ -466,21 +474,23 @@ class _SettingsCard extends GetView<ProfileController> {
             icon: Icons.security_outlined,
             label: 'profile_settings_security'.tr,
             trailing: const Icon(Icons.chevron_right, color: AppColor.brownAccentPrimary, size: 20),
-            onTap: () {},
+            onTap: () {
+              Get.toNamed(AppRoutes.securityScreen);
+            },
           ),
           _buildDivider(),
           _SettingsTile(
             icon: Icons.menu_book_outlined,
             label: 'profile_settings_booking_safety'.tr,
             trailing: const Icon(Icons.chevron_right, color: AppColor.brownAccentPrimary, size: 20),
-            onTap: () {},
+            onTap: () => Get.toNamed(AppRoutes.bookingSafetyScreen),
           ),
           _buildDivider(),
           _SettingsTile(
             icon: Icons.privacy_tip_outlined,
             label: 'profile_settings_privacy'.tr,
             trailing: const Icon(Icons.chevron_right, color: AppColor.brownAccentPrimary, size: 20),
-            onTap: () {},
+            onTap: () => Get.toNamed(AppRoutes.privacyPolicyScreen),
             isLast: true,
           ),
         ],

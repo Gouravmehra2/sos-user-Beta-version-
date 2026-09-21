@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:squadonsite/constant/app_assets/app_assets.dart';
+import 'package:squadonsite/constant/routes/app_routes.dart';
 import 'package:squadonsite/core/services/language_service.dart';
 
 /// Model for a service category tile
@@ -235,6 +236,7 @@ class HomeController extends GetxController {
 
   void onNotificationsTapped() {
     // TODO: navigate to notifications
+    Get.toNamed(AppRoutes.notificationScreen);
   }
 
   void onProfileTapped() {

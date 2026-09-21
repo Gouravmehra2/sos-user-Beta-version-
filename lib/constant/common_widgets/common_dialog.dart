@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:squadonsite/constant/app_color/app_color.dart';
 import 'package:squadonsite/constant/app_text_style/app_text_style.dart';
+import 'package:squadonsite/constant/common_widgets/common_button.dart';
 
 class CommonDialog {
   static Future<T?> show<T>({
@@ -20,110 +21,211 @@ class CommonDialog {
 
   /// Shows a bottom-sheet style dialog for picking image from gallery or camera.
   /// Returns the picked [XFile] or null if cancelled.
-  static Future<XFile?> showImagePickerDialog() async {
-    XFile? result;
-    await Get.bottomSheet(
-      Container(
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-        ),
-        child: SafeArea(
-          top: false,
+  static Future<XFile?> showImagePickerDialog() {
+    return Get.dialog<XFile>(
+      Dialog(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        insetPadding: const EdgeInsets.symmetric(horizontal: 24),
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: [
+              BoxShadow(
+                color: AppColor.blackShade2.withOpacity(.10),
+                blurRadius: 24,
+                offset: const Offset(0, 8),
+              ),
+            ],
+          ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Center(
-                child: Container(
-                  width: 40,
-                  height: 4,
-                  margin: const EdgeInsets.only(bottom: 16),
-                  decoration: BoxDecoration(
-                    color: AppColor.lightGreyColor,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
+              /// Header — matches project AppBar theming
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                decoration: const BoxDecoration(
+                  color: AppColor.brownAccentPrimary,
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Upload Profile Photo",
+                            style: AppTextStyle.titleLargeSemiBold.copyWith(
+                              color: Colors.white,
+                              fontSize: 18,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            "Choose how you'd like to add your profile photo",
+                            style: AppTextStyle.bodySmallRegular.copyWith(
+                              color: Colors.white70,
+                              height: 1.4,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    InkWell(
+                      onTap: Get.back,
+                      borderRadius: BorderRadius.circular(50),
+                      child: Container(
+                        height: 32,
+                        width: 32,
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.20),
+                          borderRadius: BorderRadius.circular(50),
+                        ),
+                        child: const Icon(
+                          Icons.close_rounded,
+                          size: 18,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              Text('Upload Profile Photo',
-                  style: AppTextStyle.titleLargeSemiBold
-                      .copyWith(color: AppColor.blackShade1)),
-              const SizedBox(height: 4),
-              Text('Choose from below options',
-                  style: AppTextStyle.bodySmallRegular
-                      .copyWith(color: AppColor.coolGrayText)),
-              const SizedBox(height: 20),
-              _PickerOption(
-                icon: Icons.photo_library_outlined,
-                label: 'Choose from Gallery',
-                onTap: () async {
-                  Get.back();
-                  result = await ImagePicker()
-                      .pickImage(source: ImageSource.gallery, imageQuality: 80);
-                },
+
+              Padding(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  children: [
+                    /// Options
+                    Row(
+                      children: [
+                        Expanded(
+                          child: _ImageSourceCard(
+                            icon: Icons.photo_library_outlined,
+                            title: "Gallery",
+                            subtitle: "Select Photo",
+                            onTap: () async {
+                              final image = await ImagePicker().pickImage(
+                                source: ImageSource.gallery,
+                                imageQuality: 80,
+                              );
+                              Get.back(result: image);
+                            },
+                          ),
+                        ),
+                        const SizedBox(width: 14),
+                        Expanded(
+                          child: _ImageSourceCard(
+                            icon: Icons.camera_alt_outlined,
+                            title: "Camera",
+                            subtitle: "Take Photo",
+                            onTap: () async {
+                              final image = await ImagePicker().pickImage(
+                                source: ImageSource.camera,
+                                imageQuality: 80,
+                              );
+                              Get.back(result: image);
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    const SizedBox(height: 16),
+
+                    CommonButton(
+                      label: "Cancel",
+                      onTap: Get.back,
+                      backgroundColor: AppColor.brownAccentPrimary,
+                      height: 46,
+                    ),
+                  ],
+                ),
               ),
-              const SizedBox(height: 12),
-              _PickerOption(
-                icon: Icons.camera_alt_outlined,
-                label: 'Take a Photo',
-                onTap: () async {
-                  Get.back();
-                  result = await ImagePicker()
-                      .pickImage(source: ImageSource.camera, imageQuality: 80);
-                },
-              ),
-              const SizedBox(height: 8),
             ],
           ),
         ),
       ),
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
     );
-    return result;
   }
 }
 
-class _PickerOption extends StatelessWidget {
+class _ImageSourceCard extends StatelessWidget {
   final IconData icon;
-  final String label;
+  final String title;
+  final String subtitle;
   final VoidCallback onTap;
 
-  const _PickerOption({
+  const _ImageSourceCard({
     required this.icon,
-    required this.label,
+    required this.title,
+    required this.subtitle,
     required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(14),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-        decoration: BoxDecoration(
-          color: AppColor.lightGreyColor.withValues(alpha: 0.5),
-          borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: AppColor.lightGreyColor),
-        ),
-        child: Row(
-          children: [
-            Container(
-              width: 42,
-              height: 42,
-              decoration: BoxDecoration(
-                color: AppColor.brownAccentPrimary.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Icon(icon, color: AppColor.brownAccentPrimary, size: 22),
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(18),
+        onTap: onTap,
+        child: Container(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 12,
+            vertical: 20,
+          ),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(18),
+            border: Border.all(
+              color: AppColor.lightGreyColor,
             ),
-            const SizedBox(width: 14),
-            Text(label,
-                style: AppTextStyle.titleSmallSemiBold
-                    .copyWith(color: AppColor.blackShade1)),
-          ],
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.04),
+                blurRadius: 12,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          child: Column(
+            children: [
+              Container(
+                width: 54,
+                height: 54,
+                decoration: BoxDecoration(
+                  color: AppColor.brownAccentPrimary.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(14),
+                ),
+                child: Icon(
+                  icon,
+                  size: 28,
+                  color: AppColor.brownAccentPrimary,
+                ),
+              ),
+
+              const SizedBox(height: 12),
+
+              Text(
+                title,
+                style: AppTextStyle.titleSmallSemiBold,
+              ),
+
+              const SizedBox(height: 4),
+
+              Text(
+                subtitle,
+                textAlign: TextAlign.center,
+                style: AppTextStyle.bodySmallRegular.copyWith(
+                  color: AppColor.coolGrayText,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

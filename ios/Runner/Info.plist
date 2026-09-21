@@ -4,32 +4,6 @@
 <dict>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
-	<!-- Photo / Camera permissions for image_picker -->
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>We need access to your photo library to let you update your profile picture.</string>
-	<key>NSCameraUsageDescription</key>
-	<string>We need access to your camera to let you take a profile photo.</string>
-	<!-- Location permission descriptions -->
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>We need your location to show your position on the map and help you select a delivery address.</string>
-	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>We need your location to show your position on the map and help you select a delivery address.</string>
-	<!-- Google Maps iOS SDK key -->
-	<key>GMSApiKey</key>
-	<string>YOUR_GOOGLE_MAPS_API_KEY</string>
-	<key>GIDClientID</key>
-	<string>955827747819-n6k9cleneohsh4hi2jt2le9nkcr6k510.apps.googleusercontent.com</string>
-	<key>CFBundleURLTypes</key>
-	<array>
-		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>com.googleusercontent.apps.955827747819-n6k9cleneohsh4hi2jt2le9nkcr6k510</string>
-			</array>
-		</dict>
-	</array>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
@@ -48,16 +22,33 @@
 	<string>$(FLUTTER_BUILD_NAME)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.955827747819-n6k9cleneohsh4hi2jt2le9nkcr6k510</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
+	<key>GIDClientID</key>
+	<string>955827747819-n6k9cleneohsh4hi2jt2le9nkcr6k510.apps.googleusercontent.com</string>
+	<key>GMSApiKey</key>
+	<string>YOUR_GOOGLE_MAPS_API_KEY</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-
-	<key>UIBackgroundModes</key>
-    <array>
-      <string>location</string>
-    </array>
-
+	<key>NSCameraUsageDescription</key>
+	<string>We need access to your camera to let you take a profile photo.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>We need your location to show your position on the map and help you select a delivery address.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>We need your location to show your position on the map and help you select a delivery address.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>We need access to your photo library to let you update your profile picture.</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
@@ -81,6 +72,10 @@
 	</dict>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>location</string>
+	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>

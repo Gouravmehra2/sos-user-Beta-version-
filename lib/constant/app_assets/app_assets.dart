@@ -57,5 +57,22 @@ class AppAssets {
   static String verifyNumber = 'assets/images/verify_number_image.png';
 
   static String couponImage = 'assets/images/coupon_image.png';
+  static String dummyServiceImage = 'assets/images/dummy_service_image.png';
+
+  static String wifiOutlineImage = 'assets/images/wifi_outline_icon.svg';
+  static String wifiFilledImage = 'assets/images/wifi_filled_icon.svg';
+  static String tvOutlineImage = 'assets/images/tv_outline_icon.svg';
+  static String tvFilledImage = 'assets/images/tv_filled_icon.svg';
+  static String smartHomeOutlineImage = 'assets/images/smart_home_outline_icon.svg';
+  static String smartHomeFilledImage = 'assets/images/smart_home_filled_icon.svg';
+  static String computerDeviceOutlineImage = 'assets/images/computer_outline_icon.svg';
+  static String computerDeviceFilledImage = 'assets/images/computer_filled_icon.svg';
+  static String videoOutlineImage = 'assets/images/video_outline_icon.svg';
+  static String videoFilledImage = 'assets/images/video_filled_icon.svg';
+  static String securityOutlineImage = 'assets/images/security_outline_icon.svg';
+  static String securityFilledImage = 'assets/images/security_filled_icon.svg';
+
+  static String customerImage = 'assets/images/customer_image.png';
+  static String offerIcon = 'assets/images/offer_icon.svg';
 
 }

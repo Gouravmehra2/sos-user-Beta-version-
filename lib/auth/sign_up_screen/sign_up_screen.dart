@@ -8,7 +8,6 @@ import 'package:squadonsite/constant/common_widgets/common_button.dart';
 import 'package:squadonsite/constant/common_widgets/common_country_code_picker.dart';
 import 'package:squadonsite/constant/common_widgets/common_text_form_field.dart';
 import 'package:squadonsite/constant/common_widgets/social_login_button.dart';
-import 'package:squadonsite/core/services/social_auth_service.dart';
 
 class SignUpScreen extends StatelessWidget {
   const SignUpScreen({super.key});
@@ -151,18 +150,24 @@ Widget _signUpPanel(SignUpController controller) {
               Row(
                 children: [
                   Expanded(
-                    child: SocialLoginButton(
-                      onTap: () {},
-                      icon: Image.asset(AppAssets.appleImage,height: 20,)
+                    child: Obx(
+                      () => SocialLoginButton(
+                        onTap: controller.handleAppleSignUp,
+                        icon: Image.asset(AppAssets.appleImage, height: 20),
+                        isLoading: controller.isAppleLoading.value,
+                        enabled: !controller.isGoogleLoading.value,
+                      ),
                     ),
                   ),
                   const SizedBox(width: 20),
                   Expanded(
-                    child: SocialLoginButton(
-                      onTap: () {
-                        SocialAuthService().signInWithGoogle();
-                      },
-                      icon:Image.asset(AppAssets.googleImage,height: 20,)
+                    child: Obx(
+                      () => SocialLoginButton(
+                        onTap: controller.handleGoogleSignUp,
+                        icon: Image.asset(AppAssets.googleImage, height: 20),
+                        isLoading: controller.isGoogleLoading.value,
+                        enabled: !controller.isAppleLoading.value,
+                      ),
                     ),
                   ),
                 ],

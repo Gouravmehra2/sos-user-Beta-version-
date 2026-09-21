@@ -157,16 +157,24 @@ class _EmailLoginPanel extends StatelessWidget {
                 Row(
                   children: [
                     Expanded(
-                      child: SocialLoginButton(
-                        onTap: controller.handleAppleLogin,
-                        icon: Image.asset(AppAssets.appleImage,height: 20,),
+                      child: Obx(
+                        () => SocialLoginButton(
+                          onTap: controller.handleAppleLogin,
+                          icon: Image.asset(AppAssets.appleImage, height: 20),
+                          isLoading: controller.isAppleLoading.value,
+                          enabled: !controller.isGoogleLoading.value,
+                        ),
                       ),
                     ),
                     const SizedBox(width: 20),
                     Expanded(
-                      child: SocialLoginButton(
-                        onTap: controller.handleGoogleLogin,
-                        icon:Image.asset(AppAssets.googleImage,height: 20,)
+                      child: Obx(
+                        () => SocialLoginButton(
+                          onTap: controller.handleGoogleLogin,
+                          icon: Image.asset(AppAssets.googleImage, height: 20),
+                          isLoading: controller.isGoogleLoading.value,
+                          enabled: !controller.isAppleLoading.value,
+                        ),
                       ),
                     ),
                   ],

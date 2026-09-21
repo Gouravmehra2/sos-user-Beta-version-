@@ -6,6 +6,7 @@ import 'package:squadonsite/presentation/screens/dashboard/dashboard_controller.
 import 'package:squadonsite/presentation/screens/dashboard/widgets/custom_bottom_navigation_tab.dart';
 import 'package:squadonsite/presentation/screens/home_screen/home_screen.dart';
 import 'package:squadonsite/presentation/screens/profile_screen/profile_screen.dart';
+import 'package:squadonsite/presentation/screens/service_screen/service_screen.dart';
 import 'package:squadonsite/presentation/screens/splash_screen/splash_screen.dart';
 
 class DashboardScreen extends StatelessWidget {
@@ -20,7 +21,7 @@ class DashboardScreen extends StatelessWidget {
         builder: (controller) {
           return IndexedStack(index: controller.selectedIndex, children: [
             HomeScreen(),
-            SplashScreen(),
+            const ServiceScreen(),
             SplashScreen(),
             ProfileScreen(),
           ]);

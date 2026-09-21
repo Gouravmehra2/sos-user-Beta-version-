@@ -58,7 +58,9 @@ class HomeHeader extends StatelessWidget {
             children: [
               // Notification icon
               GestureDetector(
-                onTap: controller.onNotificationsTapped,
+                onTap: (){
+                  Get.toNamed(AppRoutes.walletScreen);
+                },
                 child: _CircleIconButton(
                   child: Stack(
                     clipBehavior: Clip.none,
