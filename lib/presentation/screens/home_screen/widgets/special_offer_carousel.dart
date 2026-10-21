@@ -108,7 +108,7 @@ class SpecialOfferCarousel extends StatelessWidget {
                                 child: Text(
                                   offer.tag,
                                   style: AppTextStyle.labelSmallMedium.copyWith(
-                                    color: AppColor.brownAccentDark,
+                                    color: AppColor.blackShade2,
                                     letterSpacing: 0.5,
                                   ),
                                 ),
@@ -170,7 +170,7 @@ class SpecialOfferCarousel extends StatelessWidget {
                 height: 6,
                 decoration: BoxDecoration(
                   color: isActive
-                      ? AppColor.brownAccentPrimary
+                      ? AppColor.blackColor
                       : AppColor.lightGreyColor,
                   borderRadius: BorderRadius.circular(4),
                 ),

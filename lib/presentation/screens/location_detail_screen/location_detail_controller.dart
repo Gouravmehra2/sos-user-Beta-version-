@@ -1,50 +1,122 @@
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+import 'package:squadonsite/constant/common_widgets/app_snackbar.dart';
 import 'package:squadonsite/constant/routes/app_routes.dart';
 
 enum SaveAsType { home, office, other }
 
 class LocationDetailController extends GetxController {
-  // ── Form ──────────────────────────────────────────────────────────────────
-
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-
-  @override
-  void onInit() {
-    super.onInit();
-  }
-
-  // ── Text controllers ──────────────────────────────────────────────────────
 
   final TextEditingController searchController = TextEditingController();
   final TextEditingController houseController = TextEditingController();
   final TextEditingController apartmentController = TextEditingController();
   final TextEditingController landmarkController = TextEditingController();
 
-  // ── Save-as selection ─────────────────────────────────────────────────────
-
   final Rx<SaveAsType> selectedSaveAs = SaveAsType.home.obs;
+  final RxBool isLocationLoading = false.obs;
+  final RxBool hasCurrentLocation = false.obs;
+
+  @override
+  void onInit() {
+    super.onInit();
+    _loadCurrentLocationIfPermissionAlreadyGranted();
+  }
 
   void selectSaveAs(SaveAsType type) => selectedSaveAs.value = type;
 
-  // ── Actions ───────────────────────────────────────────────────────────────
-
-
   void onSearchChanged(String value) {
-    // TODO: trigger place autocomplete
     debugPrint('[LocationDetail] search: $value');
   }
 
-  void useCurrentLocation() {
-    // TODO: get GPS coordinates and reverse-geocode
-    debugPrint('[LocationDetail] Use current location tapped');
+  Future<void> useCurrentLocation() async {
+    final permission = await Geolocator.checkPermission();
+
+    if (permission == LocationPermission.denied) {
+      final requested = await Geolocator.requestPermission();
+      if (requested == LocationPermission.denied ||
+          requested == LocationPermission.deniedForever) {
+        AppSnackbar.show(
+          'Location access required',
+          'Please allow location access so we can use your current location.',
+        );
+        return;
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      AppSnackbar.show(
+        'Location access denied',
+        'Please enable location access in app settings to continue.',
+      );
+      return;
+    }
+
+    await _fetchCurrentLocation();
+  }
+
+  Future<void> _loadCurrentLocationIfPermissionAlreadyGranted() async {
+    final permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.whileInUse ||
+        permission == LocationPermission.always) {
+      await _fetchCurrentLocation();
+    }
+  }
+
+  Future<void> _fetchCurrentLocation() async {
+    isLocationLoading.value = true;
+    try {
+      final position = await Geolocator.getCurrentPosition(
+        locationSettings: const LocationSettings(
+          accuracy: LocationAccuracy.high,
+        ),
+      );
+
+      final placemarks = await Geocoding().placemarkFromCoordinates(
+        position.latitude,
+        position.longitude,
+      );
+
+      final place = placemarks.first;
+      final address = [
+        place.name,
+        place.subLocality,
+        place.locality,
+        place.administrativeArea,
+        place.country,
+      ].where((value) => value != null && value.isNotEmpty).join(', ');
+
+      if (address.isNotEmpty) {
+        searchController.text = address;
+        hasCurrentLocation.value = true;
+      } else {
+        searchController.text = 'Current location';
+        hasCurrentLocation.value = true;
+      }
+    } catch (_) {
+      hasCurrentLocation.value = false;
+      searchController.text = '';
+      AppSnackbar.show(
+        'Unable to fetch location',
+        'Please try again or allow location access.',
+      );
+    } finally {
+      isLocationLoading.value = false;
+    }
   }
 
   void confirmLocation() {
-    if (!formKey.currentState!.validate()) return;
+    if (!hasCurrentLocation.value) {
+      AppSnackbar.show(
+        'Location required',
+        'Please allow current location access to continue.',
+      );
+      return;
+    }
 
-    Get.toNamed(AppRoutes.dashboardScreen);
+    if (!formKey.currentState!.validate()) return;
 
     final payload = {
       'search': searchController.text.trim(),
@@ -54,11 +126,9 @@ class LocationDetailController extends GetxController {
       'saveAs': selectedSaveAs.value.name,
     };
 
-    // TODO: save address and navigate forward
     debugPrint('[LocationDetail] confirm: $payload');
+    Get.toNamed(AppRoutes.dashboardScreen);
   }
-
-  // ── Lifecycle ─────────────────────────────────────────────────────────────
 
   @override
   void onClose() {

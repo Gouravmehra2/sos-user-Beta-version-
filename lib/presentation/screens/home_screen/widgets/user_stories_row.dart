@@ -65,138 +65,130 @@ class _ImageStoryCard extends StatelessWidget {
 
 // ─── Video card ───────────────────────────────────────────────────────────────
 
-class _VideoStoryCard extends StatefulWidget {
+class _VideoStoryCard extends StatelessWidget {
   final String videoPath;
   final String title;
-
   const _VideoStoryCard({required this.videoPath, required this.title});
 
   @override
-  State<_VideoStoryCard> createState() => _VideoStoryCardState();
-}
-
-class _VideoStoryCardState extends State<_VideoStoryCard> {
-  late final VideoPlayerController _controller;
-  bool _initialized = false;
-  bool _muted = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = VideoPlayerController.asset(widget.videoPath)
-      ..initialize().then((_) {
-        if (mounted) {
-          setState(() => _initialized = true);
-          _controller.setLooping(true);
-          _controller.play();
-        }
-      });
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  void _togglePlayPause() {
-    setState(() {
-      _controller.value.isPlaying
-          ? _controller.pause()
-          : _controller.play();
-    });
-  }
-
-  void _toggleMute() {
-    setState(() {
-      _muted = !_muted;
-      _controller.setVolume(_muted ? 0 : 1);
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return ClipRRect(
+  Widget build(BuildContext context) => InkWell(
+    onTap: () => showDialog<void>(
+      context: context,
+      builder: (_) => _StoryPlayer(videoPath: videoPath),
+    ),
+    child: ClipRRect(
       borderRadius: BorderRadius.circular(16),
       child: SizedBox(
         width: 150,
         child: Stack(
           fit: StackFit.expand,
           children: [
-            // ── Video or loading placeholder ──────────────────────────────
-            if (_initialized)
-              FittedBox(
-                fit: BoxFit.cover,
-                clipBehavior: Clip.hardEdge,
-                child: SizedBox(
-                  width: _controller.value.size.width,
-                  height: _controller.value.size.height,
-                  child: VideoPlayer(_controller),
-                ),
-              )
-            else
-              Container(color: Colors.black),
-
-            // ── Gradient overlay ──────────────────────────────────────────
-            _GradientOverlay(),
-
-            // ── Centre tap — play / pause ─────────────────────────────────
-            GestureDetector(
-              behavior: HitTestBehavior.opaque,
-              onTap: _togglePlayPause,
-              child: Center(
-                child: AnimatedOpacity(
-                  duration: const Duration(milliseconds: 250),
-                  opacity:
-                      (_initialized && _controller.value.isPlaying) ? 0 : 1,
-                  child: Container(
-                    width: 36,
-                    height: 36,
-                    decoration: BoxDecoration(
-                      color: Colors.black54,
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(
-                      _initialized && _controller.value.isPlaying
-                          ? Icons.pause_rounded
-                          : Icons.play_arrow_rounded,
-                      color: Colors.white,
-                      size: 22,
-                    ),
-                  ),
-                ),
+            Container(color: Colors.black87),
+            const Center(
+              child: Icon(
+                Icons.play_circle_outline,
+                color: Colors.white,
+                size: 48,
               ),
             ),
-
-            // ── Mute / unmute button — top-right ──────────────────────────
-            Positioned(
-              top: 8,
-              right: 8,
-              child: GestureDetector(
-                onTap: _toggleMute,
-                child: Container(
-                  width: 28,
-                  height: 28,
-                  decoration: BoxDecoration(
-                    color: Colors.black54,
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(
-                    _muted ? Icons.volume_off_rounded : Icons.volume_up_rounded,
-                    color: Colors.white,
-                    size: 16,
-                  ),
-                ),
-              ),
-            ),
-
-            // ── Title label ───────────────────────────────────────────────
-            _TitleLabel(title: widget.title),
+            _TitleLabel(title: title),
           ],
         ),
       ),
-    );
+    ),
+  );
+}
+
+// Allocate the native player only while the user is viewing a story.
+class _StoryPlayer extends StatefulWidget {
+  final String videoPath;
+  const _StoryPlayer({required this.videoPath});
+  @override
+  State<_StoryPlayer> createState() => _StoryPlayerState();
+}
+
+class _StoryPlayerState extends State<_StoryPlayer>
+    with WidgetsBindingObserver {
+  late final VideoPlayerController _controller;
+  bool _ready = false;
+  bool _failed = false;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    _controller = VideoPlayerController.asset(widget.videoPath);
+    _initialize();
   }
+
+  Future<void> _initialize() async {
+    try {
+      await _controller.initialize();
+      if (!mounted) return;
+      setState(() => _ready = true);
+      if (WidgetsBinding.instance.lifecycleState == AppLifecycleState.resumed) {
+        await _controller.play();
+      }
+    } catch (_) {
+      if (mounted) setState(() => _failed = true);
+    }
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state != AppLifecycleState.resumed) _controller.pause();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => Dialog(
+    child: Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Align(
+          alignment: Alignment.topRight,
+          child: IconButton(
+            tooltip: 'Close video',
+            icon: const Icon(Icons.close),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+        ),
+        if (_failed)
+          const Padding(
+            padding: EdgeInsets.all(24),
+            child: Text('Unable to play this video.'),
+          )
+        else if (!_ready)
+          const Padding(
+            padding: EdgeInsets.all(24),
+            child: CircularProgressIndicator(),
+          )
+        else
+          Flexible(
+            child: AspectRatio(
+              aspectRatio: _controller.value.aspectRatio,
+              child: VideoPlayer(_controller),
+            ),
+          ),
+        if (_ready)
+          ValueListenableBuilder<VideoPlayerValue>(
+            valueListenable: _controller,
+            builder: (_, value, _) => IconButton(
+              tooltip: value.isPlaying ? 'Pause' : 'Play',
+              icon: Icon(value.isPlaying ? Icons.pause : Icons.play_arrow),
+              onPressed: () =>
+                  value.isPlaying ? _controller.pause() : _controller.play(),
+            ),
+          ),
+      ],
+    ),
+  );
 }
 
 // ─── Shared sub-widgets ───────────────────────────────────────────────────────
@@ -209,10 +201,7 @@ class _GradientOverlay extends StatelessWidget {
         gradient: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
-          colors: [
-            Colors.transparent,
-            Colors.black.withValues(alpha: 0.65),
-          ],
+          colors: [Colors.transparent, Colors.black.withValues(alpha: 0.65)],
         ),
       ),
     );

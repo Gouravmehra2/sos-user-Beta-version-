@@ -123,7 +123,7 @@ class CustomSearchBar extends StatefulWidget {
     this.showClearButton = true,
     this.backgroundColor = Colors.white,
     this.borderColor = AppColor.lightGreyColor,
-    this.focusedBorderColor = AppColor.brownAccentPrimary,
+    this.focusedBorderColor = AppColor.blackColor,
     this.borderRadius = 30,
     this.height = 52,
     this.borderWidth = 1.2,

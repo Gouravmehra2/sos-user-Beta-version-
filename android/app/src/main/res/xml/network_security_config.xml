@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <!-- Production endpoints must use HTTPS. Local HTTP is enabled only in debug/profile. -->
+    <base-config cleartextTrafficPermitted="false" />
+</network-security-config>

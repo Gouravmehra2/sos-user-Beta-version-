@@ -1,8 +1,11 @@
+import 'package:squadonsite/presentation/screens/terms_conditions_screen/terms_conditions_screen.dart';
 import 'package:get/get.dart';
 import 'package:squadonsite/auth/email_login_screen/email_login_binding.dart';
 import 'package:squadonsite/auth/email_login_screen/email_login_screen.dart';
 import 'package:squadonsite/auth/forgot_password_screen/forgot_password_binding.dart';
 import 'package:squadonsite/auth/forgot_password_screen/forgot_password_screen.dart';
+import 'package:squadonsite/auth/reset_password_screen/reset_password_binding.dart';
+import 'package:squadonsite/auth/reset_password_screen/reset_password_screen.dart';
 import 'package:squadonsite/auth/login_screen/login_binding.dart';
 import 'package:squadonsite/auth/login_screen/login_screen.dart';
 import 'package:squadonsite/auth/otp_screen/otp_binding.dart';
@@ -10,6 +13,10 @@ import 'package:squadonsite/auth/otp_screen/otp_screen.dart';
 import 'package:squadonsite/auth/sign_up_screen/sign_up_binding.dart';
 import 'package:squadonsite/auth/sign_up_screen/sign_up_screen.dart';
 import 'package:squadonsite/constant/routes/app_routes.dart';
+import 'package:squadonsite/presentation/screens/address_form_screen/address_form_binding.dart';
+import 'package:squadonsite/presentation/screens/address_form_screen/address_form_screen.dart';
+import 'package:squadonsite/presentation/screens/map_picker_screen/map_picker_binding.dart';
+import 'package:squadonsite/presentation/screens/map_picker_screen/map_picker_screen.dart';
 import 'package:squadonsite/presentation/screens/map_screen/map_binding.dart';
 import 'package:squadonsite/presentation/screens/map_screen/map_screen.dart';
 import 'package:squadonsite/presentation/screens/dashboard/dasboard_screen.dart';
@@ -28,6 +35,8 @@ import 'package:squadonsite/presentation/screens/booking_safety_screen/booking_s
 import 'package:squadonsite/presentation/screens/booking_safety_screen/booking_safety_screen.dart';
 import 'package:squadonsite/presentation/screens/security_screen/security_binding.dart';
 import 'package:squadonsite/presentation/screens/security_screen/security_screen.dart';
+import 'package:squadonsite/presentation/screens/change_password/change_password_binding.dart';
+import 'package:squadonsite/presentation/screens/change_password/change_password_screen.dart';
 import 'package:squadonsite/presentation/screens/support_screen/support_binding.dart';
 import 'package:squadonsite/presentation/screens/support_screen/support_screen.dart';
 import 'package:squadonsite/presentation/screens/support_screen/chat_support_binding.dart';
@@ -40,6 +49,8 @@ import 'package:squadonsite/presentation/screens/support_screen/support_thank_yo
 import 'package:squadonsite/presentation/screens/service_screen/service_binding.dart';
 import 'package:squadonsite/presentation/screens/service_screen/service_screen.dart';
 import 'package:squadonsite/presentation/screens/select_location_screen/select_location_binding.dart';
+import 'package:squadonsite/presentation/screens/technician_home_screen/technician_home_binding.dart';
+import 'package:squadonsite/presentation/screens/technician_home_screen/technician_home_screen.dart';
 import 'package:squadonsite/presentation/screens/select_location_screen/select_location_screen.dart';
 import 'package:squadonsite/presentation/screens/profile_screen/profile_binding.dart';
 import 'package:squadonsite/presentation/screens/profile_screen/profile_screen.dart';
@@ -70,6 +81,8 @@ import 'package:squadonsite/presentation/screens/coupon screen/coupon_binding.da
 import 'package:squadonsite/presentation/screens/coupon screen/coupon_screen.dart';
 import 'package:squadonsite/presentation/screens/home_services_screen/home_services_binding.dart';
 import 'package:squadonsite/presentation/screens/home_services_screen/home_services_screen.dart';
+import 'package:squadonsite/presentation/screens/booking_history_screen/booking_history_binding.dart';
+import 'package:squadonsite/presentation/screens/booking_history_screen/booking_history_screen.dart';
 
 class AppPages {
   static List<GetPage> getPages = [
@@ -110,11 +123,18 @@ class AppPages {
       transition: Transition.rightToLeftWithFade,
     ),
     GetPage(
+      name: AppRoutes.resetPasswordScreen,
+      page: () => const ResetPasswordScreen(),
+      binding: ResetPasswordBinding(),
+      transition: Transition.rightToLeftWithFade,
+    ),
+    GetPage(
       name: AppRoutes.emailLoginScreen,
       page: () => const EmailLoginScreen(),
       binding: EmailLoginBinding(),
       transition: Transition.rightToLeftWithFade,
-    ),GetPage(
+    ),
+    GetPage(
       name: AppRoutes.locationPermissionScreen,
       page: () => const LocationPermissionScreen(),
       binding: LocationPermissionBindings(),
@@ -127,9 +147,21 @@ class AppPages {
       transition: Transition.rightToLeftWithFade,
     ),
     GetPage(
+      name: AppRoutes.technicianHomeScreen,
+      page: () => const TechnicianHomeScreen(),
+      binding: TechnicianHomeBinding(),
+      transition: Transition.rightToLeftWithFade,
+    ),
+    GetPage(
       name: AppRoutes.dashboardScreen,
       page: () => DashboardScreen(),
       binding: DashboardBinding(),
+      transition: Transition.rightToLeftWithFade,
+    ),
+    GetPage(
+      name: AppRoutes.bookingHistoryScreen,
+      page: () => const BookingHistoryScreen(),
+      binding: BookingHistoryBinding(),
       transition: Transition.rightToLeftWithFade,
     ),
     GetPage(
@@ -154,6 +186,12 @@ class AppPages {
       name: AppRoutes.personalInformationScreen,
       page: () => PersonalInformationScreen(),
       binding: PersonalInformationBinding(),
+      transition: Transition.rightToLeftWithFade,
+    ),
+    GetPage(
+      name: AppRoutes.termsConditionsScreen,
+      page: () => const TermsConditionsScreen(),
+      binding: TermsConditionsBinding(),
       transition: Transition.rightToLeftWithFade,
     ),
     GetPage(
@@ -199,7 +237,7 @@ class AppPages {
     ),
     GetPage(
       name: AppRoutes.serviceScreen,
-      page: () => const ServiceScreen(),
+      page: () => ServiceScreen(),
       binding: ServiceBinding(),
       transition: Transition.rightToLeftWithFade,
     ),
@@ -257,6 +295,12 @@ class AppPages {
       transition: Transition.rightToLeftWithFade,
     ),
     GetPage(
+      name: AppRoutes.changePasswordScreen,
+      page: () => const ChangePasswordScreen(),
+      binding: ChangePasswordBinding(),
+      transition: Transition.rightToLeftWithFade,
+    ),
+    GetPage(
       name: AppRoutes.walletScreen,
       page: () => const WalletScreen(),
       binding: WalletBinding(),
@@ -284,6 +328,18 @@ class AppPages {
       name: AppRoutes.homeServicesScreen,
       page: () => const HomeServicesScreen(),
       binding: HomeServicesBinding(),
+      transition: Transition.rightToLeftWithFade,
+    ),
+    GetPage(
+      name: AppRoutes.mapPickerScreen,
+      page: () => const MapPickerScreen(),
+      binding: MapPickerBinding(),
+      transition: Transition.rightToLeftWithFade,
+    ),
+    GetPage(
+      name: AppRoutes.addressFormScreen,
+      page: () => const AddressFormScreen(),
+      binding: AddressFormBinding(),
       transition: Transition.rightToLeftWithFade,
     ),
   ];

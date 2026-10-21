@@ -1,49 +1,77 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-/// Supported locales for the app.
-enum AppLanguage { english, spanish }
+/// Arabic uses the UAE locale for customers in Dubai.
+enum AppLanguage { english, spanish, arabic }
 
 class LanguageService extends GetxController {
   static LanguageService get to => Get.find<LanguageService>();
 
-  static const _defaultLocale = Locale('en', 'US');
-  static const _spanishLocale = Locale('es', 'ES');
+  static const supportedLocales = [
+    Locale('en', 'US'),
+    Locale('es', 'ES'),
+    Locale('ar', 'AE'),
+  ];
 
   final Rx<AppLanguage> currentLanguage = AppLanguage.english.obs;
+  static const preferenceKey = 'app_language';
+  SharedPreferences? _preferences;
+  bool _refreshScheduled = false;
 
-  /// Returns the active [Locale].
-  Locale get locale =>
-      currentLanguage.value == AppLanguage.english
-          ? _defaultLocale
-          : _spanishLocale;
-
-  /// Switch to English.
-  void setEnglish() {
-    currentLanguage.value = AppLanguage.english;
-    Get.updateLocale(_defaultLocale);
+  Future<void> initialize() async {
+    _preferences = await SharedPreferences.getInstance();
+    final saved = _preferences!.getString(preferenceKey);
+    currentLanguage.value = AppLanguage.values.firstWhere(
+      (language) => language.name == saved,
+      orElse: () => AppLanguage.english,
+    );
+    Get.locale = locale;
   }
 
-  /// Switch to Spanish.
-  void setSpanish() {
-    currentLanguage.value = AppLanguage.spanish;
-    Get.updateLocale(_spanishLocale);
-  }
+  Locale get locale => supportedLocales[currentLanguage.value.index];
 
-  /// Toggle between the two supported languages.
-  void toggleLanguage() {
-    if (currentLanguage.value == AppLanguage.english) {
-      setSpanish();
-    } else {
-      setEnglish();
+  Future<void> setLanguage(AppLanguage language) async {
+    currentLanguage.value = language;
+    Get.locale = locale;
+    Get.appUpdate();
+    // Some existing screens use .tr without listening to Localizations.
+    // Rebuild mounted routes, including offstage tabs, while retaining their
+    // controllers, navigation stack, scroll positions and form state.
+    if (!_refreshScheduled) {
+      _refreshScheduled = true;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _refreshScheduled = false;
+        void rebuild(Element element) {
+          element.markNeedsBuild();
+          element.visitChildren(rebuild);
+        }
+
+        WidgetsBinding.instance.rootElement?.visitChildren(rebuild);
+      });
+      WidgetsBinding.instance.scheduleFrame();
+    }
+    try {
+      final preferences = _preferences ??=
+          await SharedPreferences.getInstance();
+      await preferences.setString(preferenceKey, currentLanguage.value.name);
+    } catch (error) {
+      debugPrint('Unable to save language preference: $error');
     }
   }
 
-  /// Returns a human-readable label for the current language.
-  String get currentLanguageLabel =>
-      currentLanguage.value == AppLanguage.english ? 'English' : 'Español';
+  void setEnglish() => setLanguage(AppLanguage.english);
+  void setSpanish() => setLanguage(AppLanguage.spanish);
+  void setArabic() => setLanguage(AppLanguage.arabic);
 
-  /// Returns a human-readable label for the other (switchable) language.
+  void toggleLanguage() => setLanguage(
+    AppLanguage.values[(currentLanguage.value.index + 1) %
+        AppLanguage.values.length],
+  );
+
+  String get currentLanguageLabel => _labels[currentLanguage.value.index];
   String get switchLanguageLabel =>
-      currentLanguage.value == AppLanguage.english ? 'Español' : 'English';
+      _labels[(currentLanguage.value.index + 1) % _labels.length];
+
+  static const _labels = ['English', 'Español', 'العربية'];
 }

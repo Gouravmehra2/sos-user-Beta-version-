@@ -24,7 +24,11 @@ class SosScreen extends GetView<SosController> {
               color: Color(0xffF0F0F0),
               shape: BoxShape.circle,
             ),
-            child: const Icon(Icons.chevron_left, color: Colors.black, size: 24),
+            child: const Icon(
+              Icons.chevron_left,
+              color: Colors.black,
+              size: 24,
+            ),
           ),
         ),
         title: Text(
@@ -42,7 +46,7 @@ class SosScreen extends GetView<SosController> {
             child: Text(
               'Tap & Hold for 3 Seconds',
               style: AppTextStyle.titleLargeBold.copyWith(
-                color: AppColor.brownAccentPrimary,
+                color: AppColor.blackColor,
                 fontSize: 20,
               ),
             ),
@@ -81,7 +85,7 @@ class SosScreen extends GetView<SosController> {
             title: '1App Safety Team',
             subtitle: '24/7 priority assistance for marketplace safety.',
             icon: Icons.verified_user_outlined,
-            iconColor: AppColor.brownAccentPrimary,
+            iconColor: AppColor.blackColor,
             actions: [
               _ActionButton(
                 label: 'Call Safety Team',
@@ -105,23 +109,30 @@ class SosScreen extends GetView<SosController> {
             title: 'Share Live Location',
             subtitle: 'Update contacts and safety team on your movement.',
             icon: Icons.my_location_outlined,
-            iconColor: AppColor.brownAccentPrimary,
+            iconColor: AppColor.blackColor,
             actions: [
               CommonButton(
                 label: 'Share Location',
                 onTap: controller.shareLocation,
-                backgroundColor: AppColor.brownAccentPrimary,
+                backgroundColor: AppColor.blackColor,
                 foregroundColor: Colors.white,
                 height: 52,
                 boxShadow: const [],
-                leadingIcon: const Icon(Icons.location_on_outlined, color: Colors.white, size: 18),
+                leadingIcon: const Icon(
+                  Icons.location_on_outlined,
+                  color: Colors.white,
+                  size: 18,
+                ),
               ),
             ],
           ),
           const SizedBox(height: 24),
 
           // ── Currently Assigned Technician ──────────────────────────────
-          Text('Currently Assigned Technician', style: AppTextStyle.titleLargeBold),
+          Text(
+            'Currently Assigned Technician',
+            style: AppTextStyle.titleLargeBold,
+          ),
           const SizedBox(height: 12),
           _TechnicianCard(controller: controller),
           const SizedBox(height: 24),
@@ -130,13 +141,16 @@ class SosScreen extends GetView<SosController> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Your Emergency Contacts', style: AppTextStyle.titleLargeBold),
+              Text(
+                'Your Emergency Contacts',
+                style: AppTextStyle.titleLargeBold,
+              ),
               GestureDetector(
                 onTap: controller.addEmergencyContact,
                 child: Text(
                   '+ Add',
                   style: AppTextStyle.bodyMediumMedium.copyWith(
-                    color: AppColor.brownAccentPrimary,
+                    color: AppColor.blackColor,
                   ),
                 ),
               ),
@@ -160,7 +174,9 @@ class SosScreen extends GetView<SosController> {
                     const SizedBox(height: 6),
                     Text(
                       c.name,
-                      style: AppTextStyle.bodySmallMedium.copyWith(color: AppColor.blackShade1),
+                      style: AppTextStyle.bodySmallMedium.copyWith(
+                        color: AppColor.blackShade1,
+                      ),
                     ),
                   ],
                 );
@@ -171,7 +187,7 @@ class SosScreen extends GetView<SosController> {
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: const Color(0xffF0F0F0),
+              color: const Color(0xffF5F5F5),
               borderRadius: BorderRadius.circular(10),
             ),
             child: Text(
@@ -204,7 +220,7 @@ class SosScreen extends GetView<SosController> {
               _QuickActionTile(
                 icon: Icons.camera_alt_outlined,
                 label: 'Upload Evidence',
-                iconColor: AppColor.brownAccentPrimary,
+                iconColor: AppColor.blackColor,
                 onTap: controller.uploadEvidence,
               ),
               _QuickActionTile(
@@ -234,18 +250,22 @@ class _SosButton extends StatefulWidget {
   State<_SosButton> createState() => _SosButtonState();
 }
 
-class _SosButtonState extends State<_SosButton> with SingleTickerProviderStateMixin {
+class _SosButtonState extends State<_SosButton>
+    with SingleTickerProviderStateMixin {
   late final AnimationController _anim;
   late final Animation<double> _pulse;
 
   @override
   void initState() {
     super.initState();
-    _anim = AnimationController(vsync: this, duration: const Duration(seconds: 1))
-      ..repeat(reverse: true);
-    _pulse = Tween<double>(begin: 1.0, end: 1.08).animate(
-      CurvedAnimation(parent: _anim, curve: Curves.easeInOut),
-    );
+    _anim = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 1),
+    )..repeat(reverse: true);
+    _pulse = Tween<double>(
+      begin: 1.0,
+      end: 1.08,
+    ).animate(CurvedAnimation(parent: _anim, curve: Curves.easeInOut));
   }
 
   @override
@@ -264,14 +284,14 @@ class _SosButtonState extends State<_SosButton> with SingleTickerProviderStateMi
         height: 200,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          color: const Color(0xffF5B8B8),
+          color: const Color(0xffCCCCCC),
         ),
         child: Padding(
           padding: const EdgeInsets.all(12),
           child: Container(
             decoration: const BoxDecoration(
               shape: BoxShape.circle,
-              color: Color(0xffCC3333),
+              color: Color(0xff111111),
             ),
             child: Stack(
               alignment: Alignment.center,
@@ -282,7 +302,10 @@ class _SosButtonState extends State<_SosButton> with SingleTickerProviderStateMi
                   height: 130,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    border: Border.all(color: Colors.white.withOpacity(0.3), width: 1.5),
+                    border: Border.all(
+                      color: Colors.white.withOpacity(0.3),
+                      width: 1.5,
+                    ),
                   ),
                 ),
                 // ring 2
@@ -291,13 +314,20 @@ class _SosButtonState extends State<_SosButton> with SingleTickerProviderStateMi
                   height: 100,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    border: Border.all(color: Colors.white.withOpacity(0.3), width: 1.5),
+                    border: Border.all(
+                      color: Colors.white.withOpacity(0.3),
+                      width: 1.5,
+                    ),
                   ),
                 ),
                 Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Icon(Icons.notifications_outlined, color: Color(0xffF5B8B8), size: 44),
+                    const Icon(
+                      Icons.notifications_outlined,
+                      color: Color(0xffCCCCCC),
+                      size: 44,
+                    ),
                     const SizedBox(height: 4),
                     Text(
                       'EMERGENCY SOS',
@@ -358,7 +388,9 @@ class _ServiceCard extends StatelessWidget {
                     const SizedBox(height: 4),
                     Text(
                       subtitle,
-                      style: AppTextStyle.bodyMediumRegular.copyWith(color: AppColor.coolGrayText),
+                      style: AppTextStyle.bodyMediumRegular.copyWith(
+                        color: AppColor.coolGrayText,
+                      ),
                     ),
                   ],
                 ),
@@ -394,11 +426,15 @@ class _ActionButton extends StatelessWidget {
     return CommonButton(
       label: label,
       onTap: onTap,
-      backgroundColor: isDark ? AppColor.blackColor : const Color(0xffF0F0F0),
+      backgroundColor: isDark ? AppColor.blackColor : const Color(0xffF5F5F5),
       foregroundColor: isDark ? Colors.white : AppColor.blackShade1,
       height: 52,
       boxShadow: const [],
-      leadingIcon: Icon(icon, color: isDark ? Colors.white : AppColor.blackShade1, size: 18),
+      leadingIcon: Icon(
+        icon,
+        color: isDark ? Colors.white : AppColor.blackShade1,
+        size: 18,
+      ),
     );
   }
 }
@@ -454,18 +490,24 @@ class _TechnicianCard extends StatelessWidget {
                   children: [
                     Row(
                       children: [
-                        Text('Gourav Dev', style: AppTextStyle.titleMediumSemiBold),
+                        Text(
+                          'Gourav Dev',
+                          style: AppTextStyle.titleMediumSemiBold,
+                        ),
                         const SizedBox(width: 8),
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 3,
+                          ),
                           decoration: BoxDecoration(
-                            color: AppColor.brownAccentPrimary.withOpacity(0.12),
+                            color: AppColor.blackColor.withOpacity(0.12),
                             borderRadius: BorderRadius.circular(6),
                           ),
                           child: Text(
                             'EXPERT',
                             style: AppTextStyle.labelSmallMedium.copyWith(
-                              color: AppColor.brownAccentPrimary,
+                              color: AppColor.blackColor,
                               letterSpacing: 0.5,
                             ),
                           ),
@@ -475,16 +517,24 @@ class _TechnicianCard extends StatelessWidget {
                     const SizedBox(height: 2),
                     Text(
                       'Booking ID: #A12345',
-                      style: AppTextStyle.bodySmallRegular.copyWith(color: AppColor.coolGrayText),
+                      style: AppTextStyle.bodySmallRegular.copyWith(
+                        color: AppColor.coolGrayText,
+                      ),
                     ),
                     const SizedBox(height: 2),
                     Row(
                       children: [
-                        const Icon(Icons.directions_car_outlined, size: 14, color: AppColor.coolGrayText),
+                        const Icon(
+                          Icons.directions_car_outlined,
+                          size: 14,
+                          color: AppColor.coolGrayText,
+                        ),
                         const SizedBox(width: 4),
                         Text(
                           'White Tesla Model 3 • ABC-123',
-                          style: AppTextStyle.bodySmallRegular.copyWith(color: AppColor.coolGrayText),
+                          style: AppTextStyle.bodySmallRegular.copyWith(
+                            color: AppColor.coolGrayText,
+                          ),
                         ),
                       ],
                     ),
@@ -504,7 +554,11 @@ class _TechnicianCard extends StatelessWidget {
                   foregroundColor: Colors.white,
                   height: 46,
                   boxShadow: const [],
-                  leadingIcon: const Icon(Icons.phone_outlined, color: Colors.white, size: 16),
+                  leadingIcon: const Icon(
+                    Icons.phone_outlined,
+                    color: Colors.white,
+                    size: 16,
+                  ),
                   leadingSpacing: 6,
                 ),
               ),
@@ -513,11 +567,15 @@ class _TechnicianCard extends StatelessWidget {
                 child: CommonButton(
                   label: 'Message',
                   onTap: controller.messageTechnician,
-                  backgroundColor: const Color(0xffF0F0F0),
+                  backgroundColor: const Color(0xffF5F5F5),
                   foregroundColor: AppColor.blackShade1,
                   height: 46,
                   boxShadow: const [],
-                  leadingIcon: const Icon(Icons.chat_bubble_outline, color: AppColor.blackShade1, size: 16),
+                  leadingIcon: const Icon(
+                    Icons.chat_bubble_outline,
+                    color: AppColor.blackShade1,
+                    size: 16,
+                  ),
                   leadingSpacing: 6,
                 ),
               ),
@@ -562,7 +620,9 @@ class _QuickActionTile extends StatelessWidget {
             Text(
               label,
               textAlign: TextAlign.center,
-              style: AppTextStyle.bodySmallMedium.copyWith(color: AppColor.blackShade1),
+              style: AppTextStyle.bodySmallMedium.copyWith(
+                color: AppColor.blackShade1,
+              ),
             ),
           ],
         ),

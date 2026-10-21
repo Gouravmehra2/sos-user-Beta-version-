@@ -15,7 +15,7 @@ class EmailSupportScreen extends GetView<EmailSupportController> {
     return MyScaffold(
       backgroundColor: const Color(0xffF6F6F6),
       appBar: AppBar(
-        backgroundColor: AppColor.brownAccentPrimary,
+        backgroundColor: AppColor.blackColor,
         iconTheme: const IconThemeData(color: Colors.white),
         title: Text(
           'Email Support',
@@ -31,11 +31,14 @@ class EmailSupportScreen extends GetView<EmailSupportController> {
               width: 56,
               height: 56,
               decoration: BoxDecoration(
-                color: const Color(0xFFF2EDE8),
+                color: const Color(0xFFF0F0F0),
                 borderRadius: BorderRadius.circular(14),
               ),
-              child: const Icon(Icons.mail_outline_rounded,
-                  color: AppColor.brownAccentPrimary, size: 28),
+              child: const Icon(
+                Icons.mail_outline_rounded,
+                color: AppColor.blackColor,
+                size: 28,
+              ),
             ),
             const SizedBox(height: 16),
             Text(
@@ -75,10 +78,12 @@ class EmailSupportScreen extends GetView<EmailSupportController> {
                       controller: controller.subjectController,
                       hintText: 'e.g. Booking inquiry or Technical issue',
                       borderRadius: 10,
-                      borderColor: AppColor.brownAccentPrimary.withValues(alpha: 0.4),
-                      focusedBorderColor: AppColor.brownAccentPrimary,
+                      borderColor: AppColor.blackColor.withValues(alpha: 0.4),
+                      focusedBorderColor: AppColor.blackColor,
                       backgroundColor: const Color(0xFFFAF7F4),
-                      validator: CommonValidators.required(message: 'Subject is required'),
+                      validator: CommonValidators.required(
+                        message: 'Subject is required',
+                      ),
                     ),
                     const SizedBox(height: 14),
                     _FieldLabel('Order ID'),
@@ -87,8 +92,8 @@ class EmailSupportScreen extends GetView<EmailSupportController> {
                       controller: controller.orderIdController,
                       hintText: 'e.g. #ORD-77291',
                       borderRadius: 10,
-                      borderColor: AppColor.brownAccentPrimary.withValues(alpha: 0.4),
-                      focusedBorderColor: AppColor.brownAccentPrimary,
+                      borderColor: AppColor.blackColor.withValues(alpha: 0.4),
+                      focusedBorderColor: AppColor.blackColor,
                       backgroundColor: const Color(0xFFFAF7F4),
                     ),
                     const SizedBox(height: 14),
@@ -101,10 +106,12 @@ class EmailSupportScreen extends GetView<EmailSupportController> {
                       maxLines: 5,
                       minLines: 5,
                       borderRadius: 10,
-                      borderColor: AppColor.brownAccentPrimary.withValues(alpha: 0.4),
-                      focusedBorderColor: AppColor.brownAccentPrimary,
+                      borderColor: AppColor.blackColor.withValues(alpha: 0.4),
+                      focusedBorderColor: AppColor.blackColor,
                       backgroundColor: const Color(0xFFFAF7F4),
-                      validator: CommonValidators.required(message: 'Description is required'),
+                      validator: CommonValidators.required(
+                        message: 'Description is required',
+                      ),
                     ),
                     const SizedBox(height: 14),
 
@@ -118,19 +125,25 @@ class EmailSupportScreen extends GetView<EmailSupportController> {
                           color: const Color(0xFFFAF7F4),
                           borderRadius: BorderRadius.circular(10),
                           border: Border.all(
-                            color: AppColor.brownAccentPrimary.withValues(alpha: 0.4),
+                            color: AppColor.blackColor.withValues(alpha: 0.4),
                             style: BorderStyle.solid,
                           ),
                         ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            const Icon(Icons.attach_file_rounded,
-                                color: AppColor.coolGrayText, size: 18),
+                            const Icon(
+                              Icons.attach_file_rounded,
+                              color: AppColor.coolGrayText,
+                              size: 18,
+                            ),
                             const SizedBox(width: 8),
-                            Text('Attach screenshots or relevant files',
-                                style: AppTextStyle.bodySmallMedium
-                                    .copyWith(color: AppColor.coolGrayText)),
+                            Text(
+                              'Attach screenshots or relevant files',
+                              style: AppTextStyle.bodySmallMedium.copyWith(
+                                color: AppColor.coolGrayText,
+                              ),
+                            ),
                           ],
                         ),
                       ),
@@ -140,10 +153,13 @@ class EmailSupportScreen extends GetView<EmailSupportController> {
                     CommonButton(
                       label: 'Send Message',
                       onTap: controller.onSendMessage,
-                      backgroundColor: AppColor.brownAccentPrimary,
+                      backgroundColor: AppColor.blackColor,
                       foregroundColor: Colors.white,
-                      trailingIcon: const Icon(Icons.send_outlined,
-                          color: Colors.white, size: 18),
+                      trailingIcon: const Icon(
+                        Icons.send_outlined,
+                        color: Colors.white,
+                        size: 18,
+                      ),
                     ),
                   ],
                 ),
@@ -181,7 +197,7 @@ class _FieldLabel extends StatelessWidget {
     return Text(
       label,
       style: AppTextStyle.bodyMediumMedium.copyWith(
-        color: AppColor.brownAccentPrimary,
+        color: AppColor.blackColor,
         fontWeight: FontWeight.w600,
       ),
     );
@@ -218,23 +234,30 @@ class _BottomOptionTile extends StatelessWidget {
               width: 42,
               height: 42,
               decoration: BoxDecoration(
-                color: const Color(0xFFF2EDE8),
+                color: const Color(0xFFF0F0F0),
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: Icon(icon, color: AppColor.brownAccentPrimary, size: 20),
+              child: Icon(icon, color: AppColor.blackColor, size: 20),
             ),
             const SizedBox(width: 12),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(title,
-                      style: AppTextStyle.titleSmallSemiBold
-                          .copyWith(color: AppColor.blackShade1)),
+                  Text(
+                    title,
+                    style: AppTextStyle.titleSmallSemiBold.copyWith(
+                      color: AppColor.blackShade1,
+                    ),
+                  ),
                   const SizedBox(height: 2),
-                  Text(subtitle,
-                      style: AppTextStyle.bodySmallRegular
-                          .copyWith(color: AppColor.coolGrayText, height: 1.4)),
+                  Text(
+                    subtitle,
+                    style: AppTextStyle.bodySmallRegular.copyWith(
+                      color: AppColor.coolGrayText,
+                      height: 1.4,
+                    ),
+                  ),
                 ],
               ),
             ),

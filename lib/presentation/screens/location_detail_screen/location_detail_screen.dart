@@ -24,11 +24,13 @@ class LocationDetailScreen extends StatelessWidget {
             ),
             child: Column(
               children: [
-                SizedBox(height: Get.height*0.06),
+                SizedBox(height: Get.height * 0.06),
                 Row(
                   children: [
                     InkWell(
-                      onTap: (){Get.back();},
+                      onTap: () {
+                        Get.back();
+                      },
                       child: Container(
                         margin: EdgeInsetsDirectional.symmetric(horizontal: 20),
                         padding: const EdgeInsets.all(12),
@@ -42,7 +44,7 @@ class LocationDetailScreen extends StatelessWidget {
                         ),
                       ),
                     ),
-                    Align(alignment: Alignment.center,child: _buildTitle()),
+                    Align(alignment: Alignment.center, child: _buildTitle()),
                   ],
                 ),
                 Expanded(
@@ -86,7 +88,7 @@ class LocationDetailScreen extends StatelessWidget {
       'location_detail_title'.tr,
       style: AppTextStyle.headlineMediumSemiBold.copyWith(
         color: AppColor.blackShade1,
-        fontSize: 20
+        fontSize: 20,
       ),
     );
   }
@@ -94,43 +96,68 @@ class LocationDetailScreen extends StatelessWidget {
   // ── Search bar ─────────────────────────────────────────────────────────────
 
   Widget _buildSearchBar(LocationDetailController controller) {
-    return CommonTextFormField(readOnly: true,
-      onTap: (){
-        Get.toNamed(AppRoutes.mapScreen);
-      },
-      controller: controller.searchController,
-      hintText: 'location_detail_search_hint'.tr,
-      keyboardType: TextInputType.streetAddress,
-      textInputAction: TextInputAction.search,
-      prefixIcon: Icons.search_rounded,
-      onChanged: controller.onSearchChanged,
-      borderColor: Colors.transparent,
-      backgroundColor: Colors.white,
+    return Obx(
+      () => CommonTextFormField(
+        readOnly: true,
+        onTap: () {
+          if (controller.hasCurrentLocation.value) {
+            Get.toNamed(AppRoutes.mapScreen);
+            return;
+          }
+          controller.useCurrentLocation();
+        },
+        controller: controller.searchController,
+        hintText: controller.hasCurrentLocation.value
+            ? controller.searchController.text.isNotEmpty
+                  ? controller.searchController.text
+                  : 'location_detail_search_hint'.tr
+            : 'location_detail_search_hint'.tr,
+        keyboardType: TextInputType.streetAddress,
+        textInputAction: TextInputAction.search,
+        prefixIcon: Icons.location_on_rounded,
+        onChanged: controller.onSearchChanged,
+        borderColor: Colors.transparent,
+        backgroundColor: Colors.white,
+      ),
     );
   }
 
   // ── Use current location ───────────────────────────────────────────────────
 
   Widget _buildCurrentLocationButton(LocationDetailController controller) {
-    return GestureDetector(
-      onTap: controller.useCurrentLocation,
-      behavior: HitTestBehavior.opaque,
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const Icon(
-            Icons.my_location_rounded,
-            size: 20,
-            color: AppColor.brownAccentPrimary,
-          ),
-          const SizedBox(width: 8),
-          Text(
-            'location_detail_use_current'.tr,
-            style: AppTextStyle.titleSmallSemiBold.copyWith(
-              color: AppColor.brownAccentPrimary,
+    return Obx(
+      () => GestureDetector(
+        onTap: controller.isLocationLoading.value
+            ? null
+            : controller.useCurrentLocation,
+        behavior: HitTestBehavior.opaque,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              controller.hasCurrentLocation.value
+                  ? Icons.check_circle_rounded
+                  : Icons.my_location_rounded,
+              size: 20,
+              color: controller.hasCurrentLocation.value
+                  ? Colors.green
+                  : AppColor.blackColor,
             ),
-          ),
-        ],
+            const SizedBox(width: 8),
+            Text(
+              controller.isLocationLoading.value
+                  ? 'Fetching your location...'
+                  : (controller.hasCurrentLocation.value
+                        ? 'Current location updated'
+                        : 'location_detail_use_current'.tr),
+              style: AppTextStyle.titleSmallSemiBold.copyWith(
+                color: controller.hasCurrentLocation.value
+                    ? Colors.green
+                    : AppColor.blackColor,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -195,10 +222,12 @@ class LocationDetailScreen extends StatelessWidget {
       children: [
         _buildFieldLabel('location_detail_save_as'.tr),
         const SizedBox(height: 10),
-        Obx(() => _SaveAsRow(
-              selected: controller.selectedSaveAs.value,
-              onSelect: controller.selectSaveAs,
-            )),
+        Obx(
+          () => _SaveAsRow(
+            selected: controller.selectedSaveAs.value,
+            onSelect: controller.selectSaveAs,
+          ),
+        ),
       ],
     );
   }
@@ -206,11 +235,20 @@ class LocationDetailScreen extends StatelessWidget {
   // ── Confirm button ─────────────────────────────────────────────────────────
 
   Widget _buildConfirmButton(LocationDetailController controller) {
-    return CommonButton(
-      label: 'location_detail_confirm_btn'.tr,
-      onTap: controller.confirmLocation,
-      backgroundColor: AppColor.blackColor,
-      foregroundColor: Colors.white,
+    return Obx(
+      () => CommonButton(
+        label: 'location_detail_confirm_btn'.tr,
+        onTap: controller.hasCurrentLocation.value
+            ? controller.confirmLocation
+            : null,
+        enabled: controller.hasCurrentLocation.value,
+        backgroundColor: controller.hasCurrentLocation.value
+            ? AppColor.blackColor
+            : AppColor.lightGreyColor,
+        foregroundColor: controller.hasCurrentLocation.value
+            ? Colors.white
+            : AppColor.grey1Color,
+      ),
     );
   }
 

@@ -30,8 +30,8 @@ class CommonWormIndicator extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20),
             color: currentIndex == index
-                ? activeColor ?? AppColor.brownAccentPrimary
-                : unActiveColor ??  AppColor.darkGray,
+                ? activeColor ?? AppColor.blackColor
+                : unActiveColor ?? AppColor.darkGray,
           ),
         ),
       ),

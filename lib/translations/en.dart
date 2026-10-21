@@ -9,7 +9,7 @@ const Map<String, String> en = {
   'onboarding_slide2_title': 'Verified Service\nExperts',
   'onboarding_slide2_desc':
       'Every professional is background-\nverified and quality-checked.',
-  'onboarding_slide3_title': 'One App.\nEvery Service.',
+  'onboarding_slide3_title': 'SOS.\nEvery Service.',
   'onboarding_slide3_desc':
       'From appliance repair to emergency\nsupport — Squad On Site has you\ncovered.',
 
@@ -47,6 +47,18 @@ const Map<String, String> en = {
   // ── OTP Screen ─────────────────────────────────────────────────────────────
   'otp_title_phone': 'Verify Number',
   'otp_title_email': 'Verify Email',
+  'reset_otp_title': 'Reset Password',
+  'reset_otp_continue': 'Continue',
+  'reset_otp_expires_in': 'Code expires in %s',
+  'reset_otp_expired': 'This code has expired. Request a new code.',
+  'reset_session_expired':
+      'This reset session expired. Please request a new code.',
+  'reset_request_timeout':
+      'Request timed out. Wait for the SMS before manually resending.',
+  'forgot_request_timeout':
+      'Request timed out. Wait for the SMS before manually requesting another code.',
+  'network_retry': 'Unable to connect. Check your connection and try again.',
+  'unexpected_server_response': 'Unexpected server response. Please try again.',
   'otp_verify_btn': 'Verify & Continue',
   'otp_no_code': "Didn't receive an OTP? ",
   'otp_subtitle': 'We sent a 6-digit code to %s',
@@ -58,14 +70,28 @@ const Map<String, String> en = {
   // ── Forgot Password Screen ─────────────────────────────────────────────────
   'forgot_title': 'Forgot Password?',
   'forgot_subtitle_phone':
-      "Enter your phone number and we'll send you a\nrecovery link.",
+      "Enter your phone number and we'll send a\npassword reset code.",
   'forgot_subtitle_email':
-      "Enter your email and we'll send you a\nrecovery link.",
+      "Enter your email and we'll send a\npassword reset code to your registered phone.",
   'forgot_hint_phone': 'Enter your phone number',
   'forgot_hint_email': 'Enter your email',
-  'forgot_btn': 'Get Recovery Link',
-  'forgot_resend': 'Resend Link',
+  'forgot_btn': 'Send Reset Code',
+  'forgot_resend': 'Resend Code',
   'forgot_back_to_login': 'Back to Login',
+  'reset_password_title': 'Create New Password',
+  'reset_password_subtitle': 'Choose a password with at least 6 characters.',
+  'reset_password_new_label': 'New password',
+  'reset_password_new_hint': 'Enter your new password',
+  'reset_password_confirm_label': 'Confirm password',
+  'reset_password_confirm_hint': 'Enter your new password again',
+  'reset_password_submit': 'Reset Password',
+  'reset_password_required': 'Enter a new password.',
+  'reset_password_min_length': 'Password must be at least 6 characters.',
+  'reset_password_confirm_required': 'Confirm your new password.',
+  'reset_password_mismatch': 'Passwords do not match.',
+  'reset_password_success': 'Password reset successfully.',
+  'reset_password_timeout':
+      'Request timed out. Your password may have been changed; try logging in before submitting again.',
 
   // ── Location Permission Screen ─────────────────────────────────────────────
   'location_perm_title': 'Enable Location Access',
@@ -165,8 +191,9 @@ const Map<String, String> en = {
   'validation_email_required': 'Email is required',
   'validation_phone_required': 'Phone number is required',
   'validation_password_required': 'Password is required',
-    'language_english': 'English',
-    'language_spanish': 'Spanish',
+  'language_arabic': 'العربية',
+  'language_english': 'English',
+  'language_spanish': 'Spanish',
   'sign_in_failed': 'Sign in failed',
   'signup_failed': 'Sign up failed',
 
@@ -186,10 +213,56 @@ const Map<String, String> en = {
   'profile_settings_notifications': 'Notification Settings',
   'profile_settings_language': 'Language',
   'profile_settings_security': 'Security',
+  'profile_settings_change_password': 'Change password',
   'profile_settings_booking_safety': 'Booking Safety Guide',
+  'profile_settings_terms': 'Terms & Conditions',
   'profile_settings_privacy': 'Privacy Policy',
   'profile_referral_code': 'Referral Code',
   'profile_copied': 'Copied',
   'profile_referral_copied': 'Referral code copied!',
+  'profile_delete_account': 'Delete account',
   'profile_logout': 'Logout from 1App',
+  'change_password_title': 'Change password',
+  'change_password_subtitle':
+      'Choose a strong password to help protect your account.',
+  'change_password_old_label': 'Old password',
+  'change_password_old_hint': 'Enter your old password',
+  'change_password_new_label': 'New password',
+  'change_password_new_hint': 'Enter a new password',
+  'change_password_confirm_label': 'Confirm new password',
+  'change_password_confirm_hint': 'Re-enter your new password',
+  'change_password_old_required': 'Enter your old password',
+  'change_password_new_required': 'Enter a new password',
+  'change_password_confirm_required': 'Confirm your new password',
+  'change_password_mismatch': 'Passwords do not match',
+  'change_password_submit': 'Update password',
+  'change_password_success': 'Your password has been updated.',
+  'change_password_failed': 'Unable to update your password. Please try again.',
+
+  'location_gps_off_title': 'Location is turned off',
+  'location_gps_off_body':
+      'Your device location is currently turned off. Turn on location services to continue.',
+  'location_denied_forever_title': 'Location permission required',
+  'location_denied_forever_body':
+      'Location permission has been permanently denied. Please enable it from your device settings to continue.',
+
+  // Dialog actions
+  'location_dialog_cancel': 'Not now',
+  'location_dialog_open_settings': 'Turn on Location',
+  'location_dialog_open_app_settings': 'Open App Settings',
+
+  'location_enable_steps_title': 'How to enable location',
+
+  'location_enable_step_1': 'Tap "Open App Settings" below.',
+
+  'location_enable_step_2':
+      'Open Location or Permissions in your device settings.',
+
+  'location_enable_step_3': 'Allow location access for this app.',
+
+  'location_enable_step_4': 'Return to the app and try again.',
+
+  'signup_hint_name': 'Enter your name',
+  'signup_hint_confirm_password': 'Confirm your password',
+  'register': 'Register',
 };

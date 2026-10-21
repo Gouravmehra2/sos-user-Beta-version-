@@ -33,7 +33,7 @@ import 'package:squadonsite/constant/app_text_style/app_text_style.dart';
 ///   label: 'Continue',
 ///   onTap: controller.next,
 ///   gradient: LinearGradient(
-///     colors: [AppColor.brownAccentDark, AppColor.brownAccentPrimary],
+///     colors: [AppColor.blackShade2, AppColor.blackColor],
 ///   ),
 /// )
 /// ```
@@ -253,7 +253,7 @@ class _CommonButtonState extends State<CommonButton> {
             alignment: AlignmentGeometry.center,
             duration: const Duration(milliseconds: 150),
             width: widget.fullWidth ? double.infinity : widget.width,
-            height: widget.height,
+            constraints: BoxConstraints(minHeight: widget.height),
             padding: EdgeInsets.symmetric(
               horizontal: widget.paddingHorizontal,
               vertical: widget.paddingVertical,
@@ -365,7 +365,9 @@ class _LabelRow extends StatelessWidget {
           leadingIcon!,
           SizedBox(width: leadingSpacing),
         ],
-        Text(label, style: style),
+        Flexible(
+          child: Text(label, style: style, textAlign: TextAlign.center),
+        ),
         if (trailingIcon != null) ...[
           SizedBox(width: trailingSpacing),
           trailingIcon!,

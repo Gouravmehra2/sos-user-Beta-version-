@@ -9,6 +9,7 @@ import 'package:squadonsite/constant/app_text_style/app_text_style.dart';
 import 'package:squadonsite/constant/common_widgets/common_button.dart';
 import 'package:squadonsite/constant/common_widgets/custom_search_bar.dart';
 import 'package:squadonsite/constant/common_widgets/my_scaffold.dart';
+import 'package:squadonsite/presentation/screens/home_screen/model/home_screen_model.dart';
 import 'package:squadonsite/presentation/screens/select_location_screen/select_location_controller.dart';
 
 class SelectLocationScreen extends StatelessWidget {
@@ -31,51 +32,62 @@ class SelectLocationScreen extends StatelessWidget {
                   _AppBar(),
                   // ── Scrollable content ───────────────────────────────
                   Expanded(
-                    child: SingleChildScrollView(
-                      physics: const BouncingScrollPhysics(),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: _hPad,
-                        vertical: 16,
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // ── Search Bar ───────────────────────────────
-                          CustomSearchBar(
-                            controller: controller.searchController,
-                            hintText: 'select_location_search_hint'.tr,
-
-                            onSearch: controller.onSearchChanged,
-                          ),
-                          const SizedBox(height: 20),
-
-                          // ── Quick Actions ────────────────────────────
-                          _QuickActionsRow(controller: controller),
-                          const SizedBox(height: 24),
-
-                          // ── Saved Addresses ──────────────────────────
-                          Text(
-                            'select_location_saved_addresses'.tr,
-                            style: AppTextStyle.labelMediumSemiBold.copyWith(
-                              color: AppColor.darkGray,
-                              letterSpacing: 1.2,
-                              fontSize: 14,
+                    child: RefreshIndicator(
+                      color: AppColor.blackColor,
+                      onRefresh: controller.fetchAddresses,
+                      child: SingleChildScrollView(
+                        physics: const AlwaysScrollableScrollPhysics(
+                          parent: BouncingScrollPhysics(),
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: _hPad,
+                          vertical: 16,
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // ── Search Bar ───────────────────────────
+                            CustomSearchBar(
+                              controller: controller.searchController,
+                              hintText: 'select_location_search_hint'.tr,
+                              onSearch: controller.onSearchChanged,
                             ),
-                          ),
-                          const SizedBox(height: 10),
-                          _SavedAddressList(controller: controller),
-                          const SizedBox(height: 4),
+                            const SizedBox(height: 20),
 
-                          // ── View All ─────────────────────────────────
-                          _ViewAllButton(onTap: controller.onViewAll),
-                          const SizedBox(height: 24),
-                        ],
+                            // ── Quick Actions ────────────────────────
+                            _QuickActionsRow(controller: controller),
+                            const SizedBox(height: 24),
+
+                            // ── Saved Addresses header ───────────────
+                            Text(
+                              'select_location_saved_addresses'.tr,
+                              style: AppTextStyle.labelMediumSemiBold.copyWith(
+                                color: AppColor.darkGray,
+                                letterSpacing: 1.2,
+                                fontSize: 14,
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+
+                            // ── Addresses body (state-driven) ────────
+                            _AddressesBody(controller: controller),
+                            const SizedBox(height: 4),
+
+                            // ── View All ─────────────────────────────
+                            Obx(
+                              () => controller.canViewAll
+                                  ? _ViewAllButton(onTap: controller.onViewAll)
+                                  : const SizedBox.shrink(),
+                            ),
+                            const SizedBox(height: 24),
+                          ],
+                        ),
                       ),
                     ),
                   ),
 
                   // ── Bottom Buttons (pinned) ──────────────────────────
-                  _BottomButtons(controller: controller),
+                  // _BottomButtons(controller: controller),
                 ],
               ),
             ),
@@ -95,10 +107,10 @@ class _AppBar extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
-        spacing: 15,
         children: [
           InkWell(
             onTap: Get.back,
+            borderRadius: BorderRadius.circular(50),
             child: Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
@@ -108,6 +120,7 @@ class _AppBar extends StatelessWidget {
               child: const Icon(Icons.arrow_back_ios_rounded, size: 20),
             ),
           ),
+          const SizedBox(width: 15),
           Text(
             'select_location_title'.tr,
             style: AppTextStyle.titleLargeBold.copyWith(
@@ -124,7 +137,6 @@ class _AppBar extends StatelessWidget {
 
 class _QuickActionsRow extends StatelessWidget {
   final SelectLocationController controller;
-
   const _QuickActionsRow({required this.controller});
 
   @override
@@ -132,20 +144,21 @@ class _QuickActionsRow extends StatelessWidget {
     return Row(
       children: [
         Expanded(
-          child: _QuickActionTile(
-            icon: AppAssets.currentLocationImage,
-            iconColor: const Color(0xFFE07B39),
-            iconBgColor: const Color(0xFFFFF3E8),
-            label: 'select_location_use_current'.tr,
-            onTap: controller.onUseCurrentLocation,
+          child: Obx(
+            () => _QuickActionTile(
+              icon: AppAssets.currentLocationImage,
+              label: 'select_location_use_current'.tr,
+              onTap: controller.isLoadingLocation.value
+                  ? null
+                  : controller.onUseCurrentLocation,
+              isLoading: controller.isLoadingLocation.value,
+            ),
           ),
         ),
         const SizedBox(width: 10),
         Expanded(
           child: _QuickActionTile(
             icon: AppAssets.addLocationImage,
-            iconColor: const Color(0xFF7C3AED),
-            iconBgColor: const Color(0xFFF3EEFF),
             label: 'select_location_add_new'.tr,
             onTap: controller.onAddNewAddress,
           ),
@@ -154,8 +167,6 @@ class _QuickActionsRow extends StatelessWidget {
         Expanded(
           child: _QuickActionTile(
             icon: AppAssets.whatsUpImage,
-            iconColor: const Color(0xFF16A34A),
-            iconBgColor: const Color(0xFFECFDF5),
             label: 'select_location_request_friend'.tr,
             onTap: controller.onRequestFromFriend,
           ),
@@ -167,17 +178,15 @@ class _QuickActionsRow extends StatelessWidget {
 
 class _QuickActionTile extends StatelessWidget {
   final String icon;
-  final Color iconColor;
-  final Color iconBgColor;
   final String label;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
+  final bool isLoading;
 
   const _QuickActionTile({
     required this.icon,
-    required this.iconColor,
-    required this.iconBgColor,
     required this.label,
     required this.onTap,
+    this.isLoading = false,
   });
 
   @override
@@ -191,7 +200,6 @@ class _QuickActionTile extends StatelessWidget {
           borderRadius: BorderRadius.circular(14),
           border: Border.all(
             color: AppColor.borderColor.withValues(alpha: 0.30),
-            width: 1,
           ),
           boxShadow: [
             BoxShadow(
@@ -205,15 +213,32 @@ class _QuickActionTile extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Image.asset(icon, height: 30, fit: BoxFit.cover),
+            isLoading
+                ? const SizedBox(
+                    height: 25,
+                    width: 25,
+                    child: Center(
+                      child: SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: AppColor.blackColor,
+                        ),
+                      ),
+                    ),
+                  )
+                : Image.asset(icon, height: 30, fit: BoxFit.cover),
             const SizedBox(height: 8),
             Text(
               label,
               textAlign: TextAlign.left,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
               style: AppTextStyle.bodySmallMedium.copyWith(
                 color: AppColor.blackShade1,
                 height: 1.4,
-                fontSize: 13,
+                fontSize: 12,
                 fontWeight: FontWeight.w600,
               ),
             ),
@@ -224,12 +249,39 @@ class _QuickActionTile extends StatelessWidget {
   }
 }
 
-// ─── Saved Addresses List ─────────────────────────────────────────────────────
+// ─── Address body (handles all three states) ─────────────────────────────────
 
-class _SavedAddressList extends StatelessWidget {
+class _AddressesBody extends StatelessWidget {
   final SelectLocationController controller;
+  const _AddressesBody({required this.controller});
 
-  const _SavedAddressList({required this.controller});
+  @override
+  Widget build(BuildContext context) {
+    return Obx(() {
+      switch (controller.screenState.value) {
+        case LocationScreenState.loading:
+          return const _AddressesShimmer();
+
+        case LocationScreenState.error:
+          return _ErrorCard(
+            message: controller.errorMessage.value,
+            onRetry: controller.fetchAddresses,
+          );
+
+        case LocationScreenState.success:
+          if (controller.addresses.isEmpty) {
+            return _EmptyAddresses(onAdd: controller.onAddNewAddress);
+          }
+          return _SavedAddressList(controller: controller);
+      }
+    });
+  }
+}
+
+// ─── Loading shimmer ──────────────────────────────────────────────────────────
+
+class _AddressesShimmer extends StatelessWidget {
+  const _AddressesShimmer();
 
   @override
   Widget build(BuildContext context) {
@@ -247,21 +299,36 @@ class _SavedAddressList extends StatelessWidget {
         ],
       ),
       child: Column(
-        children: List.generate(controller.savedAddresses.length, (index) {
-          final address = controller.savedAddresses[index];
-          final isLast = index == controller.savedAddresses.length - 1;
+        children: List.generate(3, (i) {
+          final isLast = i == 2;
           return Column(
             children: [
-              Obx(
-                () => _AddressTile(
-                  imageColor: address.iconColor,
-                  imagePath: address.icon,
-                  address: address,
-                  isSelected: controller.selectedIndex.value == index,
-                  onTap: () => controller.selectAddress(index),
-                  onShare: () => controller.onShareAddress(index),
-                  onEdit: () => controller.onEditAddress(index),
-                  onDelete: () => controller.onDeleteAddress(index),
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 14,
+                  vertical: 16,
+                ),
+                child: Row(
+                  children: [
+                    _ShimmerBox(width: 64, height: 64, radius: 12),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _ShimmerBox(width: 80, height: 12, radius: 6),
+                          const SizedBox(height: 8),
+                          _ShimmerBox(
+                            width: double.infinity,
+                            height: 10,
+                            radius: 6,
+                          ),
+                          const SizedBox(height: 4),
+                          _ShimmerBox(width: 140, height: 10, radius: 6),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
               ),
               if (!isLast)
@@ -279,25 +346,273 @@ class _SavedAddressList extends StatelessWidget {
   }
 }
 
+class _ShimmerBox extends StatefulWidget {
+  final double width;
+  final double height;
+  final double radius;
+
+  const _ShimmerBox({
+    required this.width,
+    required this.height,
+    required this.radius,
+  });
+
+  @override
+  State<_ShimmerBox> createState() => _ShimmerBoxState();
+}
+
+class _ShimmerBoxState extends State<_ShimmerBox>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _ctrl;
+  late final Animation<double> _anim;
+
+  @override
+  void initState() {
+    super.initState();
+    _ctrl = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1000),
+    )..repeat(reverse: true);
+    _anim = Tween<double>(
+      begin: 0.3,
+      end: 0.7,
+    ).animate(CurvedAnimation(parent: _ctrl, curve: Curves.easeInOut));
+  }
+
+  @override
+  void dispose() {
+    _ctrl.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _anim,
+      builder: (_, __) => Container(
+        width: widget.width,
+        height: widget.height,
+        decoration: BoxDecoration(
+          color: AppColor.lightGreyColor.withValues(alpha: _anim.value),
+          borderRadius: BorderRadius.circular(widget.radius),
+        ),
+      ),
+    );
+  }
+}
+
+// ─── Error card ───────────────────────────────────────────────────────────────
+
+class _ErrorCard extends StatelessWidget {
+  final String message;
+  final VoidCallback onRetry;
+
+  const _ErrorCard({required this.message, required this.onRetry});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 28),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppColor.borderColor.withValues(alpha: 0.30)),
+        boxShadow: [
+          BoxShadow(
+            color: AppColor.shadowGrey.withValues(alpha: 0.4),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          const Icon(
+            Icons.wifi_off_rounded,
+            size: 44,
+            color: AppColor.coolGrayText,
+          ),
+          const SizedBox(height: 12),
+          Text(
+            'select_location_error_load'.tr,
+            style: AppTextStyle.titleSmallSemiBold.copyWith(
+              color: AppColor.blackShade1,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 6),
+          Text(
+            message,
+            style: AppTextStyle.bodySmallRegular.copyWith(
+              color: AppColor.coolGrayText,
+            ),
+            textAlign: TextAlign.center,
+            maxLines: 3,
+            overflow: TextOverflow.ellipsis,
+          ),
+          const SizedBox(height: 18),
+          GestureDetector(
+            onTap: onRetry,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
+              decoration: BoxDecoration(
+                color: AppColor.blackColor,
+                borderRadius: BorderRadius.circular(30),
+              ),
+              child: Text(
+                'select_location_retry'.tr,
+                style: AppTextStyle.buttonSmall.copyWith(color: Colors.white),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ─── Empty state ──────────────────────────────────────────────────────────────
+
+class _EmptyAddresses extends StatelessWidget {
+  final VoidCallback onAdd;
+  const _EmptyAddresses({required this.onAdd});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onAdd,
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 32),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: AppColor.borderColor.withValues(alpha: 0.30),
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: AppColor.shadowGrey.withValues(alpha: 0.4),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Column(
+          children: [
+            Icon(
+              Icons.location_off_outlined,
+              size: 44,
+              color: AppColor.coolGrayText,
+            ),
+            const SizedBox(height: 12),
+            Text(
+              'select_location_empty_title'.tr,
+              style: AppTextStyle.titleSmallSemiBold.copyWith(
+                color: AppColor.blackShade1,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 6),
+            Text(
+              'select_location_empty_subtitle'.tr,
+              style: AppTextStyle.bodySmallRegular.copyWith(
+                color: AppColor.coolGrayText,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// ─── Saved Addresses List ─────────────────────────────────────────────────────
+
+class _SavedAddressList extends StatelessWidget {
+  final SelectLocationController controller;
+  const _SavedAddressList({required this.controller});
+
+  @override
+  Widget build(BuildContext context) {
+    return Obx(
+      () => Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: AppColor.borderColor.withValues(alpha: 0.30),
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: AppColor.shadowGrey.withValues(alpha: 0.4),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Column(
+          children: List.generate(controller.visibleAddressCount, (index) {
+            final address = controller.addresses[index];
+            final isLast = index == controller.visibleAddressCount - 1;
+            return Column(
+              children: [
+                Obx(
+                  () => _AddressTile(
+                    address: address,
+                    isSelected: controller.selectedIndex.value == index,
+                    isSaving:
+                        controller.savingIndex.value == index ||
+                        controller.deletingAddressId.value == address.id,
+                    iconPath: controller.iconFor(address),
+                    iconColor: controller.iconColorFor(address),
+                    onTap: () => controller.selectAddress(index),
+                    onEdit: () => controller.onEditAddress(index),
+                    onDelete: () => controller.onDeleteAddress(index),
+                    onShare: () => controller.onShareAddress(index),
+                  ),
+                ),
+                if (!isLast)
+                  const Divider(
+                    height: 1,
+                    indent: 16,
+                    endIndent: 16,
+                    color: AppColor.lightGreyColor,
+                  ),
+              ],
+            );
+          }),
+        ),
+      ),
+    );
+  }
+}
+
+// ─── Address Tile ─────────────────────────────────────────────────────────────
+
 class _AddressTile extends StatelessWidget {
-  final SavedAddress address;
+  final UserAddress address;
   final bool isSelected;
+  final bool isSaving;
+  final String iconPath;
+  final Color iconColor;
   final VoidCallback onTap;
-  final VoidCallback onShare;
   final VoidCallback onEdit;
   final VoidCallback onDelete;
-  final Color imageColor;
-  final String imagePath;
+  final VoidCallback onShare;
 
   const _AddressTile({
     required this.address,
     required this.isSelected,
+    required this.isSaving,
+    required this.iconPath,
+    required this.iconColor,
     required this.onTap,
-    required this.onShare,
     required this.onEdit,
     required this.onDelete,
-    required this.imageColor,
-    required this.imagePath,
+    required this.onShare,
   });
 
   @override
@@ -305,126 +620,213 @@ class _AddressTile extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       behavior: HitTestBehavior.opaque,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
-        child: Row(
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        padding: const EdgeInsets.symmetric(
+          horizontal: 14,
+          vertical: 14,
+        ),
+        decoration: BoxDecoration(
+          color: isSelected
+              ? AppColor.lightGreen1Color.withValues(alpha: 0.25)
+              : Colors.transparent,
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // ── Icon box ─────────────────────────────────────────────
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-              decoration: BoxDecoration(
-                color: address.iconBgColor,
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(
-                  color: AppColor.borderColor.withValues(alpha: 0.30),
-                ),
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SvgPicture.asset(imagePath, height: 24, color: imageColor),
-                  const SizedBox(height: 2),
-                  Text(
-                    address.type,
-                    style: AppTextStyle.labelMediumSemiBold.copyWith(
-                      color: AppColor.blackShade2,
-                      fontWeight: FontWeight.w400,
+            // Address details
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  width: 64,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 6,
+                    vertical: 10,
+                  ),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF0F0F0),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(
+                      color: AppColor.borderColor.withValues(alpha: 0.30),
                     ),
                   ),
-                  Text(
-                    address.distance,
-                    style: AppTextStyle.labelSmallRegular.copyWith(
-                      color: AppColor.grey3Color,
-                      // fontWeight: AppColor.grey3Color
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(width: 12),
-
-            // ── Address text + selected badge ─────────────────────────
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
+                      SvgPicture.asset(
+                        iconPath,
+                        height: 24,
+                        color: iconColor,
+                      ),
+                      const SizedBox(height: 5),
                       Text(
-                        address.type,
-                        style: AppTextStyle.titleSmallSemiBold.copyWith(
-                          color: AppColor.blackShade1,
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600,
+                        address.label,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.center,
+                        style: AppTextStyle.labelMediumSemiBold.copyWith(
+                          color: AppColor.blackShade2,
+                          fontWeight: FontWeight.w400,
                         ),
                       ),
-                      if (isSelected) ...[
-                        const SizedBox(width: 8),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 2,
-                          ),
-                          decoration: BoxDecoration(
-                            color: AppColor.lightGreen1Color,
-                            borderRadius: BorderRadius.circular(20),
-                            // border: Border.all(
-                            //   color: const Color(0xFF16A34A),
-                            //   width: 0.8,
-                            // ),
-                          ),
-                          child: Text(
-                            'select_location_selected_badge'.tr,
-                            style: AppTextStyle.labelSmallMedium.copyWith(
-                              color: AppColor.green2Color,
-                              fontSize: 9,
-                              letterSpacing: 0.6,
-                            ),
-                          ),
-                        ),
-                      ],
                     ],
                   ),
-                  const SizedBox(height: 4),
-                  Text(
-                    address.fullAddress,
-                    maxLines: 3,
-                    overflow: TextOverflow.ellipsis,
-                    style: AppTextStyle.bodySmallRegular.copyWith(
-                      color: AppColor.grey2Color,
-                      height: 1.4,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(width: 8),
+                ),
+                const SizedBox(width: 12),
 
-            // ── Action icons ──────────────────────────────────────────
-            Column(
-              mainAxisSize: MainAxisSize.min,
+                // Address title and description
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Wrap(
+                        crossAxisAlignment: WrapCrossAlignment.center,
+                        spacing: 8,
+                        runSpacing: 4,
+                        children: [
+                          Text(
+                            address.label,
+                            style: AppTextStyle.titleSmallSemiBold.copyWith(
+                              color: AppColor.blackShade1,
+                              fontSize: 15,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          if (isSaving)
+                            const SizedBox(
+                              width: 13,
+                              height: 13,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 1.5,
+                                color: AppColor.blackColor,
+                              ),
+                            )
+                          else if (isSelected)
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                                vertical: 3,
+                              ),
+                              decoration: BoxDecoration(
+                                color: AppColor.lightGreen1Color,
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Text(
+                                'select_location_selected_badge'.tr,
+                                style: AppTextStyle.labelSmallMedium.copyWith(
+                                  color: AppColor.green2Color,
+                                  fontSize: 9,
+                                  letterSpacing: 0.4,
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
+                      const SizedBox(height: 6),
+                      Text(
+                        address.displayAddress,
+                        maxLines: 3,
+                        overflow: TextOverflow.ellipsis,
+                        style: AppTextStyle.bodySmallRegular.copyWith(
+                          color: AppColor.grey2Color,
+                          height: 1.4,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 14),
+
+            // Share, Edit and Delete buttons at the bottom
+            Row(
               children: [
-                _ActionIcon(
-                  imagePath: AppAssets.shareIcon,
-                  color: AppColor.blueColor,
-                  onTap: onShare,
+                Expanded(
+                  child: _buildActionButton(
+                    imagePath: AppAssets.shareIcon,
+                    label: 'Share',
+                    color: AppColor.primaryGrey,
+                    onTap: onShare,
+                  ),
                 ),
-                const SizedBox(height: 6),
-                _ActionIcon(
-                  imagePath: AppAssets.editIcon,
-                  color: const Color(0xFF16A34A),
-                  onTap: onEdit,
+                const SizedBox(width: 10),
+                Expanded(
+                  child: _buildActionButton(
+                    imagePath: AppAssets.editIcon,
+                    label: 'Edit',
+                    color: const Color(0xFF333333),
+                    onTap: onEdit,
+                  ),
                 ),
-                const SizedBox(height: 6),
-                _ActionIcon(
-                  imagePath: AppAssets.deleteIcon,
-                  color: const Color(0xFFDC2626),
-                  onTap: onDelete,
+                const SizedBox(width: 10),
+                Expanded(
+                  child: _buildActionButton(
+                    imagePath: AppAssets.deleteIcon,
+                    label: 'Delete',
+                    color: Colors.red,
+                    onTap: onDelete,
+                  ),
                 ),
               ],
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildActionButton({
+    required String imagePath,
+    required String label,
+    required Color color,
+    required VoidCallback onTap,
+  }) {
+    return Material(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(10),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(10),
+        child: Container(
+          constraints: const BoxConstraints(minHeight: 40),
+          padding: const EdgeInsets.symmetric(
+            horizontal: 8,
+            vertical: 9,
+          ),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(
+              color: AppColor.borderColor.withValues(alpha: 0.35),
+            ),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset(
+                imagePath,
+                height: 16,
+                width: 16,
+                color: color,
+              ),
+              const SizedBox(width: 6),
+              Flexible(
+                child: Text(
+                  label,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppTextStyle.bodySmallMedium.copyWith(
+                    color: color,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -451,7 +853,6 @@ class _ActionIcon extends StatelessWidget {
 
 class _ViewAllButton extends StatelessWidget {
   final VoidCallback onTap;
-
   const _ViewAllButton({required this.onTap});
 
   @override
@@ -462,9 +863,9 @@ class _ViewAllButton extends StatelessWidget {
         width: double.infinity,
         padding: const EdgeInsets.symmetric(vertical: 14),
         decoration: BoxDecoration(
-          color: Color(0xffFAF7F4),
+          color: const Color(0xffF8F8F8),
           borderRadius: BorderRadius.circular(30),
-          border: Border.all(color: AppColor.brownAccentPrimary, width: 0.5),
+          border: Border.all(color: AppColor.blackColor, width: 0.5),
           boxShadow: [
             BoxShadow(
               color: AppColor.shadowGrey.withValues(alpha: 0.3),
@@ -477,7 +878,7 @@ class _ViewAllButton extends StatelessWidget {
           'select_location_view_all'.tr,
           textAlign: TextAlign.center,
           style: AppTextStyle.bodyMediumMedium.copyWith(
-            color: AppColor.brownAccentPrimary,
+            color: AppColor.blackColor,
             fontWeight: FontWeight.w700,
           ),
         ),
@@ -486,56 +887,4 @@ class _ViewAllButton extends StatelessWidget {
   }
 }
 
-// ─── Bottom Buttons ───────────────────────────────────────────────────────────
 
-class _BottomButtons extends StatelessWidget {
-  final SelectLocationController controller;
-
-  const _BottomButtons({required this.controller});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.fromLTRB(16, 12, 16, 20),
-      decoration: const BoxDecoration(color: Color(0xFFF5F5F5)),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          // ── + Add New Address (dashed outline) ──────────────────────
-          GestureDetector(
-            onTap: controller.onAddNewAddress,
-            child: DottedBorder(
-              options: RoundedRectDottedBorderOptions(
-                radius: Radius.circular(30),
-                color: AppColor.brownAccentPrimary,
-              ),
-              child: Container(
-                width: double.infinity,
-                padding: const EdgeInsets.symmetric(vertical: 14),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFFFF8EE),
-                  borderRadius: BorderRadius.circular(30),
-                ),
-                child: Text(
-                  'select_location_add_address_btn'.tr,
-                  textAlign: TextAlign.center,
-                  style: AppTextStyle.buttonLarge.copyWith(
-                    color: AppColor.brownAccentPrimary,
-                  ),
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(height: 10),
-          // ── Confirm Location ────────────────────────────────────────
-          CommonButton(
-            label: 'select_location_confirm_btn'.tr,
-            onTap: controller.onConfirmLocation,
-            backgroundColor: AppColor.brownAccentPrimary,
-            foregroundColor: Colors.white,
-          ),
-        ],
-      ),
-    );
-  }
-}

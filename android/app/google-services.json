@@ -1,40 +1,84 @@
 {
   "project_info": {
-    "project_number": "955827747819",
-    "project_id": "app-69bfa",
-    "storage_bucket": "app-69bfa.firebasestorage.app"
+    "project_number": "957547435039",
+    "project_id": "app-tech-3a417",
+    "storage_bucket": "app-tech-3a417.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:955827747819:android:96cc6ed82a77f5b0cf37ae",
+        "mobilesdk_app_id": "1:957547435039:android:37faa42f25f11fcb12712a",
         "android_client_info": {
-          "package_name": "com.squadonsite.in.squadonsite"
+          "package_name": "com.example.technicianapp"
         }
       },
       "oauth_client": [
         {
-          "client_id": "955827747819-h3p9vbcc9nrv2hknujvsr4bquq1l1tj1.apps.googleusercontent.com",
+          "client_id": "957547435039-9c74psr8j7h9ijve5adc438ktphmqom3.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBHpdFDG1GWV20plAA4LWarhJEhRR-Vbhw"
+          "current_key": "AIzaSyDDHHx0AxU8bqDrzBbO_EwFXLt9fHBHxuY"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "955827747819-h3p9vbcc9nrv2hknujvsr4bquq1l1tj1.apps.googleusercontent.com",
+              "client_id": "957547435039-9c74psr8j7h9ijve5adc438ktphmqom3.apps.googleusercontent.com",
               "client_type": 3
             },
             {
-              "client_id": "955827747819-n6k9cleneohsh4hi2jt2le9nkcr6k510.apps.googleusercontent.com",
+              "client_id": "957547435039-8mocki8tbck4qim32i27o5r0nl82k124.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.squadonsite.in.squadonsite"
+                "bundle_id": "com.aceWebSolution.1App"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:957547435039:android:e7c06b40d9da212412712a",
+        "android_client_info": {
+          "package_name": "com.squadonsite.in"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "957547435039-r4tan0luo0i5ras1dl3381konm9kcu8g.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.squadonsite.in",
+            "certificate_hash": "fd91ebb020af5a1e8ee769e33bcb5c1194cd6cdf"
+          }
+        },
+        {
+          "client_id": "957547435039-9c74psr8j7h9ijve5adc438ktphmqom3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDDHHx0AxU8bqDrzBbO_EwFXLt9fHBHxuY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "957547435039-9c74psr8j7h9ijve5adc438ktphmqom3.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "957547435039-8mocki8tbck4qim32i27o5r0nl82k124.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.aceWebSolution.1App"
               }
             }
           ]

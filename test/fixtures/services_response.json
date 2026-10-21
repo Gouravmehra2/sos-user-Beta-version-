@@ -1,0 +1,262 @@
+{
+    "success": true,
+    "count": 1,
+    "data": {
+        "services": [
+            {
+                "_id": "6ab1a5e4371b87cdfa865f91",
+                "name": "CCTV Installation",
+                "shortDescription": [
+                    "Professional CCTV camera installation",
+                    "Camera positioning and system configuration",
+                    "DVR/NVR setup and security testing"
+                ],
+                "longDescription": "Professional CCTV installation service for homes and businesses. Our technician installs and positions CCTV cameras, connects the cameras to the recording system, configures the DVR or NVR, sets up viewing devices and performs system testing to ensure reliable security monitoring.",
+                "category": {
+                    "_id": "6ab2c0a4371b87cdfa867bc3",
+                    "name": "Home Appliances"
+                },
+                "subcategory": {
+                    "_id": "6ab2c795371b87cdfa867c70",
+                    "name": "CCTV"
+                },
+                "serviceType": "",
+                "status": "active",
+                "isFeatured": true,
+                "serviceDuration": 180,
+                "hasVariants": true,
+                "actualPrice": 0,
+                "discountPercentage": 0,
+                "offerPrice": 0,
+                "variants": [
+                    {
+                        "name": "1-2 Camera Installation",
+                        "sizeCapacity": "1-2",
+                        "unit": "Cameras",
+                        "actualPrice": 149,
+                        "discountPercentage": 10,
+                        "offerPrice": 134,
+                        "duration": 90,
+                        "isActive": true,
+                        "_id": "6ab563152429ecd500201660"
+                    },
+                    {
+                        "name": "3-4 Camera Installation",
+                        "sizeCapacity": "3-4",
+                        "unit": "Cameras",
+                        "actualPrice": 249,
+                        "discountPercentage": 10,
+                        "offerPrice": 224,
+                        "duration": 180,
+                        "isActive": true,
+                        "_id": "6ab563152429ecd500201661"
+                    },
+                    {
+                        "name": "5-8 Camera Installation",
+                        "sizeCapacity": "5-8",
+                        "unit": "Cameras",
+                        "actualPrice": 399,
+                        "discountPercentage": 10,
+                        "offerPrice": 359,
+                        "duration": 300,
+                        "isActive": true,
+                        "_id": "6ab563152429ecd500201662"
+                    }
+                ],
+                "addons": [
+                    {
+                        "name": "DVR/NVR Configuration",
+                        "description": "Configure the DVR or NVR recording system and connected cameras.",
+                        "price": 49,
+                        "image": "",
+                        "isActive": true,
+                        "_id": "6ab563152429ecd500201663"
+                    },
+                    {
+                        "name": "Wi-Fi/Remote Viewing Setup",
+                        "description": "Configure remote CCTV viewing on supported phones and devices.",
+                        "price": 39,
+                        "image": "",
+                        "isActive": true,
+                        "_id": "6ab563152429ecd500201664"
+                    },
+                    {
+                        "name": "Additional Camera Installation",
+                        "description": "Installation and configuration of an additional customer-provided camera.",
+                        "price": 49,
+                        "image": "",
+                        "isActive": true,
+                        "_id": "6ab563152429ecd500201665"
+                    },
+                    {
+                        "name": "CCTV System Testing",
+                        "description": "Additional testing of camera feeds, recording and remote viewing.",
+                        "price": 29,
+                        "image": "",
+                        "isActive": true,
+                        "_id": "6ab563152429ecd500201666"
+                    }
+                ],
+                "includedItems": [
+                    {
+                        "title": "Camera positioning and installation",
+                        "icon": "",
+                        "_id": "6ab563152429ecd500201667"
+                    },
+                    {
+                        "title": "Camera connection",
+                        "icon": "",
+                        "_id": "6ab563152429ecd500201668"
+                    },
+                    {
+                        "title": "DVR/NVR basic configuration",
+                        "icon": "",
+                        "_id": "6ab563152429ecd500201669"
+                    },
+                    {
+                        "title": "Camera viewing setup",
+                        "icon": "",
+                        "_id": "6ab563152429ecd50020166a"
+                    },
+                    {
+                        "title": "System functionality testing",
+                        "icon": "",
+                        "_id": "6ab563152429ecd50020166b"
+                    }
+                ],
+                "excludedItems": [
+                    {
+                        "title": "Purchase of CCTV cameras",
+                        "icon": "",
+                        "_id": "6ab563152429ecd50020166c"
+                    },
+                    {
+                        "title": "DVR/NVR hardware purchase",
+                        "icon": "",
+                        "_id": "6ab563152429ecd50020166d"
+                    },
+                    {
+                        "title": "Electrical wiring installation",
+                        "icon": "",
+                        "_id": "6ab563152429ecd50020166e"
+                    },
+                    {
+                        "title": "Major wall or ceiling construction",
+                        "icon": "",
+                        "_id": "6ab563152429ecd50020166f"
+                    },
+                    {
+                        "title": "Internet service or router purchase",
+                        "icon": "",
+                        "_id": "6ab563152429ecd500201670"
+                    }
+                ],
+                "faqs": [
+                    {
+                        "question": "Do you provide CCTV cameras?",
+                        "answer": "No. The customer must provide the CCTV cameras and required recording equipment unless equipment purchase is arranged separately.",
+                        "order": 0,
+                        "_id": "6ab563152429ecd500201671"
+                    },
+                    {
+                        "question": "Can you set up CCTV viewing on my phone?",
+                        "answer": "Yes. Remote viewing can be configured on supported smartphones and devices.",
+                        "order": 1,
+                        "_id": "6ab563152429ecd500201672"
+                    },
+                    {
+                        "question": "Does CCTV installation include wiring?",
+                        "answer": "Basic cable connection is included. Extensive wiring, concealed wiring or major electrical work may require an additional charge.",
+                        "order": 2,
+                        "_id": "6ab563152429ecd500201673"
+                    },
+                    {
+                        "question": "Will you test the cameras after installation?",
+                        "answer": "Yes. Each installed camera and the recording system are tested after installation.",
+                        "order": 3,
+                        "_id": "6ab563152429ecd500201674"
+                    }
+                ],
+                "featuredImage": "services/featured/7e452a52-37a3-4be4-8828-526196170445.jpeg",
+                "gallery": [
+                    {
+                        "type": "image",
+                        "url": "services/gallery/a1618e28-edbd-4138-b31c-a6baf359d745.jpeg",
+                        "order": 0,
+                        "_id": "6ab5633f2429ecd500201a23"
+                    }
+                ],
+                "requirements": [
+                    {
+                        "title": "CCTV cameras and accessories available",
+                        "image": "",
+                        "_id": "6ab563152429ecd500201675",
+                        "id": "6ab563152429ecd500201675"
+                    },
+                    {
+                        "title": "DVR/NVR available",
+                        "image": "",
+                        "_id": "6ab563152429ecd500201676",
+                        "id": "6ab563152429ecd500201676"
+                    },
+                    {
+                        "title": "Power and network connection available",
+                        "image": "",
+                        "_id": "6ab563152429ecd500201677",
+                        "id": "6ab563152429ecd500201677"
+                    }
+                ],
+                "tools": [
+                    {
+                        "name": "CCTV Installation Tool Kit",
+                        "image": "",
+                        "description": "Professional tools used for CCTV camera mounting and installation.",
+                        "_id": "6ab563152429ecd500201678"
+                    },
+                    {
+                        "name": "CCTV Configuration Software",
+                        "image": "",
+                        "description": "Software used to configure and test CCTV cameras and recording systems.",
+                        "_id": "6ab563152429ecd500201679"
+                    }
+                ],
+                "processSteps": [
+                    {
+                        "stepNumber": 1,
+                        "title": "Site Inspection",
+                        "description": "Our technician reviews the installation area and determines suitable camera positions.",
+                        "image": "",
+                        "_id": "6ab5633f2429ecd500201a29"
+                    },
+                    {
+                        "stepNumber": 2,
+                        "title": "Camera Installation",
+                        "description": "The cameras are securely positioned, mounted and connected to the recording system.",
+                        "image": "",
+                        "_id": "6ab5633f2429ecd500201a2a"
+                    },
+                    {
+                        "stepNumber": 3,
+                        "title": "Configuration & Testing",
+                        "description": "The DVR/NVR, camera feeds and viewing devices are configured and tested.",
+                        "image": "",
+                        "_id": "6ab5633f2429ecd500201a2b"
+                    }
+                ],
+                "isActive": true,
+                "ratingsAverage": 4.5,
+                "ratingsQuantity": 0,
+                "createdAt": "2026-09-24T17:47:15.408Z",
+                "updatedAt": "2026-09-24T17:51:59.340Z",
+                "__v": 0,
+                "price": {
+                    "min": 134,
+                    "max": 359
+                },
+                "duration": 300,
+                "description": "Professional CCTV camera installation Camera positioning and system configuration DVR/NVR setup and security testing",
+                "id": "6ab1a5e4371b87cdfa865f91"
+            }
+        ]
+    }
+}

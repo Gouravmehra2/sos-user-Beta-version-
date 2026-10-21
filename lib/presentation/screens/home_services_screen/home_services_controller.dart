@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:squadonsite/constant/app_assets/app_assets.dart';
-import 'package:squadonsite/presentation/screens/service_screen/service_controller.dart';
+import 'package:squadonsite/presentation/screens/service_screen/model/service_screen_model.dart';
 
 class CategoryItem {
   final String label;
@@ -75,9 +75,9 @@ class HomeServicesController extends GetxController {
   ];
 
   final popularServices = [
-    ServiceModel(name: 'Smart Lock - Video Doorbell Setup', price: '\$10', rating: 4.3, reviews: 124, image: AppAssets.dummyServiceImage),
-    ServiceModel(name: 'Thermostats Installation', price: '\$10', rating: 4.3, reviews: 124, image: AppAssets.dummyServiceImage),
-    ServiceModel(name: 'TV Mounting', price: '\$10', rating: 4.3, reviews: 124, image: AppAssets.dummyServiceImage),
+    ServiceItem(id: '1', name: 'Smart Lock - Video Doorbell Setup', actualPrice: 10, offerPrice: 10, ratingsAverage: 4.3, ratingsQuantity: 124, featuredImage: '', shortDescription: '', longDescription: '', serviceDuration: 0, addons: [], includedItems: [], excludedItems: [], faqs: [], gallery: []),
+    ServiceItem(id: '2', name: 'Thermostats Installation', actualPrice: 10, offerPrice: 10, ratingsAverage: 4.3, ratingsQuantity: 124, featuredImage: '', shortDescription: '', longDescription: '', serviceDuration: 0, addons: [], includedItems: [], excludedItems: [], faqs: [], gallery: []),
+    ServiceItem(id: '3', name: 'TV Mounting', actualPrice: 10, offerPrice: 10, ratingsAverage: 4.3, ratingsQuantity: 124, featuredImage: '', shortDescription: '', longDescription: '', serviceDuration: 0, addons: [], includedItems: [], excludedItems: [], faqs: [], gallery: []),
   ];
 
   List<CategoryItem> get baseCategories =>

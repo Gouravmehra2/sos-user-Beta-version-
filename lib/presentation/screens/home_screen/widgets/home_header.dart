@@ -25,24 +25,34 @@ class HomeHeader extends StatelessWidget {
               children: [
                 Text(
                   '${controller.greeting}, ${controller.userName}',
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
                   style: AppTextStyle.titleLargeSemiBold.copyWith(
-                    color: AppColor.blackShade1,
-                    fontSize: 20
+                    color: Colors.white,
+                    fontSize: 20,
                   ),
                 ),
                 const SizedBox(height: 4),
-                InkWell(onTap: ()=>Get.toNamed(AppRoutes.selectLocationScreen),
+                InkWell(
+                  onTap: () async {
+                    await Get.toNamed(AppRoutes.selectLocationScreen);
+                    await controller.fetchUserProfile();
+                  },
                   child: Row(
                     children: [
-                      Image.asset(AppAssets.locationImage,height: 14,),
+                      Image.asset(
+                        AppAssets.locationImage,
+                        height: 14,
+                        color: Colors.white,
+                      ),
                       const SizedBox(width: 4),
-                      Flexible(
+                      Expanded(
                         child: Text(
                           controller.address,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: AppTextStyle.bodySmallRegular.copyWith(
-                            color: AppColor.coolGrayText,
+                            color: Colors.white,
                           ),
                         ),
                       ),
@@ -54,60 +64,32 @@ class HomeHeader extends StatelessWidget {
           ),
           const SizedBox(width: 12),
           // ── Action icons ───────────────────────────────────────────────
-          Row(
-            children: [
-              // Notification icon
-              GestureDetector(
-                onTap: (){
-                  Get.toNamed(AppRoutes.walletScreen);
-                },
-                child: _CircleIconButton(
-                  child: Stack(
-                    clipBehavior: Clip.none,
-                    children: [
-                      Image.asset(AppAssets.walletImage,height: 24),
-                      Positioned(
-                        right: -2,
-                        top: -2,
-                        child: Container(
-                          width: 8,
-                          height: 8,
-                          decoration: const BoxDecoration(
-                            color: AppColor.brownAccentPrimary,
-                            shape: BoxShape.circle,
-                          ),
-                        ),
-                      ),
-                    ],
+          GestureDetector(
+            onTap: controller.onNotificationsTapped,
+            child: _CircleIconButton(
+              child: Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  Image.asset(
+                    AppAssets.notificationImage,
+                    height: 24,
+                    color: Colors.white,
                   ),
-                ),
-              ),
-              const SizedBox(width: 10),
-              // notification avatar
-              GestureDetector(
-                onTap: controller.onNotificationsTapped,
-                child: _CircleIconButton(
-                  child: Stack(
-                    clipBehavior: Clip.none,
-                    children: [
-                      Image.asset(AppAssets.notificationImage,height: 24),
-                      Positioned(
-                        right: -2,
-                        top: -2,
-                        child: Container(
-                          width: 8,
-                          height: 8,
-                          decoration: const BoxDecoration(
-                            color: AppColor.brownAccentPrimary,
-                            shape: BoxShape.circle,
-                          ),
-                        ),
+                  Positioned(
+                    right: -2,
+                    top: -2,
+                    child: Container(
+                      width: 8,
+                      height: 8,
+                      decoration: const BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.circle,
                       ),
-                    ],
+                    ),
                   ),
-                ),
+                ],
               ),
-            ],
+            ),
           ),
         ],
       ),
@@ -125,15 +107,8 @@ class _CircleIconButton extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(8),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Colors.white.withValues(alpha: 0.20),
         shape: BoxShape.circle,
-        boxShadow: [
-          BoxShadow(
-            color: AppColor.shadowGrey.withValues(alpha: 0.6),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
       ),
       child: Center(child: child),
     );

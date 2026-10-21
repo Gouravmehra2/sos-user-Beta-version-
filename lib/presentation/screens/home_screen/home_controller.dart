@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:squadonsite/constant/common_widgets/app_snackbar.dart';
 import 'package:squadonsite/constant/app_assets/app_assets.dart';
 import 'package:squadonsite/constant/routes/app_routes.dart';
-import 'package:squadonsite/core/services/language_service.dart';
+import 'package:squadonsite/core/services/api_repo.dart';
+import 'package:squadonsite/presentation/screens/home_screen/model/home_screen_model.dart';
+import 'package:squadonsite/presentation/screens/service_screen/model/service_screen_model.dart';
 
 /// Model for a service category tile
 class ServiceCategory {
@@ -52,10 +55,7 @@ class SummerBanner {
   final String imagePath;
   final VoidCallback? onTap;
 
-  const SummerBanner({
-    required this.imagePath,
-    this.onTap,
-  });
+  const SummerBanner({required this.imagePath, this.onTap});
 }
 
 /// Model for a user story card – supports both image and video assets.
@@ -75,15 +75,240 @@ class UserStory {
 }
 
 class HomeController extends GetxController {
-  // ── State ────────────────────────────────────────────────────────────────────
-
-  final String userName = 'Jagritii';
-  final String address = 'CDS Stores, Greenfall Road...';
+  String userName = 'User';
+  String address = 'Your location';
   final RxString searchQuery = ''.obs;
   final TextEditingController searchController = TextEditingController();
-
-  /// Index of the currently visible special offer banner
+  final RxString selectedDateFilter = 'Today'.obs;
+  final List<String> serviceSuggestions = [
+    'AC Repair',
+    'Plumbing',
+    'Electrical',
+    'Carpentry',
+    'Cleaning',
+    'Appliance Repair',
+    'Painting',
+    'Pest Control',
+  ];
+  final RxBool isProfileLoading = false.obs;
+  HomeProfileUser? profile;
   final RxInt offerBannerIndex = 0.obs;
+
+  // Search
+  final RxList<ServiceItem> searchResults = <ServiceItem>[].obs;
+  final RxBool isLoadingSearch = false.obs;
+  final RxBool isLoadingMoreSearch = false.obs;
+  final RxBool hasMoreSearch = false.obs;
+  final RxBool isSearchMode = false.obs;
+  final RxBool showSearchSuggestions = false.obs;
+  Worker? _debounceWorker;
+  final _searchQuery = ''.obs;
+  int _searchVersion = 0;
+  int _searchPage = 1;
+  static const int _pageSize = 10;
+
+  // Featured services
+  final RxList<FeaturedServiceItem> featuredServices =
+      <FeaturedServiceItem>[].obs;
+  final RxBool isLoadingFeatured = false.obs;
+  final RxBool isLoadingMoreFeatured = false.obs;
+  final RxBool hasMoreFeatured = false.obs;
+  int _featuredPage = 1;
+
+  @override
+  void onInit() {
+    super.onInit();
+    final initialProfile = Get.arguments;
+    if (initialProfile is HomeProfileUser) {
+      profile = initialProfile;
+      userName = initialProfile.name.isNotEmpty ? initialProfile.name : 'User';
+      address =
+          initialProfile.defaultAddress?.displayAddress ?? 'Your location';
+    } else {
+      fetchUserProfile();
+    }
+    fetchFeaturedServices();
+    _debounceWorker = debounce(
+      _searchQuery,
+      (String q) => _runSearch(q),
+      time: const Duration(milliseconds: 300),
+    );
+  }
+
+  void onSearchChanged(String value) {
+    _searchVersion++;
+    isLoadingMoreSearch.value = false;
+    _searchQuery.value = value;
+    searchQuery.value = value;
+    if (value.trim().isEmpty) {
+      isLoadingSearch.value = false;
+      isSearchMode.value = false;
+      showSearchSuggestions.value = false;
+      searchResults.clear();
+      hasMoreSearch.value = false;
+    } else {
+      isSearchMode.value = true;
+      showSearchSuggestions.value = true;
+    }
+  }
+
+  void showSearchSuggestionsAgain() {
+    if (isSearchMode.value) showSearchSuggestions.value = true;
+  }
+
+  void hideSearchSuggestions() {
+    showSearchSuggestions.value = false;
+  }
+
+  void clearSearch() {
+    _searchVersion++;
+    isLoadingMoreSearch.value = false;
+    isLoadingSearch.value = false;
+    searchController.clear();
+    _searchQuery.value = '';
+    searchQuery.value = '';
+    isSearchMode.value = false;
+    showSearchSuggestions.value = false;
+    searchResults.clear();
+    hasMoreSearch.value = false;
+  }
+
+  Future<void> _runSearch(String query) async {
+    if (query.trim().isEmpty) return;
+    final version = _searchVersion;
+    _searchPage = 1;
+    hasMoreSearch.value = false;
+    isLoadingSearch.value = true;
+    try {
+      final results = await Get.find<ApiRepo>().searchServices(
+        query.trim(),
+        page: 1,
+        limit: _pageSize,
+      );
+      if (!isClosed && version == _searchVersion) {
+        searchResults.assignAll(results.items);
+        hasMoreSearch.value = results.hasMore && results.items.isNotEmpty;
+      }
+    } catch (_) {
+      if (!isClosed && version == _searchVersion) searchResults.clear();
+    } finally {
+      if (!isClosed && version == _searchVersion) isLoadingSearch.value = false;
+    }
+  }
+
+  Future<void> loadMoreSearchResults() async {
+    final query = _searchQuery.value.trim();
+    if (query.isEmpty ||
+        !hasMoreSearch.value ||
+        isLoadingSearch.value ||
+        isLoadingMoreSearch.value) {
+      return;
+    }
+    final version = _searchVersion;
+    isLoadingMoreSearch.value = true;
+    try {
+      final nextPage = _searchPage + 1;
+      final result = await Get.find<ApiRepo>().searchServices(
+        query,
+        page: nextPage,
+        limit: _pageSize,
+      );
+      if (isClosed || version != _searchVersion) return;
+      final knownIds = searchResults.map((item) => item.id).toSet();
+      final newItems = result.items
+          .where((item) => item.id.isEmpty || knownIds.add(item.id))
+          .toList();
+      searchResults.addAll(newItems);
+      _searchPage = nextPage;
+      hasMoreSearch.value = result.hasMore && newItems.isNotEmpty;
+    } catch (_) {
+      // Keep already loaded results available if a later page fails.
+    } finally {
+      if (!isClosed && version == _searchVersion) {
+        isLoadingMoreSearch.value = false;
+      }
+    }
+  }
+
+  Future<void> refreshData() async {
+    await Future.wait([fetchUserProfile(), fetchFeaturedServices()]);
+  }
+
+  /// Featured cards are summaries; resolve the full record before opening
+  /// details or booking so variants and add-ons are available in both flows.
+  Future<ServiceItem> loadFeaturedService(FeaturedServiceItem featured) async {
+    if (featured.id.isEmpty) {
+      throw StateError('Service ID is missing.');
+    }
+    final services = await Get.find<ApiRepo>().searchServices(
+      featured.name,
+      page: 1,
+      limit: _pageSize,
+    );
+    for (final service in services.items) {
+      if (service.id == featured.id) return service;
+    }
+    throw StateError('This service is currently unavailable.');
+  }
+
+  Future<void> fetchFeaturedServices() => _fetchFeaturedServices(reset: true);
+
+  Future<void> _fetchFeaturedServices({required bool reset}) async {
+    if (isLoadingFeatured.value || isLoadingMoreFeatured.value) return;
+    if (reset) {
+      _featuredPage = 1;
+      hasMoreFeatured.value = false;
+      isLoadingFeatured.value = true;
+    } else {
+      if (!hasMoreFeatured.value) return;
+      isLoadingMoreFeatured.value = true;
+    }
+    try {
+      final page = reset ? 1 : _featuredPage + 1;
+      final results = await Get.find<ApiRepo>().getFeaturedServices(
+        page: page,
+        limit: _pageSize,
+      );
+      if (reset) {
+        featuredServices.assignAll(results.items);
+        hasMoreFeatured.value = results.hasMore && results.items.isNotEmpty;
+      } else {
+        final knownIds = featuredServices.map((item) => item.id).toSet();
+        final newItems = results.items
+            .where((item) => item.id.isEmpty || knownIds.add(item.id))
+            .toList();
+        featuredServices.addAll(newItems);
+        hasMoreFeatured.value = results.hasMore && newItems.isNotEmpty;
+      }
+      _featuredPage = page;
+    } catch (_) {
+      // silently fail — carousel stays empty
+    } finally {
+      isLoadingFeatured.value = false;
+      isLoadingMoreFeatured.value = false;
+    }
+  }
+
+  Future<void> loadMoreFeaturedServices() =>
+      _fetchFeaturedServices(reset: false);
+
+  Future<void> fetchUserProfile() async {
+    if (isProfileLoading.value) return;
+
+    isProfileLoading.value = true;
+    try {
+      final response = await Get.find<ApiRepo>().meProfile();
+      final user = response.data.user;
+      profile = user;
+      userName = user.name.isNotEmpty ? user.name : 'User';
+      address = user.defaultAddress?.displayAddress ?? 'Your location';
+      update();
+    } catch (error) {
+      AppSnackbar.show('Profile', 'Unable to load profile details.');
+    } finally {
+      isProfileLoading.value = false;
+    }
+  }
 
   // ── Data ─────────────────────────────────────────────────────────────────────
 
@@ -150,15 +375,9 @@ class HomeController extends GetxController {
   ];
 
   final List<SummerBanner> summerBanners = [
-    SummerBanner(
-      imagePath: AppAssets.bannerImage1,
-    ),
-    SummerBanner(
-      imagePath: AppAssets.bannerImage2,
-    ),
-    SummerBanner(
-      imagePath: AppAssets.bannerImage3,
-    ),
+    SummerBanner(imagePath: AppAssets.bannerImage1),
+    SummerBanner(imagePath: AppAssets.bannerImage2),
+    SummerBanner(imagePath: AppAssets.bannerImage3),
   ];
 
   List<UserStory> get userStories => [
@@ -184,10 +403,6 @@ class HomeController extends GetxController {
     if (hour < 12) return 'home_greeting_morning'.tr;
     if (hour < 17) return 'home_greeting_afternoon'.tr;
     return 'home_greeting_evening'.tr;
-  }
-
-  void onSearchChanged(String value) {
-    searchQuery.value = value;
   }
 
   void onOfferPageChanged(int index) {
@@ -246,6 +461,7 @@ class HomeController extends GetxController {
   @override
   void onClose() {
     searchController.dispose();
+    _debounceWorker?.dispose();
     super.onClose();
   }
 }

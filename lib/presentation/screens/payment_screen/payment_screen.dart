@@ -14,7 +14,7 @@ class PaymentScreen extends GetView<PaymentController> {
     return MyScaffold(
       backgroundColor: const Color(0xffF6F6F6),
       appBar: AppBar(
-        backgroundColor: AppColor.brownAccentPrimary,
+        backgroundColor: AppColor.blackColor,
         iconTheme: const IconThemeData(color: Colors.white),
         title: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Text('Payment Options', style: AppTextStyle.titleLargeBold.copyWith(color: Colors.white)),
@@ -33,7 +33,7 @@ class PaymentScreen extends GetView<PaymentController> {
                   Text('To Pay: ', style: AppTextStyle.bodyMediumRegular.copyWith(color: AppColor.blackShade1)),
                   Text('\$${controller.total.toStringAsFixed(0)}', style: AppTextStyle.titleSmallSemiBold.copyWith(color: Colors.green)),
                 ]),
-                GestureDetector(onTap: () {}, child: Text('View Invoice', style: AppTextStyle.bodySmallMedium.copyWith(color: AppColor.brownAccentPrimary))),
+                GestureDetector(onTap: () {}, child: Text('View Invoice', style: AppTextStyle.bodySmallMedium.copyWith(color: AppColor.blackColor))),
               ],
             ),
           ),
@@ -58,7 +58,7 @@ class PaymentScreen extends GetView<PaymentController> {
                 CommonButton(
                   label: 'Confirm & Book',
                   onTap: controller.confirmPayment,
-                  backgroundColor: AppColor.brownAccentPrimary,
+                  backgroundColor: AppColor.blackColor,
                   foregroundColor: Colors.white,
                 ),
               ],
@@ -111,7 +111,7 @@ class _PaymentRow extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
         child: Row(children: [
-          const Icon(Icons.payment, size: 20, color: AppColor.brownAccentPrimary),
+          const Icon(Icons.payment, size: 20, color: AppColor.blackColor),
           const SizedBox(width: 12),
           Expanded(child: Text(label, style: AppTextStyle.bodyMediumRegular.copyWith(color: AppColor.blackShade1))),
           trailing ?? const Icon(Icons.chevron_right, color: AppColor.coolGrayText, size: 20),
@@ -128,17 +128,17 @@ class _WalletSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         RichText(text: TextSpan(children: [
-          TextSpan(text: '1APP ', style: AppTextStyle.titleSmallSemiBold.copyWith(color: AppColor.brownAccentPrimary)),
+          TextSpan(text: '1APP ', style: AppTextStyle.titleSmallSemiBold.copyWith(color: AppColor.blackColor)),
           TextSpan(text: 'Wallet', style: AppTextStyle.titleSmallSemiBold.copyWith(color: AppColor.blackShade1, fontStyle: FontStyle.italic)),
         ])),
         const SizedBox(height: 8),
         _WhiteCard(child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
           child: Row(children: [
-            Container(padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2), decoration: BoxDecoration(color: AppColor.brownAccentPrimary, borderRadius: BorderRadius.circular(4)), child: Text('1APP', style: AppTextStyle.labelSmallMedium.copyWith(color: Colors.white))),
+            Container(padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2), decoration: BoxDecoration(color: AppColor.blackColor, borderRadius: BorderRadius.circular(4)), child: Text('1APP', style: AppTextStyle.labelSmallMedium.copyWith(color: Colors.white))),
             const SizedBox(width: 10),
             const Expanded(child: Text('Unlock 1APP Wallet', style: TextStyle(fontWeight: FontWeight.w500))),
-            Text('LINK >', style: AppTextStyle.bodySmallMedium.copyWith(color: AppColor.brownAccentPrimary)),
+            Text('LINK >', style: AppTextStyle.bodySmallMedium.copyWith(color: AppColor.blackColor)),
           ]),
         )),
       ],
@@ -162,13 +162,13 @@ class _UpiSection extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
               child: Row(children: [
-                const Icon(Icons.account_balance_outlined, size: 20, color: AppColor.brownAccentPrimary),
+                const Icon(Icons.account_balance_outlined, size: 20, color: AppColor.blackColor),
                 const SizedBox(width: 12),
                 Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   Text('Pay by any UPI app', style: AppTextStyle.bodyMediumRegular.copyWith(color: AppColor.blackShade1)),
                   Text('Use any UPI app on the phone to pay', style: AppTextStyle.bodySmallRegular.copyWith(color: AppColor.coolGrayText)),
                 ])),
-                Text('LINK >', style: AppTextStyle.bodySmallMedium.copyWith(color: AppColor.brownAccentPrimary)),
+                Text('LINK >', style: AppTextStyle.bodySmallMedium.copyWith(color: AppColor.blackColor)),
               ]),
             ),
             const Divider(height: 1, color: AppColor.lightGreyColor, indent: 14, endIndent: 14),
@@ -187,7 +187,7 @@ class _UpiSection extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
               child: Row(children: [
-                const Icon(Icons.qr_code_2, size: 20, color: AppColor.brownAccentPrimary),
+                const Icon(Icons.qr_code_2, size: 20, color: AppColor.blackColor),
                 const SizedBox(width: 12),
                 const Expanded(child: Text('Pay via QR Code')),
                 Container(padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2), decoration: BoxDecoration(color: Colors.green, borderRadius: BorderRadius.circular(4)), child: Text('NEW', style: AppTextStyle.labelSmallMedium.copyWith(color: Colors.white))),
@@ -213,13 +213,13 @@ class _CardSection extends StatelessWidget {
         _WhiteCard(child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
           child: Row(children: [
-            const Icon(Icons.add_circle_outline, size: 20, color: AppColor.brownAccentPrimary),
+            const Icon(Icons.add_circle_outline, size: 20, color: AppColor.blackColor),
             const SizedBox(width: 12),
             Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text('Add New Card', style: AppTextStyle.bodyMediumRegular.copyWith(color: AppColor.brownAccentPrimary)),
+              Text('Add New Card', style: AppTextStyle.bodyMediumRegular.copyWith(color: AppColor.blackColor)),
               Text('Visa, Mastercard, Rupay & more', style: AppTextStyle.bodySmallRegular.copyWith(color: AppColor.coolGrayText)),
             ])),
-            Text('LINK >', style: AppTextStyle.bodySmallMedium.copyWith(color: AppColor.brownAccentPrimary)),
+            Text('LINK >', style: AppTextStyle.bodySmallMedium.copyWith(color: AppColor.blackColor)),
           ]),
         )),
       ],
@@ -242,7 +242,7 @@ class _NetbankingSection extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: banks.map((b) => Column(children: [
-                Container(width: 40, height: 40, decoration: BoxDecoration(color: const Color(0xffF5F5F5), borderRadius: BorderRadius.circular(8)), child: Center(child: Text(b.split('\n')[0][0], style: AppTextStyle.titleSmallSemiBold.copyWith(color: AppColor.brownAccentPrimary)))),
+                Container(width: 40, height: 40, decoration: BoxDecoration(color: const Color(0xffF5F5F5), borderRadius: BorderRadius.circular(8)), child: Center(child: Text(b.split('\n')[0][0], style: AppTextStyle.titleSmallSemiBold.copyWith(color: AppColor.blackColor)))),
                 const SizedBox(height: 4),
                 Text(b, textAlign: TextAlign.center, style: AppTextStyle.labelSmallRegular.copyWith(color: AppColor.coolGrayText)),
               ])).toList(),
@@ -251,8 +251,8 @@ class _NetbankingSection extends StatelessWidget {
             GestureDetector(
               onTap: () {},
               child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                const Icon(Icons.keyboard_arrow_down, color: AppColor.brownAccentPrimary, size: 18),
-                Text('View More Bank', style: AppTextStyle.bodySmallMedium.copyWith(color: AppColor.brownAccentPrimary)),
+                const Icon(Icons.keyboard_arrow_down, color: AppColor.blackColor, size: 18),
+                Text('View More Bank', style: AppTextStyle.bodySmallMedium.copyWith(color: AppColor.blackColor)),
               ]),
             ),
           ]),
@@ -283,7 +283,7 @@ class _CashOnDelivery extends StatelessWidget {
               value: true,
               groupValue: controller.cashOnDelivery.value,
               onChanged: (v) => controller.cashOnDelivery.value = true,
-              activeColor: AppColor.brownAccentPrimary,
+              activeColor: AppColor.blackColor,
             )),
           ]),
         )),

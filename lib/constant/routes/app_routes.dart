@@ -1,19 +1,21 @@
 class AppRoutes {
-
   static String selectLocationScreen = '/selectLocationScreen';
   static String splashScreen = '/splashScreen';
   static String onboardingScreen = '/onboardingScreen';
   static String dashboardScreen = '/dashboardScreen';
+  static String bookingHistoryScreen = '/bookingHistoryScreen';
   static String loginScreen = '/loginScreen';
   static String signUpScreen = '/signUpScreen';
   static String otpScreen = '/otpScreen';
   static String forgotPasswordScreen = '/forgotPasswordScreen';
+  static String resetPasswordScreen = '/resetPasswordScreen';
   static String emailLoginScreen = '/emailLoginScreen';
   static String locationPermissionScreen = '/locationPermissionScreen';
   static String locationDetailScreen = '/locationDetailScreen';
   static String mapScreen = '/mapScreen';
   static String profileScreen = '/profileScreen';
   static String personalInformationScreen = '/personalInformationScreen';
+  static String termsConditionsScreen = '/termsConditionsScreen';
   static String privacyPolicyScreen = '/privacyPolicyScreen';
   static String bookingSafetyScreen = '/bookingSafetyScreen';
   static String supportScreen = '/supportScreen';
@@ -31,9 +33,13 @@ class AppRoutes {
   static String tipTechnicianScreen = '/tipTechnicianScreen';
   static String notificationScreen = '/notificationScreen';
   static String securityScreen = '/securityScreen';
+  static String changePasswordScreen = '/changePasswordScreen';
   static String walletScreen = '/walletScreen';
   static String addMoneyScreen = '/addMoneyScreen';
   static String sosScreen = '/sosScreen';
   static String couponScreen = '/couponScreen';
   static String homeServicesScreen = '/homeServicesScreen';
+  static String technicianHomeScreen = '/technicianHomeScreen';
+  static String mapPickerScreen = '/mapPickerScreen';
+  static String addressFormScreen = '/addressFormScreen';
 }

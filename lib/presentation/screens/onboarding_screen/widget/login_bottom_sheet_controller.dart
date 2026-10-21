@@ -1,5 +1,7 @@
+import 'package:squadonsite/core/services/google_auth_flow.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:squadonsite/constant/common_widgets/app_snackbar.dart';
 import 'package:squadonsite/core/services/social_auth_service.dart';
 
 class LoginBottomSheetController extends GetxController {
@@ -19,7 +21,7 @@ class LoginBottomSheetController extends GetxController {
           // TODO: send user.idToken to your backend, then navigate
           debugPrint('[LoginBottomSheet] Apple user: ${user.uid}');
         },
-        onFailure: (msg) => Get.snackbar('sign_in_failed'.tr, msg),
+        onFailure: (msg) => AppSnackbar.show('sign_in_failed'.tr, msg),
         onCancelled: () {},
       );
     } finally {
@@ -32,15 +34,7 @@ class LoginBottomSheetController extends GetxController {
 
     isGoogleLoading.value = true;
     try {
-      final result = await _socialAuth.signInWithGoogle();
-      result.fold(
-        onSuccess: (user) {
-          // TODO: send user.idToken to your backend, then navigate
-          debugPrint('[LoginBottomSheet] Google user: ${user.email}');
-        },
-        onFailure: (msg) => Get.snackbar('sign_in_failed'.tr, msg),
-        onCancelled: () {},
-      );
+      await GoogleAuthFlow.run();
     } finally {
       isGoogleLoading.value = false;
     }

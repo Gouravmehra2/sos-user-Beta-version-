@@ -57,7 +57,7 @@ class CommonPinInputField extends StatefulWidget {
   /// Border colour when idle. Defaults to [AppColor.lightGreyColor].
   final Color borderColor;
 
-  /// Border colour when a cell is focused. Defaults to [AppColor.brownAccentPrimary].
+  /// Border colour when a cell is focused. Defaults to [AppColor.blackColor].
   final Color focusedBorderColor;
 
   /// Border colour when a cell is filled. Defaults to [AppColor.blackShade1].
@@ -94,7 +94,7 @@ class CommonPinInputField extends StatefulWidget {
     this.borderWidth = 1.4,
     this.backgroundColor = Colors.white,
     this.borderColor = AppColor.lightGreyColor,
-    this.focusedBorderColor = AppColor.brownAccentPrimary,
+    this.focusedBorderColor = AppColor.blackColor,
     this.filledBorderColor = AppColor.blackShade1,
     this.errorBorderColor = Colors.red,
     this.digitStyle,
@@ -136,8 +136,7 @@ class _CommonPinInputFieldState extends State<CommonPinInputField> {
 
   // ── Value helpers ─────────────────────────────────────────────────────────
 
-  String get _currentValue =>
-      _controllers.map((c) => c.text).join();
+  String get _currentValue => _controllers.map((c) => c.text).join();
 
   bool get _isFilled => _currentValue.length == widget.length;
 
@@ -189,7 +188,9 @@ class _CommonPinInputFieldState extends State<CommonPinInputField> {
       _controllers[i].text = digits[i];
     }
     // Focus the cell after the last pasted digit.
-    final nextFocus = digits.length < widget.length ? digits.length : widget.length - 1;
+    final nextFocus = digits.length < widget.length
+        ? digits.length
+        : widget.length - 1;
     _focusNodes[nextFocus].requestFocus();
 
     final pin = _currentValue;
@@ -260,12 +261,13 @@ class _CommonPinInputFieldState extends State<CommonPinInputField> {
 
   @override
   Widget build(BuildContext context) {
-    final resolvedDigitStyle = (widget.digitStyle ??
-            AppTextStyle.titleSmallMedium.copyWith(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ))
-        .copyWith(color: AppColor.blackShade1);
+    final resolvedDigitStyle =
+        (widget.digitStyle ??
+                AppTextStyle.titleSmallMedium.copyWith(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ))
+            .copyWith(color: AppColor.blackShade1);
 
     return FormField<String>(
       validator: _validate,
@@ -286,8 +288,11 @@ class _CommonPinInputFieldState extends State<CommonPinInputField> {
             LayoutBuilder(
               builder: (context, constraints) {
                 final totalSpacing = widget.spacing * (widget.length - 1);
-                final maxCellSize = (constraints.maxWidth - totalSpacing) / widget.length;
-                final cellSize = maxCellSize < widget.cellSize ? maxCellSize : widget.cellSize;
+                final maxCellSize =
+                    (constraints.maxWidth - totalSpacing) / widget.length;
+                final cellSize = maxCellSize < widget.cellSize
+                    ? maxCellSize
+                    : widget.cellSize;
                 return Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: List.generate(widget.length, (index) {
@@ -399,11 +404,11 @@ class _PinCell extends StatelessWidget {
             style: digitStyle,
             inputFormatters: [FilteringTextInputFormatter.digitsOnly],
             onChanged: onChanged,
-            decoration: const InputDecoration(
-              border: InputBorder.none,
+            decoration: InputDecoration(
+              border: OutlineInputBorder(borderRadius: BorderRadius.circular(30)),
               counterText: '',
               isDense: true,
-              contentPadding: EdgeInsets.zero,
+              // contentPadding: EdgeInsets.zero,
             ),
           ),
         ),

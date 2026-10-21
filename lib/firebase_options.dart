@@ -50,21 +50,18 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyBHpdFDG1GWV20plAA4LWarhJEhRR-Vbhw',
-    appId: '1:955827747819:android:96cc6ed82a77f5b0cf37ae',
-    messagingSenderId: '955827747819',
-    projectId: 'app-69bfa',
-    storageBucket: 'app-69bfa.firebasestorage.app',
+    apiKey: 'AIzaSyDDHHx0AxU8bqDrzBbO_EwFXLt9fHBHxuY',
+    appId: '1:957547435039:android:e7c06b40d9da212412712a',
+    messagingSenderId: '957547435039',
+    projectId: 'app-tech-3a417',
+    storageBucket: 'app-tech-3a417.firebasestorage.app',
   );
-
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyCrFZrk3-eo7QNsH7GdaE9kZwhtaEWEpM0',
-    appId: '1:955827747819:ios:408aa903aac43d7dcf37ae',
-    messagingSenderId: '955827747819',
-    projectId: 'app-69bfa',
-    storageBucket: 'app-69bfa.firebasestorage.app',
-    iosClientId: '955827747819-n6k9cleneohsh4hi2jt2le9nkcr6k510.apps.googleusercontent.com',
-    iosBundleId: 'com.squadonsite.in.squadonsite',
+    apiKey: 'AIzaSyD7XkIP3qfp8CVgLEgaaR0IkiXFSwWl-nM',
+    appId: '1:957547435039:ios:bfcc1f056b067ea712712a',
+    messagingSenderId: '957547435039',
+    projectId: 'app-tech-3a417',
+    storageBucket: 'app-tech-3a417.firebasestorage.app',
+    iosBundleId: 'com.sosuser.in',
   );
-
 }

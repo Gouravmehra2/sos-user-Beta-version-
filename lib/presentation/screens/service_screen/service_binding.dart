@@ -4,6 +4,6 @@ import 'package:squadonsite/presentation/screens/service_screen/service_controll
 class ServiceBinding extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut(() => ServiceController());
+    Get.lazyPut<ServiceController>(() => ServiceController(), fenix: true);
   }
 }

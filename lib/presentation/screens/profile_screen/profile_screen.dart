@@ -1,6 +1,9 @@
+import 'package:squadonsite/presentation/screens/plans_screen/plans_controller.dart';
+import 'subscription_purchase_cards.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:squadonsite/constant/common_widgets/app_snackbar.dart';
 import 'package:squadonsite/constant/app_assets/app_assets.dart';
 import 'package:squadonsite/constant/app_color/app_color.dart';
 import 'package:squadonsite/constant/app_text_style/app_text_style.dart';
@@ -12,32 +15,46 @@ class ProfileScreen extends GetView<ProfileController> {
   ProfileScreen({super.key});
 
   @override
-  var controller = Get.put(ProfileController());
+  final controller = Get.isRegistered<ProfileController>()
+      ? Get.find<ProfileController>()
+      : Get.put(ProfileController());
 
   @override
   Widget build(BuildContext context) {
-    return MyScaffold(
-      backgroundColor: const Color(0xffF6F6F6),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            _buildHeader(),
-            const SizedBox(height: 50),
-            buildProfileInfo(name: 'Gourav', memberSince: '2019'),
-            const SizedBox(height: 20),
-            _QuickActions(),
-            const SizedBox(height: 20),
-            _SubscriptionCard(),
-            const SizedBox(height: 20),
-            _WalletCouponRow(),
-            const SizedBox(height: 20),
-            _SettingsCard(),
-            const SizedBox(height: 20),
-            _ReferEarnSection(),
-            const SizedBox(height: 20),
-            _LogoutButton(),
-            const SizedBox(height: 32),
-          ],
+    Localizations.localeOf(context);
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.light,
+        statusBarBrightness: Brightness.dark,
+      ),
+      child: MyScaffold(
+        backgroundColor: const Color(0xffF6F6F6),
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              _buildHeader(),
+              const SizedBox(height: 40),
+              Obx(
+                    () => buildProfileInfo(
+                  name: controller.userName.value.isEmpty
+                      ? 'nav_profile'.tr
+                      : controller.userName.value,
+                  memberSince: controller.memberSince.value,
+                ),
+              ),
+              const SizedBox(height: 20),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: SubscriptionPurchaseCards(
+                  controller: PlansController.ensure(),
+                ),
+              ),
+              const SizedBox(height: 20),
+              _SettingsCard(),
+              const SizedBox(height: 20),
+            ],
+          ),
         ),
       ),
     );
@@ -57,18 +74,12 @@ class ProfileScreen extends GetView<ProfileController> {
                 style: AppTextStyle.bodyLargeRegular.copyWith(
                   fontSize: 18,
                   color: Colors.black,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
             ),
           ],
         ).paddingSymmetric(horizontal: 10),
-        Text(
-          '${'profile_member_since'.tr} $memberSince',
-          style: AppTextStyle.bodyLargeRegular.copyWith(
-            fontSize: 14,
-            color: Colors.grey,
-          ),
-        ),
       ],
     );
   }
@@ -85,7 +96,7 @@ class ProfileScreen extends GetView<ProfileController> {
           width: Get.width,
           height: headerHeight,
           decoration: BoxDecoration(
-            color: AppColor.brownAccentPrimary,
+            color: AppColor.blackColor,
             borderRadius: BorderRadius.only(
               bottomLeft: Radius.circular(Get.width * 0.10),
               bottomRight: Radius.circular(Get.width * 0.10),
@@ -100,91 +111,69 @@ class ProfileScreen extends GetView<ProfileController> {
             decoration: BoxDecoration(
               color: Colors.white,
               shape: BoxShape.circle,
-              border: Border.all(
-                color: AppColor.brownAccentPrimary,
-                width: 1.5,
-              ),
+              border: Border.all(color: AppColor.blackColor, width: 1.5),
             ),
-            child: Image.asset(AppAssets.onboardingImage2),
+            child: Obx(() {
+              final localImage = controller.profileImage.value;
+              final remoteUrl = controller.profileImageUrl.value;
+              if (localImage != null) {
+                return ClipOval(
+                  child: Image.file(localImage, fit: BoxFit.cover),
+                );
+              }
+              if (Uri.tryParse(remoteUrl)?.hasAbsolutePath == true &&
+                  (remoteUrl.startsWith('http://') ||
+                      remoteUrl.startsWith('https://'))) {
+                return ClipOval(
+                  child: Image.network(
+                    remoteUrl,
+                    fit: BoxFit.cover,
+                    errorBuilder: (_, error, stackTrace) => Image.asset(
+                      AppAssets.onboardingImage2,
+                      fit: BoxFit.cover,
+                    ),
+                    loadingBuilder: (context, child, progress) =>
+                    progress == null
+                        ? child
+                        : const Center(
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    ),
+                  ),
+                );
+              }
+              return ClipOval(
+                child: Image.asset(
+                  AppAssets.onboardingImage2,
+                  fit: BoxFit.cover,
+                ),
+              );
+            }),
           ),
         ),
-        // Positioned(
-        //   bottom: -(profileSize * 0.40),
-        //   left: 0,
-        //   right: 0,
-        //   child: Container(
-        //     padding: EdgeInsets.all(6),
-        //     decoration: BoxDecoration(
-        //       color: Colors.white,
-        //       shape: BoxShape.circle,
-        //       border: Border.all(
-        //         color: AppColor.brownAccentPrimary,
-        //         width: 1.5,
-        //       ),
-        //     ),
-        //     child: Icon(
-        //       Icons.edit,
-        //       size: 15,
-        //       color: AppColor.brownAccentPrimary,
-        //     ),
-        //   ),
-        // ),
+        Positioned(
+          right: 10,
+          bottom: 20,
+          child: _SupportAction().paddingOnly(right: 10),
+        ),
       ],
     );
   }
 }
 
-// ─── Quick Actions ─────────────────────────────────────────────────────────────
-
-class _QuickActions extends StatelessWidget {
-  const _QuickActions();
+class _SupportAction extends StatelessWidget {
+  const _SupportAction();
 
   @override
   Widget build(BuildContext context) {
-    final items = [
-      _ActionItem(icon: Icons.calendar_today_outlined, labelKey: 'profile_quick_bookings'),
-      _ActionItem(icon: Icons.payment_outlined, labelKey: 'profile_quick_payment'),
-      _ActionItem(icon: Icons.location_on_outlined, labelKey: 'profile_quick_addresses'),
-      _ActionItem(icon: Icons.headset_mic_outlined, labelKey: 'profile_quick_support', route: AppRoutes.supportScreen),
-    ];
-
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: items,
-    ).paddingSymmetric(horizontal: 10);
-  }
-}
-
-class _ActionItem extends StatelessWidget {
-  final IconData icon;
-  final String labelKey;
-  final String? route;
-
-  const _ActionItem({required this.icon, required this.labelKey, this.route});
-
-  @override
-  Widget build(BuildContext context) {
+    Localizations.localeOf(context);
     return GestureDetector(
-      onTap: () { if (route != null) Get.toNamed(route!); },
+      onTap: () => Get.toNamed(
+        AppRoutes.chatSupportScreen,
+      ) /*Get.toNamed(AppRoutes.supportScreen)*/,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Container(
-            padding: EdgeInsets.all(15),
-            decoration: BoxDecoration(
-              color: const Color(0xFFFFF8EC),
-              shape: BoxShape.circle,
-            ),
-            child: Icon(icon, color: AppColor.brownAccentPrimary, size: 24),
-          ),
-          const SizedBox(height: 6),
-          Text(
-            labelKey.tr,
-            style: AppTextStyle.labelSmallMedium.copyWith(
-              color: AppColor.blackColor2,
-              fontSize: 12,
-            ),
-          ),
+          Icon(Icons.headset_mic_outlined, color: Colors.white, size: 24),
         ],
       ),
     );
@@ -193,214 +182,32 @@ class _ActionItem extends StatelessWidget {
 
 // ─── Subscription Card ────────────────────────────────────────────────────────
 
-class _SubscriptionCard extends GetView<ProfileController> {
-  const _SubscriptionCard();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16),
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: AppColor.brownAccentPrimary,
-        borderRadius: BorderRadius.circular(20),
-        gradient: AppColor.subscriptionCardGradient
-      ),
-      child: Stack(
-        children: [
-          Positioned(
-            right: -10,
-            top: 0,
-            child: Opacity(
-              opacity: 0.15,
-              child: Icon(Icons.workspace_premium, size: 80, color: Colors.white),
-            ),
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Obx(
-                () => Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.2),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Text(
-                    controller.subscriptionStatus.value,
-                    style: AppTextStyle.labelSmallMedium.copyWith(
-                      color: Colors.white,
-                      letterSpacing: 1,
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 10),
-              Obx(
-                () => Text(
-                  controller.subscriptionName.value,
-                  style: AppTextStyle.headlineLargeBold.copyWith(
-                    color: Colors.white,
-                    fontSize: 28,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  GestureDetector(
-                    onTap: controller.onViewBenefits,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
-                      decoration: BoxDecoration(
-                        color: AppColor.brownAccentPrimary,
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(color: Colors.black.withValues(alpha: 0.4)),
-                      ),
-                      child: Text(
-                        'profile_view_benefits'.tr,
-                        style: AppTextStyle.buttonSmall.copyWith(color: Colors.white),
-                      ),
-                    ),
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Text(
-                        'profile_savings_label'.tr,
-                        style: AppTextStyle.labelSmallRegular.copyWith(
-                          color: Colors.white70,
-                          fontSize: 9,
-                        ),
-                      ),
-                      Obx(
-                        () => Text(
-                          controller.savingsThisMonth.value,
-                          style: AppTextStyle.headlineSmallSemiBold.copyWith(
-                            color: Colors.white,
-                            fontSize: 22,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-// ─── Wallet & Coupon Row ──────────────────────────────────────────────────────
-
-class _WalletCouponRow extends GetView<ProfileController> {
-  const _WalletCouponRow();
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Row(
-        children: [
-          Expanded(
-            child: _PillCard(
-              imagePath: AppAssets.walletImage,
-              imageHeight: 25.0,
-              labelWidget: Obx(
-                () => Text(
-                  '${'profile_wallet'.tr}: ${controller.walletBalance.value}',
-                  style: AppTextStyle.titleSmallSemiBold.copyWith(
-                    color: AppColor.blackShade1,
-                  ),
-                ),
-              ),
-              onTap: () {
-                Get.toNamed(AppRoutes.walletScreen);
-              },
-            ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: _PillCard(
-              imageHeight: 23.0,
-              imagePath: AppAssets.couponImage,
-              labelWidget: Obx(
-                () => Text(
-                  '${'profile_coupons'.tr} (${controller.couponCount.value})',
-                  style: AppTextStyle.titleSmallSemiBold.copyWith(
-                    color: AppColor.blackShade1,
-                  ),
-                ),
-              ),
-              onTap: () {
-                Get.toNamed(AppRoutes.couponScreen);
-              },
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _PillCard extends StatelessWidget {
-  final Widget labelWidget;
-  final VoidCallback onTap;
-  final String imagePath;
-  final double imageHeight;
-
-  const _PillCard({ required this.labelWidget, required this.onTap,required this.imagePath,this.imageHeight = 20});
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(30),
-          border: Border.all(color: AppColor.brownAccentPrimary, width: 0.5),
-        ),
-        child: Row(
-          children: [
-            Image.asset(imagePath,height: imageHeight,color: AppColor.brownAccentPrimary),
-            const SizedBox(width: 8),
-            Flexible(child: labelWidget),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-// ─── Settings Card ────────────────────────────────────────────────────────────
-
 class _SettingsCard extends GetView<ProfileController> {
   const _SettingsCard();
 
   @override
   Widget build(BuildContext context) {
+    Localizations.localeOf(context);
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColor.brownAccentPrimary, width: 0.5),
+        border: Border.all(color: AppColor.blackColor, width: 0.5),
       ),
       child: Column(
         children: [
           _SettingsTile(
             icon: Icons.person_outline,
             label: 'profile_settings_personal'.tr,
-            trailing: const Icon(Icons.chevron_right, color: AppColor.brownAccentPrimary, size: 20),
-            onTap: () {
-              Get.toNamed(AppRoutes.personalInformationScreen);
+            trailing: const Icon(
+              Icons.chevron_right,
+              color: AppColor.blackColor,
+              size: 20,
+            ),
+            onTap: () async {
+              await Get.toNamed(AppRoutes.personalInformationScreen);
+              await controller.loadProfile();
             },
           ),
           _buildDivider(),
@@ -408,12 +215,12 @@ class _SettingsCard extends GetView<ProfileController> {
             icon: Icons.notifications_none_outlined,
             label: 'profile_settings_notifications'.tr,
             trailing: Obx(
-              () => Switch(
+                  () => Switch(
                 value: controller.notificationsEnabled.value,
                 onChanged: (v) => controller.notificationsEnabled.value = v,
-                activeColor: AppColor.brownAccentPrimary,
+                activeThumbColor: AppColor.blackColor,
                 materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                activeTrackColor: Color(0xffFFEBC8),
+                activeTrackColor: Color(0xffEEEEEE),
               ),
             ),
             onTap: () {},
@@ -422,48 +229,52 @@ class _SettingsCard extends GetView<ProfileController> {
           _SettingsTile(
             icon: Icons.language_outlined,
             label: 'profile_settings_language'.tr,
+            flexibleTrailing: true,
             trailing: Obx(
-              () => Container(
-                padding: const EdgeInsets.symmetric(vertical: 5),
+                  () => Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(
-                    color: AppColor.brownAccentPrimary.withValues(alpha: 0.5),
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: AppColor.brownAccentPrimary,
-                      blurStyle: BlurStyle.outer,
-                      offset: Offset(0, 0),
-                    ),
-                  ],
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: AppColor.lightGreyColor),
                 ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: ['English', 'Spanish'].map((lang) {
-                    final selected = controller.selectedLanguage.value == lang;
-                    return GestureDetector(
-                      onTap: () => controller.changeLanguage(lang),
-                      child: Container(
-                        margin: const EdgeInsets.only(left: 6, right: 6),
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                        decoration: BoxDecoration(
-                          color: selected ? AppColor.brownAccentPrimary : Colors.transparent,
-                          borderRadius: BorderRadius.circular(20),
-                          border: Border.all(
-                            color: selected ? AppColor.brownAccentPrimary : Colors.white,
+                child: DropdownButtonHideUnderline(
+                  child: DropdownButton<String>(
+                    key: const ValueKey('profile-language-dropdown'),
+                    value: controller.selectedLanguage.value,
+                    isExpanded: true,
+                    selectedItemBuilder: (context) => [
+                      for (final label in ['English', 'Español', 'العربية'])
+                        Align(
+                          alignment: AlignmentDirectional.centerStart,
+                          child: Text(
+                            label,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ),
-                        child: Text(
-                          'language_${lang.toLowerCase()}'.tr,
-                          style: AppTextStyle.labelSmallMedium.copyWith(
-                            color: selected ? Colors.white : AppColor.blackShade1,
-                          ),
-                        ),
+                    ],
+                    dropdownColor: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                    icon: const Icon(Icons.keyboard_arrow_down_rounded),
+                    style: AppTextStyle.bodyMediumRegular.copyWith(
+                      color: AppColor.blackShade1,
+                    ),
+                    items: const [
+                      DropdownMenuItem(
+                        value: 'english',
+                        child: Text('English'),
                       ),
-                    );
-                  }).toList(),
+                      DropdownMenuItem(
+                        value: 'spanish',
+                        child: Text('Español'),
+                      ),
+                      DropdownMenuItem(value: 'arabic', child: Text('العربية')),
+                    ],
+                    onChanged: (language) {
+                      if (language != null) controller.changeLanguage(language);
+                    },
+                  ),
                 ),
               ),
             ),
@@ -471,26 +282,65 @@ class _SettingsCard extends GetView<ProfileController> {
           ),
           _buildDivider(),
           _SettingsTile(
-            icon: Icons.security_outlined,
-            label: 'profile_settings_security'.tr,
-            trailing: const Icon(Icons.chevron_right, color: AppColor.brownAccentPrimary, size: 20),
-            onTap: () {
-              Get.toNamed(AppRoutes.securityScreen);
-            },
+            icon: Icons.lock_reset_outlined,
+            label: 'profile_settings_change_password'.tr,
+            trailing: const Icon(
+              Icons.chevron_right,
+              color: AppColor.blackColor,
+              size: 20,
+            ),
+            onTap: () => Get.toNamed(AppRoutes.changePasswordScreen),
           ),
           _buildDivider(),
-          _SettingsTile(
-            icon: Icons.menu_book_outlined,
-            label: 'profile_settings_booking_safety'.tr,
-            trailing: const Icon(Icons.chevron_right, color: AppColor.brownAccentPrimary, size: 20),
-            onTap: () => Get.toNamed(AppRoutes.bookingSafetyScreen),
-          ),
-          _buildDivider(),
+          // _SettingsTile(
+          //   icon: Icons.menu_book_outlined,
+          //   label: 'profile_settings_booking_safety'.tr,
+          //   trailing: const Icon(
+          //     Icons.chevron_right,
+          //     color: AppColor.blackColor,
+          //     size: 20,
+          //   ),
+          //   onTap: () => Get.toNamed(AppRoutes.bookingSafetyScreen),
+          // ),
+          // _buildDivider(),
           _SettingsTile(
             icon: Icons.privacy_tip_outlined,
             label: 'profile_settings_privacy'.tr,
-            trailing: const Icon(Icons.chevron_right, color: AppColor.brownAccentPrimary, size: 20),
+            trailing: const Icon(
+              Icons.chevron_right,
+              color: AppColor.blackColor,
+              size: 20,
+            ),
             onTap: () => Get.toNamed(AppRoutes.privacyPolicyScreen),
+          ),
+          _buildDivider(),
+          _SettingsTile(
+            icon: Icons.gavel_outlined,
+            label: 'profile_settings_terms'.tr,
+            trailing: const Icon(
+              Icons.chevron_right,
+              color: AppColor.blackColor,
+              size: 20,
+            ),
+            onTap: () => Get.toNamed(AppRoutes.termsConditionsScreen),
+          ),
+          _buildDivider(),
+          _SettingsTile(
+            icon: Icons.delete_outline,
+            label: 'profile_delete_account'.tr,
+            trailing: const SizedBox.shrink(),
+            iconColor: Colors.black,
+            labelColor: Colors.black,
+            onTap: controller.onDeleteAccount,
+          ),
+          _buildDivider(),
+          _SettingsTile(
+            icon: Icons.logout_rounded,
+            label: 'profile_logout'.tr,
+            trailing: const SizedBox.shrink(),
+            iconColor: Colors.black,
+            labelColor: Colors.black,
+            onTap: controller.onLogout,
             isLast: true,
           ),
         ],
@@ -501,7 +351,7 @@ class _SettingsCard extends GetView<ProfileController> {
   Widget _buildDivider() => Divider(
     height: 1,
     thickness: 1,
-    color: AppColor.brownAccentPrimary.withValues(alpha: 0.3),
+    color: AppColor.blackColor.withValues(alpha: 0.3),
     indent: 16,
     endIndent: 16,
   );
@@ -512,18 +362,27 @@ class _SettingsTile extends StatelessWidget {
   final String label;
   final Widget trailing;
   final VoidCallback onTap;
+  final Color iconColor;
+  final Color labelColor;
   final bool isLast;
+  final bool stacked;
+  final bool flexibleTrailing;
 
   const _SettingsTile({
     required this.icon,
     required this.label,
     required this.trailing,
     required this.onTap,
+    this.iconColor = AppColor.blackColor,
+    this.labelColor = AppColor.blackShade1,
     this.isLast = false,
+    this.stacked = false,
+    this.flexibleTrailing = false,
   });
 
   @override
   Widget build(BuildContext context) {
+    Localizations.localeOf(context);
     return InkWell(
       onTap: onTap,
       borderRadius: isLast
@@ -531,27 +390,41 @@ class _SettingsTile extends StatelessWidget {
           : BorderRadius.zero,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-        child: Row(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              width: 36,
-              height: 36,
-              decoration: BoxDecoration(
-                color: const Color(0xFFFFF3E0),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Icon(icon, size: 18, color: AppColor.brownAccentPrimary),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Text(
-                label,
-                style: AppTextStyle.titleSmallSemiBold.copyWith(
-                  color: AppColor.blackShade1,
+            Row(
+              children: [
+                Container(
+                  width: 36,
+                  height: 36,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF5F5F5),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Icon(icon, size: 18, color: iconColor),
                 ),
-              ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    label,
+                    maxLines: flexibleTrailing ? 1 : null,
+                    overflow: flexibleTrailing ? TextOverflow.ellipsis : null,
+                    style: AppTextStyle.titleSmallSemiBold.copyWith(
+                      color: labelColor,
+                    ),
+                  ),
+                ),
+                if (!stacked) ...[
+                  const SizedBox(width: 8),
+                  if (flexibleTrailing)
+                    Expanded(flex: 2, child: trailing)
+                  else
+                    trailing,
+                ],
+              ],
             ),
-            trailing,
+            if (stacked) ...[const SizedBox(height: 12), trailing],
           ],
         ),
       ),
@@ -566,82 +439,55 @@ class _ReferEarnSection extends GetView<ProfileController> {
 
   @override
   Widget build(BuildContext context) {
+    Localizations.localeOf(context);
     return Column(
       children: [
         Image.asset(AppAssets.referenceAndEarnImage),
         const SizedBox(height: 16),
         Obx(
-          () => Container(
+              () => Container(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
             decoration: BoxDecoration(
               color: Color(0xffF1F1F1),
               borderRadius: BorderRadius.circular(30),
-              border: Border.all(color: AppColor.brownAccentPrimary.withValues(alpha: 0.5)),
+              border: Border.all(
+                color: AppColor.blackColor.withValues(alpha: 0.5),
+              ),
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(
-                  '${'profile_referral_code'.tr}: ${controller.referralCode.value}',
-                  style: AppTextStyle.titleSmallSemiBold.copyWith(
-                    color: AppColor.blackShade1,
+                Flexible(
+                  child: Text(
+                    '${'profile_referral_code'.tr}: ${controller.referralCode.value}',
+                    style: AppTextStyle.titleSmallSemiBold.copyWith(
+                      color: AppColor.blackShade1,
+                    ),
                   ),
                 ),
                 const SizedBox(width: 8),
                 GestureDetector(
-                  onTap: () => Clipboard.setData(
-                    ClipboardData(text: controller.referralCode.value),
-                  ).then(
-                    (_) => Get.snackbar(
-                      'profile_copied'.tr,
-                      'profile_referral_copied'.tr,
-                      snackPosition: SnackPosition.BOTTOM,
-                      duration: const Duration(seconds: 2),
-                    ),
+                  onTap: () =>
+                      Clipboard.setData(
+                        ClipboardData(text: controller.referralCode.value),
+                      ).then(
+                            (_) => AppSnackbar.show(
+                          'profile_copied'.tr,
+                          'profile_referral_copied'.tr,
+                          duration: const Duration(seconds: 2),
+                        ),
+                      ),
+                  child: const Icon(
+                    Icons.copy,
+                    size: 16,
+                    color: AppColor.blackColor,
                   ),
-                  child: const Icon(Icons.copy, size: 16, color: AppColor.brownAccentPrimary),
                 ),
               ],
             ),
           ),
         ),
-      ],
-    );
-  }
-}
-
-// ─── Logout ───────────────────────────────────────────────────────────────────
-
-class _LogoutButton extends GetView<ProfileController> {
-  const _LogoutButton();
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: GestureDetector(
-        onTap: controller.onLogout,
-        child: Container(
-          width: double.infinity,
-          padding: const EdgeInsets.symmetric(vertical: 16),
-          decoration: BoxDecoration(
-            color: const Color(0xFFFFE5E5),
-            borderRadius: BorderRadius.circular(30),
-            border: Border.all(color: const Color(0xFFFFCDD2)),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Icon(Icons.logout_rounded, color: Colors.redAccent, size: 20),
-              const SizedBox(width: 8),
-              Text(
-                'profile_logout'.tr,
-                style: AppTextStyle.buttonMedium.copyWith(color: Colors.redAccent),
-              ),
-            ],
-          ),
-        ),
-      ),
+      ]
     );
   }
 }

@@ -14,7 +14,7 @@ class BookingSafetyScreen extends GetView<BookingSafetyController> {
     return MyScaffold(
       backgroundColor: const Color(0xffF6F6F6),
       appBar: AppBar(
-        backgroundColor: AppColor.brownAccentPrimary,
+        backgroundColor: AppColor.blackColor,
         iconTheme: const IconThemeData(color: Colors.white),
         title: Text(
           'Booking Safety Guide',
@@ -32,12 +32,12 @@ class BookingSafetyScreen extends GetView<BookingSafetyController> {
                   width: 56,
                   height: 56,
                   decoration: BoxDecoration(
-                    color: AppColor.brownAccentPrimary.withValues(alpha: 0.12),
+                    color: AppColor.blackColor.withValues(alpha: 0.12),
                     shape: BoxShape.circle,
                   ),
                   child: const Icon(
                     Icons.shield_outlined,
-                    color: AppColor.brownAccentPrimary,
+                    color: AppColor.blackColor,
                     size: 28,
                   ),
                 ),
@@ -46,7 +46,7 @@ class BookingSafetyScreen extends GetView<BookingSafetyController> {
                   'Protecting You Every Step of the Way',
                   textAlign: TextAlign.center,
                   style: AppTextStyle.titleLargeBold.copyWith(
-                    color: AppColor.brownAccentPrimary,
+                    color: AppColor.blackColor,
                     height: 1.3,
                   ),
                 ),
@@ -101,7 +101,7 @@ class _StepCard extends StatelessWidget {
                 width: 28,
                 height: 28,
                 decoration: const BoxDecoration(
-                  color: AppColor.brownAccentPrimary,
+                  color: AppColor.blackColor,
                   shape: BoxShape.circle,
                 ),
                 alignment: Alignment.center,
@@ -118,7 +118,7 @@ class _StepCard extends StatelessWidget {
                 width: 2,
                 height: 120,
                 decoration: BoxDecoration(
-                  color: AppColor.brownAccentPrimary.withValues(alpha: 0.20),
+                  color: AppColor.blackColor.withValues(alpha: 0.20),
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -139,13 +139,13 @@ class _StepCard extends StatelessWidget {
                       width: 40,
                       height: 40,
                       decoration: BoxDecoration(
-                        color: AppColor.brownAccentPrimary.withValues(alpha: 0.10),
+                        color: AppColor.blackColor.withValues(alpha: 0.10),
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Icon(
                         step.icon,
                         size: 20,
-                        color: AppColor.brownAccentPrimary,
+                        color: AppColor.blackColor,
                       ),
                     ),
                     const SizedBox(width: 10),
@@ -163,7 +163,7 @@ class _StepCard extends StatelessWidget {
                           Text(
                             step.subtitle,
                             style: AppTextStyle.bodySmallMedium.copyWith(
-                              color: AppColor.brownAccentPrimary,
+                              color: AppColor.blackColor,
                             ),
                           ),
                         ],
@@ -185,9 +185,12 @@ class _StepCard extends StatelessWidget {
 
                 // Tip chip
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 8,
+                  ),
                   decoration: BoxDecoration(
-                    color: AppColor.brownAccentPrimary.withValues(alpha: 0.08),
+                    color: AppColor.blackColor.withValues(alpha: 0.08),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Row(
@@ -196,14 +199,14 @@ class _StepCard extends StatelessWidget {
                       const Icon(
                         Icons.check_circle_rounded,
                         size: 16,
-                        color: AppColor.brownAccentPrimary,
+                        color: AppColor.blackColor,
                       ),
                       const SizedBox(width: 6),
                       Expanded(
                         child: Text(
                           step.tip,
                           style: AppTextStyle.bodySmallRegular.copyWith(
-                            color: AppColor.brownAccentPrimary,
+                            color: AppColor.blackColor,
                             height: 1.5,
                           ),
                         ),
@@ -235,7 +238,7 @@ class _ReportCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xffFFCDD2)),
+        border: Border.all(color: const Color(0xffEAEAEA)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -243,7 +246,11 @@ class _ReportCard extends StatelessWidget {
           // Header
           Row(
             children: [
-              const Icon(Icons.warning_amber_rounded, color: Colors.redAccent, size: 20),
+              const Icon(
+                Icons.warning_amber_rounded,
+                color: Colors.redAccent,
+                size: 20,
+              ),
               const SizedBox(width: 8),
               Text(
                 'Report Safety Concerns',
@@ -265,7 +272,11 @@ class _ReportCard extends StatelessWidget {
                 children: [
                   const Padding(
                     padding: EdgeInsets.only(top: 5),
-                    child: Icon(Icons.circle, size: 6, color: AppColor.coolGrayText),
+                    child: Icon(
+                      Icons.circle,
+                      size: 6,
+                      color: AppColor.coolGrayText,
+                    ),
                   ),
                   const SizedBox(width: 8),
                   Expanded(
@@ -306,8 +317,11 @@ class _ReportCard extends StatelessWidget {
                   paddingHorizontal: 6,
                   textStyle: AppTextStyle.buttonSmall,
                   boxShadow: const [],
-                  leadingIcon: const Icon(Icons.warning_amber_rounded,
-                      color: Colors.redAccent, size: 16),
+                  leadingIcon: const Icon(
+                    Icons.warning_amber_rounded,
+                    color: Colors.redAccent,
+                    size: 16,
+                  ),
                   leadingSpacing: 4,
                 ),
               ),
@@ -317,14 +331,17 @@ class _ReportCard extends StatelessWidget {
                   label: 'Contact Support',
                   onTap: controller.onContactSupport,
                   backgroundColor: Colors.white,
-                  foregroundColor: AppColor.brownAccentPrimary,
-                  border: Border.all(color: AppColor.brownAccentPrimary),
+                  foregroundColor: AppColor.blackColor,
+                  border: Border.all(color: AppColor.blackColor),
                   height: 46,
                   paddingHorizontal: 6,
                   textStyle: AppTextStyle.buttonSmall,
                   boxShadow: const [],
-                  leadingIcon: const Icon(Icons.phone_outlined,
-                      color: AppColor.brownAccentPrimary, size: 16),
+                  leadingIcon: const Icon(
+                    Icons.phone_outlined,
+                    color: AppColor.blackColor,
+                    size: 16,
+                  ),
                   leadingSpacing: 4,
                 ),
               ),

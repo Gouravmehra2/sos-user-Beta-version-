@@ -42,8 +42,8 @@ class CommonAuthHeader extends StatelessWidget {
             top: -blobSize * 0.2,
             left: -blobSize * 0.2,
             child: CommonSoftBlobGradient(
-              color: AppColor.brownColor,
-              opacity: 0.30,
+              color: AppColor.darkGray,
+              opacity: 0.15,
               height: blobSize,
               width: blobSize,
               boxShape: BoxShape.rectangle,

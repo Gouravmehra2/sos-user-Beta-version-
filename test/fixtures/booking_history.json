@@ -1,0 +1,244 @@
+{
+  "address": {
+    "coordinates": {
+      "lat": null,
+      "lng": null
+    },
+    "label": "Home",
+    "name": "",
+    "addressLine": "ofice, Kishangarh, Kishangarh, Sector 7 MDC, Sector 7 MDC",
+    "city": "Panchkula",
+    "state": "Haryana",
+    "zipcode": "134109"
+  },
+  "paymentDetails": {
+    "provider": "stripe",
+    "orderId": "pi_3UKjo8LoofSnTZCg047MfV4J",
+    "paymentId": "ch_3UKjo8LoofSnTZCg0io6qRAB",
+    "transactionId": "ch_3UKjo8LoofSnTZCg0io6qRAB"
+  },
+  "assignedTechnician": {
+    "name": "harry",
+    "phone": "1234567890"
+  },
+  "_id": "6abab9b670a2ae385d466ee6",
+  "user": "6a3cd10eaf93ff800b67f2e7",
+  "services": [
+    {
+      "service": {
+        "_id": "6ab1a5e4371b87cdfa865f61",
+        "name": "PC Diagnosis",
+        "shortDescription": [
+          "Professional PC hardware and software diagnosis",
+          "Identify the cause of PC performance and functionality issues",
+          "Detailed diagnostic testing and recommendations"
+        ],
+        "longDescription": "Professional PC diagnosis service to identify hardware and software problems affecting your computer. Our technician performs a systematic inspection and diagnostic testing to identify the root cause of issues such as slow performance, crashes, startup problems, overheating, hardware failures and other PC-related concerns.",
+        "category": "6ab2c087371b87cdfa867bb3",
+        "subcategory": "6ab2c6ad371b87cdfa867c20",
+        "serviceType": "",
+        "status": "active",
+        "isFeatured": true,
+        "serviceDuration": 60,
+        "hasVariants": false,
+        "actualPrice": 100,
+        "discountPercentage": 0,
+        "offerPrice": 100,
+        "variants": [],
+        "addons": [
+          {
+            "name": "Hardware Health Check",
+            "description": "Detailed inspection of major PC hardware components.",
+            "price": 25,
+            "image": "",
+            "isActive": true,
+            "_id": "6ab561352429ecd5002003b8"
+          },
+          {
+            "name": "Performance Testing",
+            "description": "Additional performance testing to identify slow or underperforming components.",
+            "price": 29,
+            "image": "",
+            "isActive": true,
+            "_id": "6ab561352429ecd5002003b9"
+          },
+          {
+            "name": "Temperature Check",
+            "description": "Check CPU, GPU and system temperatures for overheating issues.",
+            "price": 19,
+            "image": "",
+            "isActive": true,
+            "_id": "6ab561352429ecd5002003ba"
+          },
+          {
+            "name": "Diagnostic Report",
+            "description": "Detailed summary of identified issues and recommended solutions.",
+            "price": 25,
+            "image": "",
+            "isActive": true,
+            "_id": "6ab561352429ecd5002003bb"
+          }
+        ],
+        "includedItems": [
+          {
+            "title": "Initial PC inspection",
+            "icon": "",
+            "_id": "6ab561352429ecd5002003bc"
+          },
+          {
+            "title": "Hardware and software diagnostics",
+            "icon": "",
+            "_id": "6ab561352429ecd5002003bd"
+          },
+          {
+            "title": "Performance assessment",
+            "icon": "",
+            "_id": "6ab561352429ecd5002003be"
+          },
+          {
+            "title": "Basic diagnostic testing",
+            "icon": "",
+            "_id": "6ab561352429ecd5002003bf"
+          },
+          {
+            "title": "Recommended solution",
+            "icon": "",
+            "_id": "6ab561352429ecd5002003c0"
+          }
+        ],
+        "excludedItems": [
+          {
+            "title": "Replacement hardware",
+            "icon": "",
+            "_id": "6ab561352429ecd5002003c1"
+          },
+          {
+            "title": "Major hardware repair",
+            "icon": "",
+            "_id": "6ab561352429ecd5002003c2"
+          },
+          {
+            "title": "Operating system license",
+            "icon": "",
+            "_id": "6ab561352429ecd5002003c3"
+          },
+          {
+            "title": "Paid software licenses",
+            "icon": "",
+            "_id": "6ab561352429ecd5002003c4"
+          },
+          {
+            "title": "Data recovery",
+            "icon": "",
+            "_id": "6ab561352429ecd5002003c5"
+          }
+        ],
+        "faqs": [
+          {
+            "question": "What problems can you diagnose?",
+            "answer": "We can diagnose common hardware and software issues including slow performance, startup problems, crashes, overheating, driver issues and hardware failures.",
+            "order": 0,
+            "_id": "6ab561352429ecd5002003c6"
+          },
+          {
+            "question": "Does PC diagnosis include repair?",
+            "answer": "The diagnosis service identifies the problem. Any required repair, replacement parts or additional services may be charged separately.",
+            "order": 1,
+            "_id": "6ab561352429ecd5002003c7"
+          },
+          {
+            "question": "Do I need to provide anything before the diagnosis?",
+            "answer": "Please provide the PC and any relevant accessories such as the power adapter, monitor or other components needed for testing.",
+            "order": 2,
+            "_id": "6ab561352429ecd5002003c8"
+          }
+        ],
+        "featuredImage": "services/featured/11a59da8-460a-4166-adf0-930a88c074cc.jpeg",
+        "gallery": [
+          {
+            "type": "image",
+            "url": "services/gallery/d6b93bbf-ed41-40ab-8ff0-8b2375bae37e.jpeg",
+            "order": 0,
+            "_id": "6ab561882429ecd50020071d"
+          }
+        ],
+        "requirements": [
+          {
+            "title": "PC available for diagnosis",
+            "image": "",
+            "_id": "6ab561352429ecd5002003c9",
+            "id": "6ab561352429ecd5002003c9"
+          },
+          {
+            "title": "Power cable and accessories",
+            "image": "",
+            "_id": "6ab561352429ecd5002003ca",
+            "id": "6ab561352429ecd5002003ca"
+          }
+        ],
+        "tools": [
+          {
+            "name": "PC Diagnostic Tool Kit",
+            "image": "",
+            "description": "Professional tools used to diagnose PC hardware and system issues.",
+            "_id": "6ab561352429ecd5002003cb"
+          },
+          {
+            "name": "Hardware Diagnostic Software",
+            "image": "",
+            "description": "Diagnostic software used to test hardware health and system performance.",
+            "_id": "6ab561352429ecd5002003cc"
+          }
+        ],
+        "processSteps": [
+          {
+            "stepNumber": 1,
+            "title": "Initial Inspection",
+            "description": "Our technician checks the PC, connected components and reported symptoms.",
+            "image": "",
+            "_id": "6ab6f1abbdff2b85235f72bd"
+          },
+          {
+            "stepNumber": 2,
+            "title": "Diagnostic Testing",
+            "description": "Hardware and software tests are performed to identify the source of the problem.",
+            "image": "",
+            "_id": "6ab6f1abbdff2b85235f72be"
+          },
+          {
+            "stepNumber": 3,
+            "title": "Diagnosis & Recommendation",
+            "description": "We explain the identified issue and recommend the appropriate solution or repair.",
+            "image": "",
+            "_id": "6ab6f1abbdff2b85235f72bf"
+          }
+        ],
+        "isActive": true,
+        "ratingsAverage": 4.5,
+        "ratingsQuantity": 0,
+        "createdAt": "2026-09-24T17:42:47.491Z",
+        "updatedAt": "2026-09-25T22:11:55.202Z",
+        "__v": 0,
+        "price": 100,
+        "duration": 60,
+        "description": "Professional PC hardware and software diagnosis Identify the cause of PC performance and functionality issues Detailed diagnostic testing and recommendations",
+        "id": "6ab1a5e4371b87cdfa865f61"
+      },
+      "quantity": 1,
+      "variantId": null,
+      "variantName": "",
+      "selectedAddons": [],
+      "price": 100,
+      "_id": "6abab99c70a2ae385d466ee2"
+    }
+  ],
+  "totalAmount": 100,
+  "phone": "7894561230",
+  "serviceDate": "2026-09-28T18:30:00.000Z",
+  "status": "Confirmed",
+  "paymentStatus": "Paid",
+  "specialInstructions": "",
+  "createdAt": "2026-09-28T19:02:14.347Z",
+  "updatedAt": "2026-09-28T20:43:12.342Z",
+  "__v": 0
+}

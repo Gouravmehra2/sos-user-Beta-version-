@@ -13,7 +13,7 @@ class SupportScreen extends GetView<SupportController> {
     return MyScaffold(
       backgroundColor: const Color(0xffF6F6F6),
       appBar: AppBar(
-        backgroundColor: AppColor.brownAccentPrimary,
+        backgroundColor: AppColor.blackColor,
         iconTheme: const IconThemeData(color: Colors.white),
         title: Text(
           'Support',
@@ -30,7 +30,7 @@ class SupportScreen extends GetView<SupportController> {
             ),
           ),
           const SizedBox(height: 16),
-          _PriorityBanner(),
+          // _PriorityBanner(),
         ],
       ),
     );
@@ -58,10 +58,10 @@ class _SupportOptionCard extends StatelessWidget {
               width: 48,
               height: 48,
               decoration: BoxDecoration(
-                color: const Color(0xFFF2EDE8),
+                color: const Color(0xFFF0F0F0),
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: Icon(option.icon, color: AppColor.brownAccentPrimary, size: 22),
+              child: Icon(option.icon, color: AppColor.blackColor, size: 22),
             ),
             const SizedBox(width: 14),
             Expanded(
@@ -87,7 +87,7 @@ class _SupportOptionCard extends StatelessWidget {
                     Text(
                       option.badge!,
                       style: AppTextStyle.bodySmallMedium.copyWith(
-                        color: AppColor.brownAccentPrimary,
+                        color: AppColor.blackColor,
                       ),
                     ),
                   ],
@@ -114,7 +114,7 @@ class _PriorityBanner extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Icon(Icons.verified_user_outlined, color: AppColor.brownAccentPrimary, size: 28),
+          const Icon(Icons.verified_user_outlined, color: AppColor.blackColor, size: 28),
           const SizedBox(height: 12),
           Text(
             'Your support is our priority',

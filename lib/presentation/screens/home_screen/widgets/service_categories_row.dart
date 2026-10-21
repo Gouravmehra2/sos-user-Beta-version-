@@ -94,7 +94,7 @@ class _ServiceCategoryTile extends StatelessWidget {
             const Icon(
               Icons.chevron_right,
               size: 18,
-              color: AppColor.brownAccentPrimary,
+              color: AppColor.blackColor,
             ),
           ],
         ),

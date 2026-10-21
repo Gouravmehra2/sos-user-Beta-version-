@@ -14,7 +14,7 @@ class CallSupportScreen extends GetView<CallSupportController> {
     return MyScaffold(
       backgroundColor: const Color(0xffF6F6F6),
       appBar: AppBar(
-        backgroundColor: AppColor.brownAccentPrimary,
+        backgroundColor: AppColor.blackColor,
         iconTheme: const IconThemeData(color: Colors.white),
         title: Text(
           'Call Support',
@@ -81,29 +81,41 @@ class CallSupportScreen extends GetView<CallSupportController> {
                     width: 40,
                     height: 40,
                     decoration: BoxDecoration(
-                      color: const Color(0xFFF2EDE8),
+                      color: const Color(0xFFF0F0F0),
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    child: const Icon(Icons.access_time_rounded,
-                        color: AppColor.brownAccentPrimary, size: 20),
+                    child: const Icon(
+                      Icons.access_time_rounded,
+                      color: AppColor.blackColor,
+                      size: 20,
+                    ),
                   ),
                   const SizedBox(width: 12),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Support Hours',
-                            style: AppTextStyle.titleSmallSemiBold
-                                .copyWith(color: AppColor.blackShade1)),
-                        Text('Monday — Sunday',
-                            style: AppTextStyle.bodySmallRegular
-                                .copyWith(color: AppColor.coolGrayText)),
+                        Text(
+                          'Support Hours',
+                          style: AppTextStyle.titleSmallSemiBold.copyWith(
+                            color: AppColor.blackShade1,
+                          ),
+                        ),
+                        Text(
+                          'Monday — Sunday',
+                          style: AppTextStyle.bodySmallRegular.copyWith(
+                            color: AppColor.coolGrayText,
+                          ),
+                        ),
                       ],
                     ),
                   ),
-                  Text('24 Hours',
-                      style: AppTextStyle.titleSmallSemiBold
-                          .copyWith(color: AppColor.blackShade1)),
+                  Text(
+                    '24 Hours',
+                    style: AppTextStyle.titleSmallSemiBold.copyWith(
+                      color: AppColor.blackShade1,
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -121,16 +133,20 @@ class CallSupportScreen extends GetView<CallSupportController> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Container(
-                    width: 8, height: 8,
+                    width: 8,
+                    height: 8,
                     decoration: const BoxDecoration(
                       color: Colors.green,
                       shape: BoxShape.circle,
                     ),
                   ),
                   const SizedBox(width: 8),
-                  Text('Average wait time: ~ 2 mins',
-                      style: AppTextStyle.bodySmallMedium
-                          .copyWith(color: AppColor.coolGrayText)),
+                  Text(
+                    'Average wait time: ~ 2 mins',
+                    style: AppTextStyle.bodySmallMedium.copyWith(
+                      color: AppColor.coolGrayText,
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -140,16 +156,21 @@ class CallSupportScreen extends GetView<CallSupportController> {
             CommonButton(
               label: 'Call Now',
               onTap: controller.onCallNow,
-              backgroundColor: AppColor.brownAccentPrimary,
+              backgroundColor: AppColor.blackColor,
               foregroundColor: Colors.white,
-              leadingIcon: const Icon(Icons.phone_outlined, color: Colors.white, size: 18),
+              leadingIcon: const Icon(
+                Icons.phone_outlined,
+                color: Colors.white,
+                size: 18,
+              ),
             ),
             const SizedBox(height: 14),
 
             Text(
               'Prefer not to call?',
-              style: AppTextStyle.bodySmallRegular
-                  .copyWith(color: AppColor.coolGrayText),
+              style: AppTextStyle.bodySmallRegular.copyWith(
+                color: AppColor.coolGrayText,
+              ),
             ),
             const SizedBox(height: 8),
 
@@ -160,32 +181,46 @@ class CallSupportScreen extends GetView<CallSupportController> {
                   onTap: controller.onLiveChat,
                   child: Row(
                     children: [
-                      const Icon(Icons.chat_bubble_outline_rounded,
-                          color: AppColor.brownAccentPrimary, size: 14),
+                      const Icon(
+                        Icons.chat_bubble_outline_rounded,
+                        color: AppColor.blackColor,
+                        size: 14,
+                      ),
                       const SizedBox(width: 4),
-                      Text('Live Chat',
-                          style: AppTextStyle.bodySmallMedium.copyWith(
-                            color: AppColor.brownAccentPrimary,
-                          )),
+                      Text(
+                        'Live Chat',
+                        style: AppTextStyle.bodySmallMedium.copyWith(
+                          color: AppColor.blackColor,
+                        ),
+                      ),
                     ],
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 12),
-                  child: Text('•', style: AppTextStyle.bodySmallRegular
-                      .copyWith(color: AppColor.coolGrayText)),
+                  child: Text(
+                    '•',
+                    style: AppTextStyle.bodySmallRegular.copyWith(
+                      color: AppColor.coolGrayText,
+                    ),
+                  ),
                 ),
                 GestureDetector(
                   onTap: controller.onEmailUs,
                   child: Row(
                     children: [
-                      const Icon(Icons.mail_outline_rounded,
-                          color: AppColor.brownAccentPrimary, size: 14),
+                      const Icon(
+                        Icons.mail_outline_rounded,
+                        color: AppColor.blackColor,
+                        size: 14,
+                      ),
                       const SizedBox(width: 4),
-                      Text('Email Us',
-                          style: AppTextStyle.bodySmallMedium.copyWith(
-                            color: AppColor.brownAccentPrimary,
-                          )),
+                      Text(
+                        'Email Us',
+                        style: AppTextStyle.bodySmallMedium.copyWith(
+                          color: AppColor.blackColor,
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -214,18 +249,21 @@ class _RipplePhoneIcon extends StatelessWidget {
             width: 80,
             height: 80,
             decoration: BoxDecoration(
-              color: const Color(0xFFF2EDE8),
+              color: const Color(0xFFF0F0F0),
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
-                  color: AppColor.brownAccentPrimary.withValues(alpha: 0.15),
+                  color: AppColor.blackColor.withValues(alpha: 0.15),
                   blurRadius: 20,
                   offset: const Offset(0, 6),
                 ),
               ],
             ),
-            child: const Icon(Icons.phone_outlined,
-                color: AppColor.brownAccentPrimary, size: 36),
+            child: const Icon(
+              Icons.phone_outlined,
+              color: AppColor.blackColor,
+              size: 36,
+            ),
           ),
         ],
       ),
@@ -239,10 +277,10 @@ class _RipplePhoneIcon extends StatelessWidget {
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         border: Border.all(
-          color: AppColor.brownAccentPrimary.withValues(alpha: alpha + 0.2),
+          color: AppColor.blackColor.withValues(alpha: alpha + 0.2),
           width: 1.5,
         ),
-        color: AppColor.brownAccentPrimary.withValues(alpha: alpha * 0.3),
+        color: AppColor.blackColor.withValues(alpha: alpha * 0.3),
       ),
     );
   }

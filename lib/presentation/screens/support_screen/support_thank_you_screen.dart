@@ -13,7 +13,9 @@ class SupportThankYouScreen extends StatelessWidget {
     final String type = (Get.arguments as String?) ?? 'chat';
     final bool isEmail = type == 'email';
 
-    final String title = isEmail ? 'Thank you for mailing us!' : 'Thank you for connecting!';
+    final String title = isEmail
+        ? 'Thank you for mailing us!'
+        : 'Thank you for connecting!';
     final String subtitle = isEmail
         ? 'We will get back to you within 24 to 48 hours'
         : 'We hope your issue was resolved.\nReach out anytime if you need further time.';
@@ -28,7 +30,7 @@ class SupportThankYouScreen extends StatelessWidget {
             Icon(
               Icons.chat_bubble_outline_rounded,
               size: 100,
-              color: AppColor.brownAccentPrimary,
+              color: AppColor.blackColor,
             ),
             const SizedBox(height: 32),
             Text(
@@ -52,7 +54,7 @@ class SupportThankYouScreen extends StatelessWidget {
             CommonButton(
               label: 'Close',
               onTap: () => Get.back(),
-              backgroundColor: AppColor.brownAccentPrimary,
+              backgroundColor: AppColor.blackColor,
               foregroundColor: Colors.white,
             ),
             const SizedBox(height: 32),

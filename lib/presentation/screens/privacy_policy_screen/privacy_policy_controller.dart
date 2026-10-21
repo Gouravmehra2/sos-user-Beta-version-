@@ -1,81 +1,220 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:html/dom.dart' as html_dom;
+import 'package:html/parser.dart' as html_parser;
 
-class PrivacyPolicySubSection {
-  final String title;
-  final String body;
+enum PrivacyPolicyBlockType { paragraph, heading, list }
 
-  const PrivacyPolicySubSection({required this.title, required this.body});
+class PrivacyPolicyBlock {
+  final PrivacyPolicyBlockType type;
+  final String text;
+  final List<String> items;
+  final bool ordered;
+  final bool centered;
+  final bool contact;
+
+  const PrivacyPolicyBlock({
+    required this.type,
+    this.text = '',
+    this.items = const [],
+    this.ordered = false,
+    this.centered = false,
+    this.contact = false,
+  });
 }
 
 class PrivacyPolicySection {
   final IconData icon;
   final String title;
-  final String intro;
-  final List<PrivacyPolicySubSection> subSections;
-  final List<String> blockQuotes;
-  final String? linkText;
-  final String? linkUrl;
+  final List<PrivacyPolicyBlock> blocks;
 
   const PrivacyPolicySection({
     required this.icon,
     required this.title,
-    required this.intro,
-    this.subSections = const [],
-    this.blockQuotes = const [],
-    this.linkText,
-    this.linkUrl,
+    required this.blocks,
   });
 }
 
 class PrivacyPolicyController extends GetxController {
-  final List<PrivacyPolicySection> sections = const [
-    PrivacyPolicySection(
-      icon: Icons.person_outline_rounded,
-      title: 'Personal Information\nWe Collect',
-      intro: '',
-      subSections: [
-        PrivacyPolicySubSection(
-          title: 'Account information',
-          body:
-              'In addition to your name, service or shipping address, billing address, e-mail address, telephone number, bank account number, credit card number, and other account information, we collect and maintain regular business records containing information about you that might constitute personal information. Aside from billing and order history, we may collect and maintain other details about your account.',
+  PrivacyPolicyController({
+    AssetBundle? bundle,
+    this.documentAsset = assetPath,
+    this.documentName = 'privacy policy',
+  }) : _bundle = bundle ?? rootBundle;
+
+  final String documentAsset;
+  final String documentName;
+  final AssetBundle _bundle;
+  bool _loadInProgress = false;
+
+  static const assetPath = 'assets/html/privacy_policy.html';
+
+  final pageTitle = ''.obs;
+  final subtitle = ''.obs;
+  final headerBlocks = <PrivacyPolicyBlock>[].obs;
+  final sections = <PrivacyPolicySection>[].obs;
+  final isLoading = true.obs;
+  final errorMessage = ''.obs;
+
+  @override
+  void onInit() {
+    super.onInit();
+    loadPolicy();
+  }
+
+  Future<void> loadPolicy() async {
+    if (_loadInProgress || isClosed) return;
+    _loadInProgress = true;
+    isLoading.value = true;
+    errorMessage.value = '';
+    try {
+      final source = await _bundle.loadString(documentAsset, cache: false);
+      if (!isClosed) _parsePolicy(source);
+    } catch (_) {
+      if (!isClosed) {
+        errorMessage.value =
+            'The $documentName could not be loaded. Please try again.';
+      }
+    } finally {
+      _loadInProgress = false;
+      if (!isClosed) isLoading.value = false;
+    }
+  }
+
+  void _parsePolicy(String source) {
+    final body = html_parser.parse(source).body;
+    if (body == null) throw const FormatException('Missing policy body.');
+
+    final parsedSections = <PrivacyPolicySection>[];
+    final parsedHeaderBlocks = <PrivacyPolicyBlock>[];
+    var parsedTitle = '';
+    var parsedSubtitle = '';
+    String? sectionTitle;
+    final sectionBlocks = <PrivacyPolicyBlock>[];
+
+    void finishSection() {
+      if (sectionTitle == null) return;
+      parsedSections.add(
+        PrivacyPolicySection(
+          icon: _iconFor(sectionTitle!),
+          title: sectionTitle!,
+          blocks: List.unmodifiable(sectionBlocks),
         ),
-        PrivacyPolicySubSection(
-          title: 'Purchase & Order Information',
-          body:
-              'Our Products and Services collect certain information relating to the products and/or services you purchase when you use them. In this Purchase and Order Information, you will find information about the products and/or services you purchased, their prices, and quantities, as well as delivery methods and details, as well as the installation dates and location.',
-        ),
-      ],
-    ),
-    PrivacyPolicySection(
-      icon: Icons.cookie_outlined,
-      title: 'Cookies & Other\nTechnologies',
-      intro:
-          'Our Products and Services may be provided through a variety of platforms, including Internet websites operated by us, our affiliates, and/or other companies. This includes information collected during your time on these sites, such as browsing activity, IP address, and items added to your Cart but not purchased.',
-      blockQuotes: [
-        'In order to better understand user behavior and gather statistics about website and platform usage, we and our partners may use technologies like cookies, web beacons, tags, and others on these platforms and in electronic communications. These tools may also collect data such as demographic information, browser type, device type, Internet Service Provider, referring/exit pages, platform type, date/time stamp, number of clicks, and similar information.',
-        'Please note that you can still access our Services even if you disable certain cookies; however, you may not be recognized automatically upon returning.',
-      ],
-    ),
-    PrivacyPolicySection(
-      icon: Icons.bar_chart_rounded,
-      title: 'Google Analytics',
-      intro:
-          'We make use of Google Analytics and Signals, which enhances current features (such as advertising reports, remarketing, cross-device reports, and reports on interests and demographics) by offering collective and anonymous data about you. This is only available if you have enabled personalized ads in your Google Account.',
-      linkText: 'Google Privacy Policy ↗',
-      linkUrl: 'https://policies.google.com/privacy',
-    ),
-    PrivacyPolicySection(
-      icon: Icons.child_care_rounded,
-      title: "Children's information",
-      intro:
-          'We are committed to protecting children\'s privacy. We do not intentionally direct the Services to children under eighteen, nor do we knowingly collect any personal information from them. In the event that we learn that a child under eighteen has provided personal information through the Services, we will take reasonable steps to remove that information.',
-    ),
-    PrivacyPolicySection(
-      icon: Icons.history_rounded,
-      title: 'Data Retention',
-      intro:
-          'We retain personal information about you for a period of time that is necessary to provide our Services, to meet legal or tax requirements, to prevent fraud, and for other business purposes. If we de-identify information, we will maintain and use it in de-identified form.',
-    ),
-  ];
+      );
+      sectionTitle = null;
+      sectionBlocks.clear();
+    }
+
+    void visit(html_dom.Node node) {
+      if (node is! html_dom.Element) return;
+      final tag = node.localName;
+      if (tag == 'style' || tag == 'script') return;
+      if (tag == 'div' && node.classes.contains('subtitle')) {
+        parsedSubtitle = _text(node);
+        return;
+      }
+
+      switch (tag) {
+        case 'h1':
+          parsedTitle = _text(node);
+        case 'h2':
+          finishSection();
+          sectionTitle = _text(node);
+        case 'h3':
+          _addBlock(
+            sectionTitle,
+            sectionBlocks,
+            parsedHeaderBlocks,
+            PrivacyPolicyBlock(
+              type: PrivacyPolicyBlockType.heading,
+              text: _text(node),
+            ),
+          );
+        case 'p':
+          final text = _text(node);
+          if (text.isNotEmpty) {
+            _addBlock(
+              sectionTitle,
+              sectionBlocks,
+              parsedHeaderBlocks,
+              PrivacyPolicyBlock(
+                type: PrivacyPolicyBlockType.paragraph,
+                text: text,
+                centered: node.classes.contains('meta'),
+                contact: node.classes.contains('contact'),
+              ),
+            );
+          }
+        case 'ul' || 'ol':
+          final items = node.children
+              .where((child) => child.localName == 'li')
+              .map((item) => _text(item))
+              .where((item) => item.isNotEmpty)
+              .toList();
+          if (items.isNotEmpty) {
+            _addBlock(
+              sectionTitle,
+              sectionBlocks,
+              parsedHeaderBlocks,
+              PrivacyPolicyBlock(
+                type: PrivacyPolicyBlockType.list,
+                items: items,
+                ordered: tag == 'ol',
+              ),
+            );
+          }
+        default:
+          for (final child in node.nodes) {
+            visit(child);
+          }
+      }
+    }
+
+    for (final node in body.nodes) {
+      visit(node);
+    }
+    finishSection();
+    if (parsedTitle.isEmpty ||
+        parsedSections.isEmpty ||
+        parsedSections.any(
+          (section) => section.title.isEmpty || section.blocks.isEmpty,
+        )) {
+      throw const FormatException('Privacy policy content is incomplete.');
+    }
+    pageTitle.value = parsedTitle;
+    subtitle.value = parsedSubtitle;
+    headerBlocks.assignAll(parsedHeaderBlocks);
+    sections.assignAll(parsedSections);
+  }
+
+  void _addBlock(
+    String? title,
+    List<PrivacyPolicyBlock> sectionBlocks,
+    List<PrivacyPolicyBlock> headerBlocks,
+    PrivacyPolicyBlock block,
+  ) {
+    (title == null ? headerBlocks : sectionBlocks).add(block);
+  }
+
+  String _text(html_dom.Element element) =>
+      element.text.replaceAll(RegExp(r'\s+'), ' ').trim();
+
+  IconData _iconFor(String title) {
+    final value = title.toLowerCase();
+    if (value.contains('about')) return Icons.business_outlined;
+    if (value.contains('information') || value.contains('account')) {
+      return Icons.person_outline_rounded;
+    }
+    if (value.contains('payment')) return Icons.payment_outlined;
+    if (value.contains('location')) return Icons.location_on_outlined;
+    if (value.contains('technician')) return Icons.handyman_outlined;
+    if (value.contains('marketing') || value.contains('advertising')) {
+      return Icons.campaign_outlined;
+    }
+    if (value.contains('security')) return Icons.shield_outlined;
+    if (value.contains('children')) return Icons.child_care_rounded;
+    if (value.contains('contact')) return Icons.mail_outline_rounded;
+    return Icons.policy_outlined;
+  }
 }

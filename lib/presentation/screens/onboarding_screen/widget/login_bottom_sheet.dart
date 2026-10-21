@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:squadonsite/constant/app_assets/app_assets.dart';
@@ -42,19 +44,7 @@ class LoginBottomSheet extends StatelessWidget {
                 ),
 
                 // ── Logo ──────────────────────────────────────────────────────
-                Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: const BoxDecoration(
-                    color: AppColor.neutral1,
-                    shape: BoxShape.circle,
-                  ),
-                  child: Text(
-                    'S',
-                    style: AppTextStyle.headlineLargeBold.copyWith(
-                      color: AppColor.blackShade1,
-                    ),
-                  ),
-                ),
+                Image.asset(AppAssets.appLogoIcon,height: 24,fit: BoxFit.cover,),
 
                 SizedBox(height: gap),
 
@@ -78,15 +68,15 @@ class LoginBottomSheet extends StatelessWidget {
 
                 SizedBox(height: gap * 1.5),
 
-                // ── Guest ─────────────────────────────────────────────────────
-                CommonButton(
-                  label: 'login_sheet_guest_btn'.tr,
-                  onTap: () => Get.toNamed(AppRoutes.locationPermissionScreen),
-                  backgroundColor: AppColor.blackColor,
-                  foregroundColor: Colors.white,
-                ),
-
-                SizedBox(height: gap),
+                // // ── Guest ─────────────────────────────────────────────────────
+                // CommonButton(
+                //   label: 'login_sheet_guest_btn'.tr,
+                //   onTap: () => Get.toNamed(AppRoutes.locationPermissionScreen),
+                //   backgroundColor: AppColor.blackColor,
+                //   foregroundColor: Colors.white,
+                // ),
+                //
+                // SizedBox(height: gap),
 
                 // ── Phone ─────────────────────────────────────────────────────
                 CommonButton(
@@ -127,17 +117,17 @@ class LoginBottomSheet extends StatelessWidget {
                   spacing: 20,
                   children: [
                     Expanded(
-                      child: Obx(
-                        () => SocialLoginButton(
-                          onTap: controller.handleAppleLogin,
-                          icon: Image.asset(AppAssets.appleImage, height: 20),
-                          backgroundColor: AppColor.shadowGrey,
-                          border: Border.all(color: Colors.transparent),
-                          isLoading: controller.isAppleLoading.value,
-                          enabled: !controller.isGoogleLoading.value,
+                        child: Obx(
+                          () => SocialLoginButton(
+                            onTap: controller.handleAppleLogin,
+                            icon: Image.asset(AppAssets.appleImage, height: 20),
+                            backgroundColor: AppColor.shadowGrey,
+                            border: Border.all(color: Colors.transparent),
+                            isLoading: controller.isAppleLoading.value,
+                            enabled: !controller.isGoogleLoading.value,
+                          ),
                         ),
                       ),
-                    ),
                     Expanded(
                       child: Obx(
                         () => SocialLoginButton(

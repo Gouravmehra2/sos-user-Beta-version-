@@ -16,9 +16,9 @@ class EmailLoginScreen extends StatelessWidget {
     return GetBuilder<EmailLoginController>(
       builder: (controller) {
         return AuthLayout(
-              imagePath: AppAssets.signInImage,
-              body: _EmailLoginPanel(controller: controller),
-            );
+          imagePath: AppAssets.authBackgroundImage,
+          body: _EmailLoginPanel(controller: controller),
+        );
       },
     );
   }
@@ -35,12 +35,9 @@ class _EmailLoginPanel extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       // height: Get.height * 0.6,
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(20),
-          topRight: Radius.circular(20),
-        ),
+        borderRadius: BorderRadius.circular(30),
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -61,19 +58,7 @@ class _EmailLoginPanel extends StatelessWidget {
                     color: AppColor.blackShade1,
                   ),
                 ),
-                const SizedBox(height: 6),
-
-                // ── Subtitle ───────────────────────────────────────────────
-                Text(
-                  'login_subtitle'.tr,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    fontSize: 13,
-                    color: AppColor.coolGrayText,
-                    height: 1.5,
-                  ),
-                ),
-                const SizedBox(height: 24),
+                const SizedBox(height: 10),
 
                 // ── Email field ────────────────────────────────────────────
                 CommonTextFormField(
@@ -111,7 +96,7 @@ class _EmailLoginPanel extends StatelessWidget {
                     child: Text(
                       'login_forgot_password'.tr,
                       style: const TextStyle(
-                        color: AppColor.brownAccentPrimary,
+                        color: AppColor.blackColor,
                         fontSize: 13,
                         fontWeight: FontWeight.w600,
                       ),
@@ -135,19 +120,25 @@ class _EmailLoginPanel extends StatelessWidget {
                   children: [
                     Expanded(
                       child: Divider(
-                          color: AppColor.lightGreyColor, thickness: 1),
+                        color: AppColor.lightGreyColor,
+                        thickness: 1,
+                      ),
                     ),
                     const Padding(
                       padding: EdgeInsets.symmetric(horizontal: 12),
                       child: Text(
                         'or',
                         style: TextStyle(
-                            fontSize: 13, color: AppColor.coolGrayText),
+                          fontSize: 13,
+                          color: AppColor.coolGrayText,
+                        ),
                       ),
                     ),
                     Expanded(
                       child: Divider(
-                          color: AppColor.lightGreyColor, thickness: 1),
+                        color: AppColor.lightGreyColor,
+                        thickness: 1,
+                      ),
                     ),
                   ],
                 ),
@@ -188,7 +179,9 @@ class _EmailLoginPanel extends StatelessWidget {
                     Text(
                       'login_no_account'.tr,
                       style: const TextStyle(
-                          fontSize: 13, color: AppColor.coolGrayText),
+                        fontSize: 13,
+                        color: AppColor.coolGrayText,
+                      ),
                     ),
                     GestureDetector(
                       onTap: controller.navigateToSignUp,
@@ -197,7 +190,7 @@ class _EmailLoginPanel extends StatelessWidget {
                         style: const TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w700,
-                          color: AppColor.brownAccentPrimary,
+                          color: AppColor.blackColor,
                         ),
                       ),
                     ),
@@ -212,4 +205,3 @@ class _EmailLoginPanel extends StatelessWidget {
     );
   }
 }
-

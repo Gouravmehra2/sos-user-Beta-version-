@@ -61,8 +61,8 @@ class _SummerHeatBannerState extends State<SummerHeatBanner> {
               height: 7,
               decoration: BoxDecoration(
                 color: isActive
-                    ? AppColor.brownAccentPrimary
-                    : AppColor.brownAccentPrimary.withValues(alpha: 0.3),
+                    ? AppColor.blackColor
+                    : AppColor.blackColor.withValues(alpha: 0.3),
                 borderRadius: BorderRadius.circular(4),
               ),
             );

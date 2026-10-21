@@ -1,110 +1,156 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-enum NotificationType { serviceUpdate, payment, profileVerified, promotion, security, requestPending }
-
-class NotificationItem {
-  final String title;
-  final String? time;
-  final String body;
-  final NotificationType type;
-  final IconData icon;
-  final Color iconBgColor;
-  final Color iconColor;
-  final bool hasLiveTrack;
-  final bool hasViewMap;
-  final bool hasDownloadReceipt;
-  final bool hasPromotion;
-  final String? promotionText;
-  final bool hasClaimReward;
-
-  const NotificationItem({
-    required this.title,
-    this.time,
-    required this.body,
-    required this.type,
-    required this.icon,
-    required this.iconBgColor,
-    required this.iconColor,
-    this.hasLiveTrack = false,
-    this.hasViewMap = false,
-    this.hasDownloadReceipt = false,
-    this.hasPromotion = false,
-    this.promotionText,
-    this.hasClaimReward = false,
-  });
-}
+import 'package:squadonsite/core/services/api_repo.dart';
+import 'model/notification_model.dart';
 
 class NotificationController extends GetxController {
-  final RxBool hasNotifications = true.obs;
+  static const int pageSize = 10;
 
-  final List<NotificationItem> thisWeek = const [
-    NotificationItem(
-      title: 'Service Update',
-      time: 'Just now',
-      body: 'Technician Alex Sterling is currently on his way to your location for the scheduled HVAC maintenance.\nEstimated arrival: 14:15.',
-      type: NotificationType.serviceUpdate,
-      icon: Icons.engineering_outlined,
-      iconBgColor: Color(0xFFF2EDE8),
-      iconColor: Color(0xFFA5732F),
-      hasLiveTrack: true,
-      hasViewMap: true,
-    ),
-    NotificationItem(
-      title: 'Payment Successful',
-      time: '2 hours ago',
-      body: 'Payment of \$85.00 for invoice #8821 was processed successfully.',
-      type: NotificationType.payment,
-      icon: Icons.check_circle_outline,
-      iconBgColor: Color(0xFFE8F5E9),
-      iconColor: Color(0xFF229D4F),
-      hasDownloadReceipt: true,
-    ),
-  ];
+  final notifications = <AppNotification>[].obs;
+  final scrollController = ScrollController();
+  final unreadCount = 0.obs;
+  final isLoading = true.obs;
+  final isLoadingMore = false.obs;
+  final hasMore = true.obs;
+  final isMarkingAllRead = false.obs;
+  final updatingNotificationIds = <String>{}.obs;
+  final errorMessage = ''.obs;
+  int _page = 1;
+  bool _requestInProgress = false;
+  int _generation = 0;
+  bool _refreshPending = false;
 
-  final List<NotificationItem> earlierThisWeek = const [
-    NotificationItem(
-      title: 'Profile Verified',
-      time: null,
-      body: 'Your identity documents have been approved.',
-      type: NotificationType.profileVerified,
-      icon: Icons.shield_outlined,
-      iconBgColor: Color(0xFFEEEEEE),
-      iconColor: Color(0xFF555555),
-    ),
-    NotificationItem(
-      title: 'Promotion',
-      time: '5 days ago',
-      body: 'Exclusive for your next technical consultation.',
-      type: NotificationType.promotion,
-      icon: Icons.card_giftcard_outlined,
-      iconBgColor: Color(0xFFF2EDE8),
-      iconColor: Color(0xFFA5732F),
-      hasPromotion: true,
-      promotionText: '15% OFF',
-      hasClaimReward: true,
-    ),
-    NotificationItem(
-      title: 'New Login Detected',
-      time: 'Yesterday',
-      body: 'A new login was detected from a Chrome browser on a MacOS device in Seattle, USA.',
-      type: NotificationType.security,
-      icon: Icons.security_outlined,
-      iconBgColor: Color(0xFFFFEBEE),
-      iconColor: Color(0xFFE53935),
-    ),
-    NotificationItem(
-      title: 'Request Pending',
-      time: 'Yesterday',
-      body: "Expert evaluation for 'Smart Home Optimization' is still in review. We'll update you soon.",
-      type: NotificationType.requestPending,
-      icon: Icons.assignment_outlined,
-      iconBgColor: Color(0xFFEEEEEE),
-      iconColor: Color(0xFF555555),
-    ),
-  ];
+  void clearAccountState() {
+    _generation++;
+    _refreshPending = false;
+    notifications.clear();
+    unreadCount.value = 0;
+    errorMessage.value = '';
+    _page = 1;
+    hasMore.value = true;
+  }
 
-  void clearAll() {
-    hasNotifications.value = false;
+  bool get hasNotifications => notifications.isNotEmpty;
+
+  @override
+  void onInit() {
+    super.onInit();
+    scrollController.addListener(_onScroll);
+    fetchNotifications();
+  }
+
+  void _onScroll() {
+    if (!scrollController.hasClients ||
+        scrollController.position.extentAfter > 300) {
+      return;
+    }
+    loadMoreNotifications();
+  }
+
+  Future<void> fetchNotifications({
+    bool showLoading = true,
+    bool reset = true,
+  }) async {
+    if (_requestInProgress) {
+      if (reset) _refreshPending = true;
+      return;
+    }
+    final generation = _generation;
+    if (!reset && !hasMore.value) return;
+    _requestInProgress = true;
+    if (reset) {
+      _page = 1;
+      hasMore.value = true;
+      if (showLoading) isLoading.value = true;
+    } else {
+      isLoadingMore.value = true;
+    }
+    errorMessage.value = '';
+    try {
+      final requestedPage = reset ? 1 : _page + 1;
+      final response = await Get.find<ApiRepo>().getNotifications(
+        page: requestedPage,
+        limit: pageSize,
+      );
+      if (generation != _generation || isClosed) return;
+      if (!response.success) {
+        throw Exception('Unable to load notifications.');
+      }
+      if (reset) {
+        notifications.assignAll(response.data.notifications);
+        hasMore.value =
+            response.data.hasMore && response.data.notifications.isNotEmpty;
+      } else {
+        final existingIds = notifications.map((item) => item.id).toSet();
+        final newItems = response.data.notifications
+            .where((item) => item.id.isEmpty || !existingIds.contains(item.id))
+            .toList();
+        notifications.addAll(newItems);
+        hasMore.value = response.data.hasMore && newItems.isNotEmpty;
+      }
+      _page = requestedPage;
+      unreadCount.value = response.data.unreadCount;
+    } catch (_) {
+      if (generation == _generation && !isClosed) {
+        errorMessage.value = 'Unable to load notifications. Please try again.';
+      }
+    } finally {
+      _requestInProgress = false;
+      isLoading.value = false;
+      isLoadingMore.value = false;
+      if (_refreshPending && !isClosed) {
+        _refreshPending = false;
+        fetchNotifications(showLoading: false);
+      }
+    }
+  }
+
+  Future<void> loadMoreNotifications() =>
+      fetchNotifications(showLoading: false, reset: false);
+
+  Future<void> markAllAsRead() async {
+    if (unreadCount.value == 0 || isMarkingAllRead.value) return;
+
+    isMarkingAllRead.value = true;
+    try {
+      await Get.find<ApiRepo>().markAllNotificationsAsRead();
+      await _refreshLoadedPages();
+    } catch (_) {
+      errorMessage.value = 'Unable to update notifications. Please try again.';
+    } finally {
+      isMarkingAllRead.value = false;
+    }
+  }
+
+  Future<void> markAsRead(AppNotification notification) async {
+    if (notification.isRead ||
+        notification.id.isEmpty ||
+        updatingNotificationIds.contains(notification.id)) {
+      return;
+    }
+
+    updatingNotificationIds.add(notification.id);
+    try {
+      await Get.find<ApiRepo>().markNotificationAsRead(notification.id);
+      await _refreshLoadedPages();
+    } catch (_) {
+      errorMessage.value = 'Unable to update notification. Please try again.';
+    } finally {
+      updatingNotificationIds.remove(notification.id);
+    }
+  }
+
+  Future<void> _refreshLoadedPages() async {
+    final loadedPage = _page;
+    await fetchNotifications(showLoading: false);
+    while (_page < loadedPage && hasMore.value && errorMessage.value.isEmpty) {
+      await loadMoreNotifications();
+    }
+  }
+
+  @override
+  void onClose() {
+    scrollController.dispose();
+    super.onClose();
   }
 }

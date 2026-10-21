@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:squadonsite/constant/common_widgets/app_snackbar.dart';
 
 class PaymentMethod {
   final String name;
   final String subtitle;
   final IconData icon;
-  PaymentMethod({required this.name, required this.subtitle, required this.icon});
+  PaymentMethod({
+    required this.name,
+    required this.subtitle,
+    required this.icon,
+  });
 }
 
 class AddMoneyController extends GetxController {
@@ -16,9 +21,21 @@ class AddMoneyController extends GetxController {
   final quickAmounts = [500, 2000, 1000, 5000];
 
   final paymentMethods = [
-    PaymentMethod(name: 'UPI / GPay', subtitle: 'Instant Settlement', icon: Icons.account_balance_wallet_outlined),
-    PaymentMethod(name: 'Visa Card •••• 4492', subtitle: 'Expires 12/26', icon: Icons.credit_card),
-    PaymentMethod(name: 'Mastercard •••• 8810', subtitle: 'Expires 05/25', icon: Icons.credit_card),
+    PaymentMethod(
+      name: 'UPI / GPay',
+      subtitle: 'Instant Settlement',
+      icon: Icons.account_balance_wallet_outlined,
+    ),
+    PaymentMethod(
+      name: 'Visa Card •••• 4492',
+      subtitle: 'Expires 12/26',
+      icon: Icons.credit_card,
+    ),
+    PaymentMethod(
+      name: 'Mastercard •••• 8810',
+      subtitle: 'Expires 05/25',
+      icon: Icons.credit_card,
+    ),
   ];
 
   void selectQuickAmount(int amount) {
@@ -29,10 +46,10 @@ class AddMoneyController extends GetxController {
   void proceedToPay() {
     final amount = int.tryParse(amountController.text);
     if (amount == null || amount <= 0) {
-      Get.snackbar('Error', 'Please enter a valid amount', snackPosition: SnackPosition.BOTTOM);
+      AppSnackbar.show('Error', 'Please enter a valid amount');
       return;
     }
-    Get.snackbar('Success', 'Processing payment of \$$amount', snackPosition: SnackPosition.BOTTOM, backgroundColor: Colors.green, colorText: Colors.white);
+    AppSnackbar.show('Success', 'Processing payment of \$$amount');
   }
 
   @override

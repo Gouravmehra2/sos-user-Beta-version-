@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+import 'package:squadonsite/constant/common_widgets/app_snackbar.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:squadonsite/core/helpers/location_permission_helper.dart';
 
 class MapController extends GetxController {
   // ── Map controller ────────────────────────────────────────────────────────
@@ -12,18 +13,19 @@ class MapController extends GetxController {
   final Rx<LatLng?> selectedPosition = Rx<LatLng?>(null);
   final RxBool isLoadingLocation = false.obs;
   final RxBool isMapReady = false.obs;
+  final RxBool locationPermissionGranted = false.obs;
   final RxString selectedAddress = ''.obs;
 
-  static const LatLng _defaultPosition = LatLng(20.5937, 78.9629); // India center
+  static const LatLng _defaultPosition = LatLng(20.5937, 78.9629);
   static const double _defaultZoom = 5.0;
-  static const double _locationZoom = 15.0;
+  static const double _locationZoom = 19.0;
 
   // ── Lifecycle ─────────────────────────────────────────────────────────────
 
   @override
   void onInit() {
     super.onInit();
-    _fetchCurrentLocation();
+    _initLocation();
   }
 
   @override
@@ -32,47 +34,65 @@ class MapController extends GetxController {
     super.onClose();
   }
 
+  // ── Initialisation ────────────────────────────────────────────────────────
+
+  /// Silently checks permission on launch (no dialog) so we can set
+  /// [locationPermissionGranted] for the GoogleMap widget, then fetches the
+  /// current position if already granted.
+  Future<void> _initLocation() async {
+    final already = await LocationPermissionHelper.isGranted();
+    locationPermissionGranted.value = already;
+    if (already) {
+      await _fetchCurrentLocation();
+    }
+  }
+
   // ── Map callbacks ─────────────────────────────────────────────────────────
 
   void onMapCreated(GoogleMapController controller) {
     mapController = controller;
     isMapReady.value = true;
+    _animateTo(initialCameraTarget, zoom: initialZoom);
   }
 
   void onCameraIdle() {
-    // Address lookup can be wired here with a geocoding package
+    // Wire reverse-geocoding here when needed.
   }
 
   void onTap(LatLng position) {
     selectedPosition.value = position;
-    update(); // refreshes GetBuilder so markers param on GoogleMap updates
+    update();
   }
 
-  // ── Location ──────────────────────────────────────────────────────────────
+  // ── Public: "Use my location" button ─────────────────────────────────────
 
+  /// Called by the FAB.  Delegates all permission edge-cases to
+  /// [LocationPermissionHelper] — the controller stays clean.
   Future<void> goToCurrentLocation() async {
+    final result = await LocationPermissionHelper.request();
+    if (result != LocationPermissionResult.granted) return;
+
+    locationPermissionGranted.value = true;
     await _fetchCurrentLocation(animateCamera: true);
   }
+
+  // ── Internal ──────────────────────────────────────────────────────────────
 
   Future<void> _fetchCurrentLocation({bool animateCamera = false}) async {
     isLoadingLocation.value = true;
     try {
-      final position = await _determinePosition();
+      final position = await LocationPermissionHelper.getCurrentPosition();
       final latLng = LatLng(position.latitude, position.longitude);
       currentPosition.value = latLng;
       selectedPosition.value = latLng;
-
       if (animateCamera || isMapReady.value) {
         _animateTo(latLng, zoom: _locationZoom);
       }
-      update(); // refresh GetBuilder to pass updated markers to GoogleMap
+      update();
     } catch (e) {
-      Get.snackbar(
+      AppSnackbar.show(
         'Location Error',
         e.toString(),
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.black87,
-        colorText: Colors.white,
         margin: const EdgeInsets.all(16),
       );
     } finally {
@@ -80,55 +100,24 @@ class MapController extends GetxController {
     }
   }
 
-  Future<Position> _determinePosition() async {
-    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      throw 'Location services are disabled. Please enable them.';
-    }
-
-    LocationPermission permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        throw 'Location permission was denied.';
-      }
-    }
-
-    if (permission == LocationPermission.deniedForever) {
-      throw 'Location permission is permanently denied. Please enable it from settings.';
-    }
-
-    return Geolocator.getCurrentPosition(
-      locationSettings: const LocationSettings(
-        accuracy: LocationAccuracy.high,
-      ),
-    );
-  }
-
   // ── Confirm ───────────────────────────────────────────────────────────────
 
   void confirmLocation() {
     final pos = selectedPosition.value;
     if (pos == null) {
-      Get.snackbar(
+      AppSnackbar.show(
         'No Location',
         'Please select a location on the map.',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.black87,
-        colorText: Colors.white,
         margin: const EdgeInsets.all(16),
       );
       return;
     }
-    // Navigate back with the selected position
     Get.back(result: pos);
   }
 
   // ── Helpers ───────────────────────────────────────────────────────────────
 
-  LatLng get initialCameraTarget =>
-      currentPosition.value ?? _defaultPosition;
-
+  LatLng get initialCameraTarget => currentPosition.value ?? _defaultPosition;
   double get initialZoom =>
       currentPosition.value != null ? _locationZoom : _defaultZoom;
 

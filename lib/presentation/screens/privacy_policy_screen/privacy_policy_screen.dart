@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:squadonsite/constant/app_color/app_color.dart';
 import 'package:squadonsite/constant/app_text_style/app_text_style.dart';
-import 'package:squadonsite/constant/common_widgets/common_button.dart';
 import 'package:squadonsite/constant/common_widgets/my_scaffold.dart';
 import 'package:squadonsite/presentation/screens/privacy_policy_screen/privacy_policy_controller.dart';
 
@@ -10,207 +9,167 @@ class PrivacyPolicyScreen extends GetView<PrivacyPolicyController> {
   const PrivacyPolicyScreen({super.key});
 
   @override
+  Widget build(BuildContext context) => PolicyDocumentView(
+    controller: controller,
+    title: 'Privacy Policy',
+    icon: Icons.privacy_tip_outlined,
+  );
+}
+
+/// Shared reading layout for the app's legal documents.
+class PolicyDocumentView extends StatelessWidget {
+  const PolicyDocumentView({
+    super.key,
+    required this.controller,
+    required this.title,
+    required this.icon,
+  });
+  final PrivacyPolicyController controller;
+  final String title;
+  final IconData icon;
+
+  @override
   Widget build(BuildContext context) {
     return MyScaffold(
+      useSafeArea: true,
+      safeAreaTop: false,
       backgroundColor: const Color(0xffF6F6F6),
       appBar: AppBar(
-        backgroundColor: AppColor.brownAccentPrimary,
+        backgroundColor: AppColor.blackColor,
         iconTheme: const IconThemeData(color: Colors.white),
         title: Text(
-          'Privacy Policy',
+          title,
           style: AppTextStyle.titleLargeBold.copyWith(color: Colors.white),
         ),
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView(
-              padding: const EdgeInsets.fromLTRB(16, 20, 16, 16),
-              children: [
-                // ── Hero title ─────────────────────────────────────────────
-                _SectionCard(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        '1APP Privacy Policy',
-                        style: AppTextStyle.headlineLargeBold.copyWith(
-                          color: AppColor.blackShade1,
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      Text(
-                        'This Privacy Notice ("Notice") outlines how 1App and its affiliates, referred to as "we," collect, use, and disclose information about customers and visitors of our websites, advertisements, and software or services.',
-                        style: AppTextStyle.bodyMediumRegular.copyWith(
-                          color: AppColor.coolGrayText,
-                          height: 1.6,
-                        ),
-                      ),
-                      const SizedBox(height: 12),
-                      _BlockQuote(
-                        text:
-                            '"The terms \'1App\', \'we\', \'us\', and \'our\' include both the company and its affiliates. These entities collectively own and operate https://www.squadonsite.com/ and provide a range of software and services now or in the future."',
-                      ),
-                    ],
+      body: Obx(() {
+        if (controller.isLoading.value) {
+          return Center(
+            child: CircularProgressIndicator(semanticsLabel: 'Loading $title'),
+          );
+        }
+        if (controller.errorMessage.value.isNotEmpty) {
+          return Center(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(24),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(Icons.description_outlined, size: 40),
+                  const SizedBox(height: 16),
+                  Semantics(
+                    liveRegion: true,
+                    child: Text(
+                      controller.errorMessage.value,
+                      textAlign: TextAlign.center,
+                      style: AppTextStyle.bodyMediumRegular,
+                    ),
                   ),
-                ),
-
-                const SizedBox(height: 12),
-
-                // ── Dynamic sections ───────────────────────────────────────
-                ...controller.sections.map(
-                  (section) => Padding(
+                  const SizedBox(height: 12),
+                  OutlinedButton.icon(
+                    onPressed: controller.loadPolicy,
+                    icon: const Icon(Icons.refresh_rounded),
+                    label: const Text('Retry'),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }
+        return SelectionArea(
+          child: Align(
+            alignment: Alignment.topCenter,
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 800),
+              child: ListView.builder(
+                key: PageStorageKey(controller.documentAsset),
+                padding: const EdgeInsets.fromLTRB(16, 20, 16, 24),
+                itemCount: controller.sections.length + 1,
+                itemBuilder: (context, index) {
+                  if (index == 0) {
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 16),
+                      child: _SectionCard(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Icon(icon, size: 32),
+                            const SizedBox(height: 16),
+                            Semantics(
+                              header: true,
+                              child: Text(
+                                controller.pageTitle.value,
+                                style: AppTextStyle.headlineLargeBold.copyWith(
+                                  color: AppColor.blackShade1,
+                                  height: 1.25,
+                                ),
+                              ),
+                            ),
+                            if (controller.subtitle.value.isNotEmpty) ...[
+                              const SizedBox(height: 8),
+                              Text(
+                                controller.subtitle.value,
+                                style: AppTextStyle.titleSmallSemiBold.copyWith(
+                                  height: 1.5,
+                                ),
+                              ),
+                            ],
+                            const SizedBox(height: 16),
+                            for (final block in controller.headerBlocks)
+                              _PolicyBlockView(block: block),
+                          ],
+                        ),
+                      ),
+                    );
+                  }
+                  final section = controller.sections[index - 1];
+                  return Padding(
                     padding: const EdgeInsets.only(bottom: 12),
                     child: _SectionCard(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // Icon + title
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                width: 44,
-                                height: 44,
-                                decoration: BoxDecoration(
-                                  color: AppColor.brownAccentPrimary
-                                      .withValues(alpha: 0.10),
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                child: Icon(
-                                  section.icon,
-                                  size: 22,
-                                  color: AppColor.brownAccentPrimary,
-                                ),
-                              ),
-                              const SizedBox(width: 12),
-                              Expanded(
-                                child: Text(
-                                  section.title,
-                                  style:
-                                      AppTextStyle.headlineSmallSemiBold
-                                          .copyWith(
-                                    color: AppColor.blackShade1,
-                                    height: 1.3,
+                          Semantics(
+                            header: true,
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                ExcludeSemantics(
+                                  child: Icon(
+                                    section.icon,
+                                    size: 24,
+                                    color: AppColor.blackColor,
                                   ),
                                 ),
-                              ),
-                            ],
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: Text(
+                                    section.title,
+                                    style: AppTextStyle.titleLargeBold.copyWith(
+                                      color: AppColor.blackShade1,
+                                      height: 1.35,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-
-                          // Intro paragraph
-                          if (section.intro.isNotEmpty) ...[
-                            const SizedBox(height: 14),
-                            Text(
-                              section.intro,
-                              style: AppTextStyle.bodyMediumRegular.copyWith(
-                                color: AppColor.coolGrayText,
-                                height: 1.6,
-                              ),
-                            ),
-                          ],
-
-                          // Block quotes
-                          if (section.blockQuotes.isNotEmpty) ...[
-                            const SizedBox(height: 12),
-                            ...section.blockQuotes.map(
-                              (q) => Padding(
-                                padding: const EdgeInsets.only(bottom: 10),
-                                child: _BlockQuote(text: q),
-                              ),
-                            ),
-                          ],
-
-                          // Sub-sections
-                          if (section.subSections.isNotEmpty) ...[
-                            const SizedBox(height: 14),
-                            ...section.subSections.map(
-                              (sub) => Padding(
-                                padding: const EdgeInsets.only(bottom: 14),
-                                child: Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      sub.title,
-                                      style: AppTextStyle.titleSmallSemiBold
-                                          .copyWith(
-                                        color: AppColor.brownAccentPrimary,
-                                        fontSize: 14,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 6),
-                                    Text(
-                                      sub.body,
-                                      style:
-                                          AppTextStyle.bodyMediumRegular
-                                              .copyWith(
-                                        color: AppColor.coolGrayText,
-                                        height: 1.6,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
-
-                          // Link
-                          if (section.linkText != null) ...[
-                            const SizedBox(height: 8),
-                            GestureDetector(
-                              onTap: () {},
-                              child: Text(
-                                section.linkText!,
-                                style: AppTextStyle.bodyMediumMedium.copyWith(
-                                  color: AppColor.brownAccentPrimary,
-                                  decoration: TextDecoration.underline,
-                                  decorationColor:
-                                      AppColor.brownAccentPrimary,
-                                ),
-                              ),
-                            ),
-                          ],
+                          const SizedBox(height: 16),
+                          for (final block in section.blocks)
+                            _PolicyBlockView(block: block),
                         ],
                       ),
                     ),
-                  ),
-                ),
-
-                // ── Footer note ────────────────────────────────────────────
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 8),
-                  child: Text(
-                    'As a customer or user of our Software and Services, including installation of TVs, smart home devices, audio components, etc., you agree to this Notice by using our Software and Services.',
-                    style: AppTextStyle.bodySmallRegular.copyWith(
-                      color: AppColor.coolGrayText,
-                      height: 1.6,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-              ],
+                  );
+                },
+              ),
             ),
           ),
-
-          // ── Accept button ──────────────────────────────────────────────
-          // Container(
-          //   color: const Color(0xffF6F6F6),
-          //   padding: const EdgeInsets.fromLTRB(16, 10, 16, 24),
-          //   child: CommonButton(
-          //     label: 'Accept Terms',
-          //     onTap: () => Get.back(),
-          //     backgroundColor: AppColor.brownAccentPrimary,
-          //     height: 52,
-          //   ),
-          // ),
-        ],
-      ),
+        );
+      }),
     );
   }
 }
-
-// ── Reusable card ─────────────────────────────────────────────────────────────
 
 class _SectionCard extends StatelessWidget {
   final Widget child;
@@ -225,9 +184,7 @@ class _SectionCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: AppColor.lightGreyColor,
-        ),
+        border: Border.all(color: AppColor.lightGreyColor),
       ),
       child: child,
     );
@@ -236,33 +193,88 @@ class _SectionCard extends StatelessWidget {
 
 // ── Block quote ───────────────────────────────────────────────────────────────
 
-class _BlockQuote extends StatelessWidget {
-  final String text;
+class _PolicyBlockView extends StatelessWidget {
+  final PrivacyPolicyBlock block;
 
-  const _BlockQuote({required this.text});
+  const _PolicyBlockView({required this.block});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: AppColor.neutral1,
-        borderRadius: BorderRadius.circular(10),
-        border: Border(
-          left: BorderSide(
-            color: AppColor.brownAccentPrimary.withValues(alpha: 0.40),
-            width: 3,
+    switch (block.type) {
+      case PrivacyPolicyBlockType.heading:
+        return Padding(
+          padding: const EdgeInsets.only(top: 14, bottom: 6),
+          child: Text(
+            block.text,
+            style: AppTextStyle.titleSmallSemiBold.copyWith(
+              color: AppColor.blackColor,
+              fontSize: 14,
+            ),
           ),
-        ),
-      ),
-      child: Text(
-        text,
-        style: AppTextStyle.bodySmallRegular.copyWith(
-          color: AppColor.coolGrayText,
-          fontStyle: FontStyle.italic,
-          height: 1.6,
-        ),
-      ),
-    );
+        );
+      case PrivacyPolicyBlockType.paragraph:
+        final text = Text(
+          block.text,
+          textAlign: block.centered ? TextAlign.center : TextAlign.start,
+          style: AppTextStyle.bodyMediumRegular.copyWith(
+            color: const Color(0xff454B54),
+            height: 1.6,
+          ),
+        );
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 10),
+          child: block.contact
+              ? Container(
+                  width: double.infinity,
+                  margin: const EdgeInsets.only(top: 4),
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: AppColor.neutral1,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: text,
+                )
+              : text,
+        );
+      case PrivacyPolicyBlockType.list:
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              for (var index = 0; index < block.items.length; index++)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 6),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        width:
+                            24 *
+                            MediaQuery.textScalerOf(context).scale(14) /
+                            14,
+                        child: Text(
+                          block.ordered ? '${index + 1}.' : '\u2022',
+                          style: AppTextStyle.bodyMediumMedium.copyWith(
+                            color: AppColor.blackColor,
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: Text(
+                          block.items[index],
+                          style: AppTextStyle.bodyMediumRegular.copyWith(
+                            color: const Color(0xff454B54),
+                            height: 1.6,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+            ],
+          ),
+        );
+    }
   }
 }

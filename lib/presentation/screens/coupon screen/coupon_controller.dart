@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:squadonsite/constant/common_widgets/app_snackbar.dart';
 
 class CouponController extends GetxController {
   final couponCodeController = TextEditingController();
@@ -32,13 +33,13 @@ class CouponController extends GetxController {
   void applyCoupon() {
     final code = couponCodeController.text.trim();
     if (code.isEmpty) return;
-    Get.snackbar('Coupon', 'Applying coupon: $code', snackPosition: SnackPosition.BOTTOM);
+    AppSnackbar.show('Coupon', 'Applying coupon: $code');
   }
 
   void redeemCode() {
     final code = redeemCodeController.text.trim();
     if (code.isEmpty) return;
-    Get.snackbar('Promo Code', 'Redeeming code: $code', snackPosition: SnackPosition.BOTTOM);
+    AppSnackbar.show('Promo Code', 'Redeeming code: $code');
   }
 
   @override

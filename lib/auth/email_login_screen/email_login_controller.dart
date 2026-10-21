@@ -1,11 +1,15 @@
+import 'package:squadonsite/core/services/google_auth_flow.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:squadonsite/constant/common_widgets/app_snackbar.dart';
 import 'package:squadonsite/auth/forgot_password_screen/forgot_password_controller.dart';
-import 'package:squadonsite/auth/otp_screen/otp_controller.dart';
 import 'package:squadonsite/auth/sign_up_screen/sign_up_controller.dart';
 import 'package:squadonsite/constant/routes/app_routes.dart';
 import 'package:squadonsite/constant/common_widgets/common_text_form_field.dart';
+import 'package:squadonsite/core/services/api_repo.dart';
+import 'package:squadonsite/core/services/auth_api_service.dart';
 import 'package:squadonsite/core/services/social_auth_service.dart';
+import 'package:squadonsite/model/auth_model.dart';
 
 class EmailLoginController extends GetxController {
   // ── Controllers ───────────────────────────────────────────────────────────
@@ -41,21 +45,37 @@ class EmailLoginController extends GetxController {
   ]);
 
   // ── Login ─────────────────────────────────────────────────────────────────
-
-  void handleLogin() {
+  Future<void> handleLogin() async {
     if (!formKey.currentState!.validate()) return;
+    if (isLoading.value || isAppleLoading.value || isGoogleLoading.value) {
+      return;
+    }
 
     isLoading.value = true;
 
-    // TODO: Call email login API — on success navigate to OTP verification
-    Future.delayed(const Duration(seconds: 1), () {
-      isLoading.value = false;
-      Get.toNamed(
-        AppRoutes.otpScreen,
-        arguments: OtpArgs.email(email: emailController.text.trim()),
+    try {
+      final response = await Get.find<ApiRepo>().login(
+        LoginRequest(
+          email: emailController.text.trim(),
+          password: passwordController.text,
+        ),
       );
-    });
+      if (response.accessToken.trim().isEmpty) {
+        throw const FormatException(
+          'The server did not return a login token. Please try again.',
+        );
+      }
+      await Get.find<AuthSession>().update(response);
+      Get.offAllNamed(AppRoutes.splashScreen);
+    } catch (error) {
+      AppSnackbar.show('sign_in_failed'.tr, _errorMessage(error));
+    } finally {
+      isLoading.value = false;
+    }
   }
+
+  String _errorMessage(Object error) =>
+      error.toString().replaceFirst('Exception: ', '');
 
   // ── Social ────────────────────────────────────────────────────────────────
 
@@ -65,7 +85,9 @@ class EmailLoginController extends GetxController {
   final RxBool isGoogleLoading = false.obs;
 
   Future<void> handleAppleLogin() async {
-    if (isAppleLoading.value || isGoogleLoading.value) return;
+    if (isLoading.value || isAppleLoading.value || isGoogleLoading.value) {
+      return;
+    }
 
     isAppleLoading.value = true;
     try {
@@ -75,7 +97,7 @@ class EmailLoginController extends GetxController {
           // TODO: send user.idToken to your backend, then navigate
           debugPrint('[EmailLogin] Apple user: ${user.uid}');
         },
-        onFailure: (msg) => Get.snackbar('sign_in_failed'.tr, msg),
+        onFailure: (msg) => AppSnackbar.show('sign_in_failed'.tr, msg),
         onCancelled: () {},
       );
     } finally {
@@ -84,19 +106,13 @@ class EmailLoginController extends GetxController {
   }
 
   Future<void> handleGoogleLogin() async {
-    if (isAppleLoading.value || isGoogleLoading.value) return;
+    if (isLoading.value || isAppleLoading.value || isGoogleLoading.value) {
+      return;
+    }
 
     isGoogleLoading.value = true;
     try {
-      final result = await _socialAuth.signInWithGoogle();
-      result.fold(
-        onSuccess: (user) {
-          // TODO: send user.idToken to your backend, then navigate
-          debugPrint('[EmailLogin] Google user: ${user.email}');
-        },
-        onFailure: (msg) => Get.snackbar('sign_in_failed'.tr, msg),
-        onCancelled: () {},
-      );
+      await GoogleAuthFlow.run();
     } finally {
       isGoogleLoading.value = false;
     }
@@ -109,10 +125,8 @@ class EmailLoginController extends GetxController {
     arguments: ForgotPasswordArgs.email(prefillEmail: ''),
   );
 
-  void navigateToSignUp() => Get.toNamed(
-        AppRoutes.signUpScreen,
-        arguments: SignUpArgs.email(),
-      );
+  void navigateToSignUp() =>
+      Get.toNamed(AppRoutes.signUpScreen, arguments: SignUpArgs.email());
 
   // ── Lifecycle ─────────────────────────────────────────────────────────────
 

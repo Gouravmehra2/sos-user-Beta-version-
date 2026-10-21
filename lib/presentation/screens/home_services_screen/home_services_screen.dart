@@ -3,9 +3,9 @@ import 'package:get/get.dart';
 import 'package:squadonsite/constant/app_color/app_color.dart';
 import 'package:squadonsite/constant/app_text_style/app_text_style.dart';
 import 'package:squadonsite/constant/common_widgets/my_scaffold.dart';
-import 'package:squadonsite/constant/routes/app_routes.dart';
 import 'package:squadonsite/presentation/screens/home_services_screen/home_services_controller.dart';
-import 'package:squadonsite/presentation/screens/service_screen/service_controller.dart';
+import 'package:squadonsite/core/end_points/api_endpoints.dart';
+import 'package:squadonsite/presentation/screens/service_screen/model/service_screen_model.dart';
 import 'package:squadonsite/presentation/screens/service_screen/service_detail_bottom_sheet.dart';
 
 class HomeServicesScreen extends GetView<HomeServicesController> {
@@ -13,38 +13,56 @@ class HomeServicesScreen extends GetView<HomeServicesController> {
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() => MyScaffold(
-          backgroundColor: Colors.white,
-          appBar: AppBar(
-            backgroundColor: AppColor.brownAccentPrimary,
-            iconTheme: const IconThemeData(color: Colors.white),
-            title: Text(
-              controller.appBarTitle,
-              style: AppTextStyle.titleLargeBold.copyWith(color: Colors.white),
-            ),
-            actions: [
-              IconButton(
-                icon: const Icon(Icons.search, color: Colors.white),
-                onPressed: () {},
-              ),
-            ],
+    return Obx(
+      () => MyScaffold(
+        backgroundColor: Colors.white,
+        appBar: AppBar(
+          backgroundColor: AppColor.blackColor,
+          iconTheme: const IconThemeData(color: Colors.white),
+          title: Text(
+            controller.appBarTitle,
+            style: AppTextStyle.titleLargeBold.copyWith(color: Colors.white),
           ),
-          body: SingleChildScrollView(
-            padding: const EdgeInsets.only(bottom: 32),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 16),
-                _TabBar(controller: controller),
-                const SizedBox(height: 16),
-                _HeroBannerCard(controller: controller),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.search, color: Colors.white),
+              onPressed: () {},
+            ),
+          ],
+        ),
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.only(bottom: 32),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 16),
+              _TabBar(controller: controller),
+              const SizedBox(height: 16),
+              _HeroBannerCard(controller: controller),
+              const SizedBox(height: 24),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Text(
+                  controller.selectedTabIndex.value == 0
+                      ? 'Explore by Services'
+                      : 'Explore by Category',
+                  style: AppTextStyle.headlineSmallSemiBold.copyWith(
+                    color: AppColor.blackShade1,
+                    fontSize: 22,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              _CategoryGrid(controller: controller),
+              if (controller.selectedTabIndex.value == 0) ...[
+                const SizedBox(height: 24),
+                _PromoBanner(),
                 const SizedBox(height: 24),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Text(
-                    controller.selectedTabIndex.value == 0
-                        ? 'Explore by Services'
-                        : 'Explore by Category',
+                    'Popular Services',
                     style: AppTextStyle.headlineSmallSemiBold.copyWith(
                       color: AppColor.blackShade1,
                       fontSize: 22,
@@ -52,30 +70,14 @@ class HomeServicesScreen extends GetView<HomeServicesController> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 16),
-                _CategoryGrid(controller: controller),
-                if (controller.selectedTabIndex.value == 0) ...[
-                  const SizedBox(height: 24),
-                  _PromoBanner(),
-                  const SizedBox(height: 24),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Text(
-                      'Popular Services',
-                      style: AppTextStyle.headlineSmallSemiBold.copyWith(
-                        color: AppColor.blackShade1,
-                        fontSize: 22,
-                        fontWeight: FontWeight.w800,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  _PopularServicesList(controller: controller),
-                ],
+                const SizedBox(height: 12),
+                _PopularServicesList(controller: controller),
               ],
-            ),
+            ],
           ),
-        ));
+        ),
+      ),
+    );
   }
 }
 
@@ -100,10 +102,12 @@ class _TabBar extends StatelessWidget {
               margin: const EdgeInsets.only(right: 10),
               padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
               decoration: BoxDecoration(
-                color: selected ? AppColor.brownAccentPrimary : Colors.white,
+                color: selected ? AppColor.blackColor : Colors.white,
                 borderRadius: BorderRadius.circular(30),
                 border: Border.all(
-                  color: selected ? AppColor.brownAccentPrimary : AppColor.lightGreyColor,
+                  color: selected
+                      ? AppColor.blackColor
+                      : AppColor.lightGreyColor,
                 ),
               ),
               child: Text(
@@ -136,7 +140,7 @@ class _HeroBannerCard extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 16),
 
       decoration: BoxDecoration(
-        color: const Color(0xffF5EFE6),
+        color: const Color(0xffF5F5F5),
         borderRadius: BorderRadius.circular(16),
       ),
       clipBehavior: Clip.hardEdge,
@@ -173,14 +177,19 @@ class _HeroBannerCard extends StatelessWidget {
                     GestureDetector(
                       onTap: () {},
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 8,
+                        ),
                         decoration: BoxDecoration(
-                          color: AppColor.brownAccentPrimary,
+                          color: AppColor.blackColor,
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Text(
                           'Book Now',
-                          style: AppTextStyle.buttonSmall.copyWith(color: Colors.white),
+                          style: AppTextStyle.buttonSmall.copyWith(
+                            color: Colors.white,
+                          ),
                         ),
                       ),
                     ),
@@ -220,7 +229,7 @@ class _HeroBannerCard extends StatelessWidget {
           TextSpan(text: parts[0]),
           TextSpan(
             text: highlight,
-            style: TextStyle(color: AppColor.brownAccentPrimary),
+            style: TextStyle(color: AppColor.blackColor),
           ),
           if (parts.length > 1) TextSpan(text: parts[1]),
         ],
@@ -256,7 +265,8 @@ class _CategoryGrid extends StatelessWidget {
             ),
             itemBuilder: (_, i) {
               final cat = cats[i];
-              final isToggle = isHomeTab &&
+              final isToggle =
+                  isHomeTab &&
                   (cat.label == 'More' || cat.label == 'View Less');
               return GestureDetector(
                 onTap: isToggle ? controller.toggleCategories : () {},
@@ -265,12 +275,15 @@ class _CategoryGrid extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: const Color(0xffE7C98B),width: 1.5),
+                    border: Border.all(
+                      color: const Color(0xffDDDDDD),
+                      width: 1.5,
+                    ),
                   ),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(cat.icon, color: AppColor.brownAccentPrimary, size: 32),
+                      Icon(cat.icon, color: AppColor.blackColor, size: 32),
                       const SizedBox(height: 6),
                       Text(
                         cat.label,
@@ -281,7 +294,7 @@ class _CategoryGrid extends StatelessWidget {
                           color: AppColor.blackShade1,
                           fontSize: 11,
                           height: 1.3,
-                          fontWeight: FontWeight.bold
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ],
@@ -300,11 +313,17 @@ class _CategoryGrid extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Icon(Icons.keyboard_arrow_up, color: AppColor.brownAccentPrimary),
+                    const Icon(
+                      Icons.keyboard_arrow_up,
+                      color: AppColor.blackColor,
+                    ),
                     const SizedBox(width: 4),
-                    Text('View Less',
-                        style: AppTextStyle.bodySmallMedium
-                            .copyWith(color: AppColor.brownAccentPrimary)),
+                    Text(
+                      'View Less',
+                      style: AppTextStyle.bodySmallMedium.copyWith(
+                        color: AppColor.blackColor,
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -324,9 +343,9 @@ class _PromoBanner extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
-        color: const Color(0xffF5EFE6),
+        color: const Color(0xffF5F5F5),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xffE8D9C0)),
+        border: Border.all(color: const Color(0xffE0E0E0)),
       ),
       child: Column(
         children: [
@@ -337,22 +356,28 @@ class _PromoBanner extends StatelessWidget {
               children: [
                 // Limited time offer badge
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 4,
+                  ),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: const Color(0xffE8D9C0)),
+                    border: Border.all(color: const Color(0xffE0E0E0)),
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Icon(Icons.access_time_outlined,
-                          size: 12, color: AppColor.brownAccentPrimary),
+                      const Icon(
+                        Icons.access_time_outlined,
+                        size: 12,
+                        color: AppColor.blackColor,
+                      ),
                       const SizedBox(width: 4),
                       Text(
                         'LIMITED TIME OFFER',
                         style: AppTextStyle.labelSmallMedium.copyWith(
-                          color: AppColor.brownAccentPrimary,
+                          color: AppColor.blackColor,
                           fontSize: 10,
                           letterSpacing: 0.5,
                         ),
@@ -373,7 +398,7 @@ class _PromoBanner extends StatelessWidget {
                       const TextSpan(text: 'Home Revamp\n'),
                       TextSpan(
                         text: 'Special',
-                        style: TextStyle(color: AppColor.brownAccentPrimary),
+                        style: TextStyle(color: AppColor.blackColor),
                       ),
                     ],
                   ),
@@ -421,8 +446,11 @@ class _PromoBanner extends StatelessWidget {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Icon(Icons.format_paint_outlined,
-                            size: 16, color: AppColor.brownAccentPrimary),
+                        const Icon(
+                          Icons.format_paint_outlined,
+                          size: 16,
+                          color: AppColor.blackColor,
+                        ),
                         Text(
                           'ON PAINTING\nSERVICES',
                           style: AppTextStyle.labelSmallMedium.copyWith(
@@ -433,19 +461,26 @@ class _PromoBanner extends StatelessWidget {
                         ),
                       ],
                     ),
+
                     const Spacer(),
                     // Valid till badge
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 8,
+                      ),
                       decoration: BoxDecoration(
                         color: Colors.white,
                         shape: BoxShape.circle,
-                        border: Border.all(color: const Color(0xffE8D9C0)),
+                        border: Border.all(color: const Color(0xffE0E0E0)),
                       ),
                       child: Column(
                         children: [
-                          const Icon(Icons.access_time_outlined,
-                              size: 14, color: AppColor.brownAccentPrimary),
+                          const Icon(
+                            Icons.access_time_outlined,
+                            size: 14,
+                            color: AppColor.blackColor,
+                          ),
                           Text(
                             'VALID TILL',
                             style: AppTextStyle.labelSmallRegular.copyWith(
@@ -471,18 +506,29 @@ class _PromoBanner extends StatelessWidget {
                 GestureDetector(
                   onTap: () {},
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 10,
+                    ),
                     decoration: BoxDecoration(
-                      color: AppColor.brownAccentPrimary,
+                      color: AppColor.blackColor,
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Text('Book Now',
-                            style: AppTextStyle.buttonSmall.copyWith(color: Colors.white)),
+                        Text(
+                          'Book Now',
+                          style: AppTextStyle.buttonSmall.copyWith(
+                            color: Colors.white,
+                          ),
+                        ),
                         const SizedBox(width: 4),
-                        const Icon(Icons.chevron_right, color: Colors.white, size: 16),
+                        const Icon(
+                          Icons.chevron_right,
+                          color: Colors.white,
+                          size: 16,
+                        ),
                       ],
                     ),
                   ),
@@ -493,13 +539,16 @@ class _PromoBanner extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(vertical: 10),
             decoration: const BoxDecoration(
-              border: Border(top: BorderSide(color: Color(0xffE8D9C0))),
+              border: Border(top: BorderSide(color: Color(0xffE0E0E0))),
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(Icons.location_on_outlined,
-                    size: 14, color: AppColor.brownAccentPrimary),
+                const Icon(
+                  Icons.location_on_outlined,
+                  size: 14,
+                  color: AppColor.blackColor,
+                ),
                 const SizedBox(width: 4),
                 Text(
                   'Offer ends at 11:59 PM',
@@ -553,8 +602,10 @@ class _PopularServiceTile extends StatelessWidget {
               topLeft: Radius.circular(12),
               bottomLeft: Radius.circular(12),
             ),
-            child: Image.asset(
-              service.image,
+            child: Image.network(
+              service.featuredImage.isNotEmpty
+                  ? '${ApiEndpoints.baseUrl}/${service.featuredImage}'
+                  : '',
               width: 120,
               height: 130,
               fit: BoxFit.cover,
@@ -591,9 +642,9 @@ class _PopularServiceTile extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    service.price,
+                    '\$${service.offerPrice}',
                     style: AppTextStyle.titleSmallSemiBold.copyWith(
-                      color: AppColor.brownAccentPrimary,
+                      color: AppColor.blackColor,
                       fontSize: 16,
                       fontWeight: FontWeight.w700,
                     ),
@@ -601,10 +652,14 @@ class _PopularServiceTile extends StatelessWidget {
                   const SizedBox(height: 4),
                   Row(
                     children: [
-                      const Icon(Icons.star, size: 14, color: Color(0xffFFC107)),
+                      const Icon(
+                        Icons.star,
+                        size: 14,
+                        color: AppColor.darkGray,
+                      ),
                       const SizedBox(width: 2),
                       Text(
-                        '${service.rating} (${service.reviews} Reviews)',
+                        '${service.ratingsAverage} (${service.ratingsQuantity} Reviews)',
                         style: AppTextStyle.bodySmallRegular.copyWith(
                           color: AppColor.coolGrayText,
                           fontSize: 11,
@@ -619,7 +674,7 @@ class _PopularServiceTile extends StatelessWidget {
                       width: double.infinity,
                       padding: const EdgeInsets.symmetric(vertical: 10),
                       decoration: BoxDecoration(
-                        color: AppColor.brownAccentPrimary,
+                        color: AppColor.blackColor,
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Text(

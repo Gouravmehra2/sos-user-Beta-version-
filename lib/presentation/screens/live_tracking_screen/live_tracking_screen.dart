@@ -15,7 +15,7 @@ class LiveTrackingScreen extends GetView<LiveTrackingController> {
     return MyScaffold(
       backgroundColor: const Color(0xffF6F6F6),
       appBar: AppBar(
-        backgroundColor: AppColor.brownAccentPrimary,
+        backgroundColor: AppColor.blackColor,
         iconTheme: const IconThemeData(color: Colors.white),
         title: Text('Live Tracking', style: AppTextStyle.titleLargeBold.copyWith(color: Colors.white)),
         actions: [
@@ -30,7 +30,7 @@ class LiveTrackingScreen extends GetView<LiveTrackingController> {
             Container(
               height: 240,
               decoration: BoxDecoration(
-                color: const Color(0xffE8E4DC),
+                color: const Color(0xffEAEAEA),
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(color: AppColor.lightGreyColor),
               ),
@@ -38,7 +38,7 @@ class LiveTrackingScreen extends GetView<LiveTrackingController> {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(16),
                   child: Container(
-                    color: const Color(0xffE8E4DC),
+                    color: const Color(0xffEAEAEA),
                     child: const Center(child: Icon(Icons.map_outlined, size: 80, color: AppColor.coolGrayText)),
                   ),
                 ),
@@ -66,7 +66,7 @@ class LiveTrackingScreen extends GetView<LiveTrackingController> {
                 Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   Text('Michael Johnson', style: AppTextStyle.titleSmallSemiBold.copyWith(color: AppColor.blackShade1)),
                   Row(children: [
-                    const Icon(Icons.star, size: 14, color: Color(0xffFFC107)),
+                    const Icon(Icons.star, size: 14, color: AppColor.darkGray),
                     const SizedBox(width: 2),
                     Text('4.3 (124 Reviews)', style: AppTextStyle.bodySmallRegular.copyWith(color: AppColor.coolGrayText)),
                   ]),
@@ -80,20 +80,20 @@ class LiveTrackingScreen extends GetView<LiveTrackingController> {
                 label: 'Call Now',
                 onTap: () {},
                 backgroundColor: Colors.white,
-                foregroundColor: AppColor.brownAccentPrimary,
-                border: Border.all(color: AppColor.brownAccentPrimary),
+                foregroundColor: AppColor.blackColor,
+                border: Border.all(color: AppColor.blackColor),
                 boxShadow: const [],
-                leadingIcon: const Icon(Icons.call_outlined, color: AppColor.brownAccentPrimary, size: 18),
+                leadingIcon: const Icon(Icons.call_outlined, color: AppColor.blackColor, size: 18),
               )),
               const SizedBox(width: 12),
               Expanded(child: CommonButton(
                 label: 'Chat Now',
                 onTap: () => Get.toNamed(AppRoutes.chatSupportScreen),
                 backgroundColor: Colors.white,
-                foregroundColor: AppColor.brownAccentPrimary,
-                border: Border.all(color: AppColor.brownAccentPrimary),
+                foregroundColor: AppColor.blackColor,
+                border: Border.all(color: AppColor.blackColor),
                 boxShadow: const [],
-                leadingIcon: const Icon(Icons.chat_bubble_outline, color: AppColor.brownAccentPrimary, size: 18),
+                leadingIcon: const Icon(Icons.chat_bubble_outline, color: AppColor.blackColor, size: 18),
               )),
             ]),
             const SizedBox(height: 12),
@@ -105,14 +105,14 @@ class LiveTrackingScreen extends GetView<LiveTrackingController> {
                   Text('Estimated Arrival', style: AppTextStyle.bodySmallRegular.copyWith(color: AppColor.coolGrayText)),
                   Text('15 Minutes', style: AppTextStyle.titleLargeBold.copyWith(color: AppColor.blackShade1)),
                 ])),
-                const Icon(Icons.access_time_rounded, color: AppColor.brownAccentPrimary, size: 28),
+                const Icon(Icons.access_time_rounded, color: AppColor.blackColor, size: 28),
               ]),
             ),
             const SizedBox(height: 16),
             CommonButton(
               label: 'Check Status',
               onTap: controller.checkStatus,
-              backgroundColor: AppColor.brownAccentPrimary,
+              backgroundColor: AppColor.blackColor,
               foregroundColor: Colors.white,
             ),
           ],
@@ -126,7 +126,7 @@ class _DashedLinePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = AppColor.brownAccentPrimary.withValues(alpha: 0.5)
+      ..color = AppColor.blackColor.withValues(alpha: 0.5)
       ..strokeWidth = 2
       ..style = PaintingStyle.stroke;
     const dashWidth = 8.0;

@@ -43,53 +43,100 @@ class OnboardingScreen extends StatelessWidget {
                         shape: BoxShape.circle,
                         color: AppColor.darkGray.withValues(alpha: 0.05),
                       ),
-                      child: const Icon(Icons.arrow_back_ios_rounded, size: 20),
+                      child: const Icon(
+                        Icons.arrow_back_ios_rounded,
+                        size: 20,
+                        color: Colors.black,
+                      ),
                     ),
                   )
                 : const SizedBox.shrink(),
-            title: DropdownButtonHideUnderline(
-              child: DropdownButton<AppLanguage>(
-                value: current,
-                dropdownColor: Colors.white,
-                items: [
-                  DropdownMenuItem(
-                    value: AppLanguage.english,
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Text('🇺🇸 '),
-                        const SizedBox(width: 6),
-                        Text(
-                          'language_english'.tr,
-                          style: AppTextStyle.titleMediumMedium.copyWith(
-                            fontSize: 14,
-                            color: AppColor.darkGray,
-                          ),
-                        ),
-                      ],
-                    ),
+            title: Center(
+              child: DropdownButtonHideUnderline(
+                child: DropdownButton<AppLanguage>(
+
+                  value: current,
+
+                  // Keep the dropdown content compact.
+                  isExpanded: false,
+
+                  // White dropdown menu.
+                  dropdownColor: Colors.white,
+
+                  // Remove default extra padding.
+                  padding: EdgeInsets.zero,
+
+                  // Center selected item.
+                  alignment: Alignment.center,
+
+                  icon: const Icon(
+                    Icons.keyboard_arrow_down_rounded,
+                    size: 20,
+                    color: AppColor.darkGray,
                   ),
-                  DropdownMenuItem(
-                    value: AppLanguage.spanish,
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Text('🇪🇸 '),
-                        const SizedBox(width: 6),
-                        Text(
-                          'language_spanish'.tr,
-                          style: AppTextStyle.titleMediumMedium.copyWith(
-                            fontSize: 14,
-                            color: AppColor.darkGray,
-                          ),
-                        ),
-                      ],
+
+                  items: [
+                    DropdownMenuItem<AppLanguage>(
+                      value: AppLanguage.arabic,
+                      child: Text('language_arabic'.tr),
                     ),
-                  ),
-                ],
-                onChanged: (val) => val == AppLanguage.spanish
-                    ? languageService.setSpanish()
-                    : languageService.setEnglish(),
+                    DropdownMenuItem<AppLanguage>(
+                      value: AppLanguage.english,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Text('🇺🇸', style: TextStyle(fontSize: 16)),
+
+                            const SizedBox(width: 8),
+
+                            Text(
+                              'language_english'.tr,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: AppTextStyle.titleMediumMedium.copyWith(
+                                fontSize: 14,
+                                color: AppColor.darkGray,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+
+                    DropdownMenuItem<AppLanguage>(
+                      value: AppLanguage.spanish,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Text('🇪🇸', style: TextStyle(fontSize: 16)),
+
+                            const SizedBox(width: 8),
+
+                            Text(
+                              'language_spanish'.tr,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: AppTextStyle.titleMediumMedium.copyWith(
+                                fontSize: 14,
+                                color: AppColor.darkGray,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+
+                  onChanged: (val) {
+                    if (val == null) return;
+
+                    languageService.setLanguage(val);
+                  },
+                ),
               ),
             ),
             centerTitle: true,
@@ -117,12 +164,15 @@ class OnboardingScreen extends StatelessWidget {
       // ── Next button — Scaffold places this before body, so body never hides behind it
       bottomNavigationBar: Padding(
         padding: EdgeInsets.fromLTRB(20, 12, 20, bottomPadding + 12),
-        child: CommonButton(
-          label: 'onboarding_next'.tr,
-          onTap: controller.nextPage,
-          trailingIcon: Icon(
-            Icons.arrow_forward,
-            color: AppColor.brownAccentPrimary,
+        child: SizedBox(
+          height: 52,
+          child: CommonButton(
+            label: 'onboarding_next'.tr,
+            onTap: controller.nextPage,
+            trailingIcon: Icon(
+              Icons.arrow_forward,
+              color: AppColor.brownAccentPrimary,
+            ),
           ),
         ),
       ),
@@ -137,7 +187,10 @@ class OnboardingScreen extends StatelessWidget {
             final data = controller.onboardingStepList[index];
             return LayoutBuilder(
               builder: (context, constraints) {
-                final imgHeight = (constraints.maxHeight * 0.42).clamp(140.0, 320.0);
+                final imgHeight = (constraints.maxHeight * 0.42).clamp(
+                  140.0,
+                  320.0,
+                );
                 return SingleChildScrollView(
                   padding: EdgeInsets.symmetric(
                     horizontal: size.width * 0.06,
@@ -155,18 +208,21 @@ class OnboardingScreen extends StatelessWidget {
                           duration: const Duration(milliseconds: 400),
                           switchInCurve: Curves.easeOut,
                           switchOutCurve: Curves.easeIn,
-                          transitionBuilder: (child, animation) => FadeTransition(
-                            opacity: animation,
-                            child: SlideTransition(
-                              position: Tween<Offset>(
-                                begin: const Offset(0.08, 0),
-                                end: Offset.zero,
-                              ).animate(animation),
-                              child: child,
-                            ),
-                          ),
+                          transitionBuilder: (child, animation) =>
+                              FadeTransition(
+                                opacity: animation,
+                                child: SlideTransition(
+                                  position: Tween<Offset>(
+                                    begin: const Offset(0.08, 0),
+                                    end: Offset.zero,
+                                  ).animate(animation),
+                                  child: child,
+                                ),
+                              ),
                           child: index == 2
-                              ? const CircularOrbitWidget(key: ValueKey('orbit'))
+                              ? const CircularOrbitWidget(
+                                  key: ValueKey('orbit'),
+                                )
                               : Image.asset(
                                   data.imagePath ?? '',
                                   key: ValueKey(data.imagePath),
@@ -190,16 +246,17 @@ class OnboardingScreen extends StatelessWidget {
                           duration: const Duration(milliseconds: 350),
                           switchInCurve: Curves.easeOut,
                           switchOutCurve: Curves.easeIn,
-                          transitionBuilder: (child, animation) => FadeTransition(
-                            opacity: animation,
-                            child: SlideTransition(
-                              position: Tween<Offset>(
-                                begin: const Offset(0, 0.12),
-                                end: Offset.zero,
-                              ).animate(animation),
-                              child: child,
-                            ),
-                          ),
+                          transitionBuilder: (child, animation) =>
+                              FadeTransition(
+                                opacity: animation,
+                                child: SlideTransition(
+                                  position: Tween<Offset>(
+                                    begin: const Offset(0, 0.12),
+                                    end: Offset.zero,
+                                  ).animate(animation),
+                                  child: child,
+                                ),
+                              ),
                           child: Column(
                             key: ValueKey(index),
                             children: [

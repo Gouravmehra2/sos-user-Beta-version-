@@ -15,9 +15,9 @@ class OtpScreen extends StatelessWidget {
     return GetBuilder<OtpController>(
       builder: (controller) {
         return AuthLayout(
-              imagePath: AppAssets.verifyNumber,
-              body: _OtpPanel(controller: controller),
-            );
+          imagePath: AppAssets.authBackgroundImage,
+          body: _OtpPanel(controller: controller),
+        );
       },
     );
   }
@@ -33,12 +33,9 @@ class _OtpPanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(20),
-          topRight: Radius.circular(20),
-        ),
+        borderRadius: BorderRadius.circular(30),
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -74,31 +71,66 @@ class _OtpPanel extends StatelessWidget {
                 const SizedBox(height: 28),
 
                 // ── PIN input ──────────────────────────────────────────────
-                CommonPinInputField(
-                  length: 6,
-                  controller: controller.pinController,
-                  onChanged: controller.onOtpChanged,
-                  onCompleted: controller.onOtpCompleted,
-                  cellSize: 50,
-                  borderRadius: 50,
-                  spacing: 8,
-                  borderColor: AppColor.lightGreyColor,
-                  focusedBorderColor: AppColor.brownAccentPrimary,
-                  filledBorderColor: AppColor.blackShade1,
-                  errorBorderColor: Colors.red,
+                LayoutBuilder(
+                  builder: (context, constraints) {
+                    final spacing = constraints.maxWidth < 360 ? 4.0 : 8.0;
+                    final cellSize = ((constraints.maxWidth - spacing * 5) / 6)
+                        .clamp(36.0, 50.0)
+                        .toDouble();
+
+                    return CommonPinInputField(
+                      length: 6,
+                      controller: controller.pinController,
+                      onChanged: controller.onOtpChanged,
+                      onCompleted: controller.onOtpCompleted,
+                      cellSize: cellSize,
+                      borderRadius: cellSize / 2,
+                      spacing: spacing,
+                      borderColor: AppColor.lightGreyColor,
+                      focusedBorderColor: AppColor.blackColor,
+                      filledBorderColor: AppColor.blackShade1,
+                      errorBorderColor: Colors.red,
+                    );
+                  },
                 ),
+                if (controller.isPasswordReset) ...[
+                  const SizedBox(height: 12),
+                  Obx(
+                    () => Text(
+                      controller.isCodeExpired
+                          ? 'reset_otp_expired'.tr
+                          : 'reset_otp_expires_in'.trArgs([
+                              controller.expiryCountdownText,
+                            ]),
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: controller.isCodeExpired
+                            ? Colors.red
+                            : AppColor.coolGrayText,
+                      ),
+                    ),
+                  ),
+                ],
                 const SizedBox(height: 28),
 
                 // ── Verify & Continue button ───────────────────────────────
-                CommonButton(
-                  label: 'otp_verify_btn'.tr,
-                  onTap: controller.handleVerify,
+                Obx(
+                  () => CommonButton(
+                    label: controller.isPasswordReset
+                        ? 'reset_otp_continue'.tr
+                        : 'otp_verify_btn'.tr,
+                    onTap: controller.handleVerify,
+                    isLoading: controller.isLoading.value,
+                    enabled: !controller.isCodeExpired,
+                  ),
                 ),
                 const SizedBox(height: 20),
 
                 // ── Resend + countdown ─────────────────────────────────────
                 Obx(() {
-                  final canResend = controller.canResend.value;
+                  final canResend =
+                      controller.canResend.value &&
+                      !controller.isResending.value;
                   final countdown = controller.countdownText;
 
                   return Row(
@@ -114,16 +146,27 @@ class _OtpPanel extends StatelessWidget {
                       ),
                       GestureDetector(
                         onTap: canResend ? controller.handleResend : null,
-                        child: Text(
-                          canResend
-                              ? 'otp_resend'.tr
-                              : 'otp_resend_countdown'.trArgs([countdown]),
-                          style: const TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w600,
-                            color: AppColor.brownAccentPrimary,
-                          ),
-                        ),
+                        child: controller.isResending.value
+                            ? const SizedBox(
+                                width: 14,
+                                height: 14,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  color: AppColor.blackColor,
+                                ),
+                              )
+                            : Text(
+                                canResend
+                                    ? 'otp_resend'.tr
+                                    : 'otp_resend_countdown'.trArgs([
+                                        countdown,
+                                      ]),
+                                style: const TextStyle(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w600,
+                                  color: AppColor.blackColor,
+                                ),
+                              ),
                       ),
                     ],
                   );
@@ -138,7 +181,7 @@ class _OtpPanel extends StatelessWidget {
                     style: const TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
-                      color: AppColor.brownAccentPrimary,
+                      color: AppColor.blackColor,
                     ),
                   ),
                 ),

@@ -13,7 +13,7 @@ class SecurityScreen extends GetView<SecurityController> {
     return MyScaffold(
       backgroundColor: const Color(0xffF6F6F6),
       appBar: AppBar(
-        backgroundColor: AppColor.brownAccentPrimary,
+        backgroundColor: AppColor.blackColor,
         iconTheme: const IconThemeData(color: Colors.white),
         title: Text(
           'Security',
@@ -272,9 +272,9 @@ class _DeleteAccountCard extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: const Color(0xFFFFE5E5),
+          color: const Color(0xFFEEEEEE),
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: const Color(0xFFFFCDD2)),
+          border: Border.all(color: const Color(0xFFEAEAEA)),
         ),
         child: Row(
           children: [
@@ -344,10 +344,10 @@ class _IconBox extends StatelessWidget {
       width: size,
       height: size,
       decoration: BoxDecoration(
-        color: const Color(0xFFFFF3E0),
+        color: const Color(0xFFF5F5F5),
         borderRadius: BorderRadius.circular(10),
       ),
-      child: Icon(icon, size: iconSize, color: AppColor.brownAccentPrimary),
+      child: Icon(icon, size: iconSize, color: AppColor.blackColor),
     );
   }
 }

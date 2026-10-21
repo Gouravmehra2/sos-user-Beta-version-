@@ -16,9 +16,9 @@ class ForgotPasswordScreen extends StatelessWidget {
     return GetBuilder<ForgotPasswordController>(
       builder: (controller) {
         return AuthLayout(
-              imagePath: AppAssets.forgotPassword,
-              body: _ForgotPasswordPanel(controller: controller),
-            );
+          imagePath: AppAssets.authBackgroundImage,
+          body: _ForgotPasswordPanel(controller: controller),
+        );
       },
     );
   }
@@ -34,12 +34,9 @@ class _ForgotPasswordPanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(20),
-          topRight: Radius.circular(20),
-        ),
+        borderRadius: BorderRadius.circular(30),
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -127,50 +124,10 @@ class _ForgotPasswordPanel extends StatelessWidget {
                     label: controller.buttonLabel,
                     onTap: controller.handleGetRecoveryLink,
                     isLoading: controller.isLoading.value,
+                    enabled: !controller.isLoading.value,
                   ),
                 ),
                 const SizedBox(height: 20),
-
-                // ── Resend row (visible after first send) ──────────────────
-                Obx(() {
-                  if (!controller.linkSent.value) {
-                    return const SizedBox.shrink();
-                  }
-
-                  final canResend = controller.canResend.value;
-                  final countdown = controller.countdownText;
-
-                  return Padding(
-                    padding: const EdgeInsets.only(bottom: 4),
-                    child: GestureDetector(
-                      onTap: canResend ? controller.handleResend : null,
-                      child: Text.rich(
-                        TextSpan(
-                          children: [
-                            const TextSpan(
-                              text: 'Resend Link',
-                              style: TextStyle(
-                                fontSize: 13,
-                                fontWeight: FontWeight.w700,
-                                color: AppColor.blackShade1,
-                              ),
-                            ),
-                            if (!canResend)
-                              TextSpan(
-                                text: '  in $countdown',
-                                style: const TextStyle(
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w600,
-                                  color: AppColor.blackShade1,
-                                ),
-                              ),
-                          ],
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  );
-                }),
 
                 // ── Back to Login ──────────────────────────────────────────
                 GestureDetector(
@@ -180,7 +137,7 @@ class _ForgotPasswordPanel extends StatelessWidget {
                     style: const TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
-                      color: AppColor.brownAccentPrimary,
+                      color: AppColor.blackColor,
                     ),
                   ),
                 ),

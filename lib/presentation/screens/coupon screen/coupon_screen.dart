@@ -14,7 +14,7 @@ class CouponScreen extends GetView<CouponController> {
     return MyScaffold(
       backgroundColor: const Color(0xffF6F6F6),
       appBar: AppBar(
-        backgroundColor: AppColor.brownAccentPrimary,
+        backgroundColor: AppColor.blackColor,
         iconTheme: const IconThemeData(color: Colors.white),
         title: Text(
           'Coupons',
@@ -38,14 +38,17 @@ class CouponScreen extends GetView<CouponController> {
                     controller: controller.couponCodeController,
                     decoration: InputDecoration(
                       hintText: 'Enter coupon code',
-                      hintStyle: AppTextStyle.bodyMediumRegular
-                          .copyWith(color: AppColor.coolGrayText),
-                      prefixIcon: const Icon(Icons.label_outline,
-                          color: AppColor.coolGrayText, size: 20),
+                      hintStyle: AppTextStyle.bodyMediumRegular.copyWith(
+                        color: AppColor.coolGrayText,
+                      ),
+                      prefixIcon: const Icon(
+                        Icons.label_outline,
+                        color: AppColor.coolGrayText,
+                        size: 20,
+                      ),
                       border: InputBorder.none,
                       isDense: true,
-                      contentPadding:
-                          const EdgeInsets.symmetric(vertical: 14),
+                      contentPadding: const EdgeInsets.symmetric(vertical: 14),
                     ),
                   ),
                 ),
@@ -56,15 +59,19 @@ class CouponScreen extends GetView<CouponController> {
                 child: ElevatedButton(
                   onPressed: controller.applyCoupon,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColor.brownAccentDark,
+                    backgroundColor: AppColor.blackShade2,
                     padding: const EdgeInsets.symmetric(horizontal: 24),
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8)),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
                     elevation: 0,
                   ),
-                  child: Text('Apply',
-                      style: AppTextStyle.titleSmallSemiBold
-                          .copyWith(color: Colors.white)),
+                  child: Text(
+                    'Apply',
+                    style: AppTextStyle.titleSmallSemiBold.copyWith(
+                      color: Colors.white,
+                    ),
+                  ),
                 ),
               ),
             ],
@@ -75,8 +82,9 @@ class CouponScreen extends GetView<CouponController> {
           // Available Coupons label
           Text(
             'Available Coupons',
-            style: AppTextStyle.titleMediumSemiBold
-                .copyWith(color: AppColor.blackShade1),
+            style: AppTextStyle.titleMediumSemiBold.copyWith(
+              color: AppColor.blackShade1,
+            ),
           ),
 
           const SizedBox(height: 12),
@@ -94,8 +102,7 @@ class CouponScreen extends GetView<CouponController> {
 
           // View Used Coupons
           Container(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(10),
@@ -106,11 +113,15 @@ class CouponScreen extends GetView<CouponController> {
               children: [
                 Text(
                   'View Used Coupons',
-                  style: AppTextStyle.bodyMediumRegular
-                      .copyWith(color: AppColor.blackShade1),
+                  style: AppTextStyle.bodyMediumRegular.copyWith(
+                    color: AppColor.blackShade1,
+                  ),
                 ),
-                const Icon(Icons.chevron_right,
-                    color: AppColor.coolGrayText, size: 22),
+                const Icon(
+                  Icons.chevron_right,
+                  color: AppColor.coolGrayText,
+                  size: 22,
+                ),
               ],
             ),
           ),
@@ -121,7 +132,7 @@ class CouponScreen extends GetView<CouponController> {
           Container(
             padding: const EdgeInsets.all(14),
             decoration: BoxDecoration(
-              color: const Color(0xffFAF5EE),
+              color: const Color(0xffF5F5F5),
               borderRadius: BorderRadius.circular(10),
               border: Border.all(color: const Color(0xffEEE2CC)),
             ),
@@ -132,11 +143,14 @@ class CouponScreen extends GetView<CouponController> {
                   width: 46,
                   height: 46,
                   decoration: BoxDecoration(
-                    color: const Color(0xffEDE5D8),
+                    color: const Color(0xffE8E8E8),
                     shape: BoxShape.circle,
                   ),
-                  child: const Icon(Icons.monetization_on_outlined,
-                      color: AppColor.brownAccentPrimary, size: 22),
+                  child: const Icon(
+                    Icons.monetization_on_outlined,
+                    color: AppColor.blackColor,
+                    size: 22,
+                  ),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
@@ -145,14 +159,16 @@ class CouponScreen extends GetView<CouponController> {
                     children: [
                       Text(
                         'How it works?',
-                        style: AppTextStyle.titleSmallSemiBold
-                            .copyWith(color: AppColor.blackShade1),
+                        style: AppTextStyle.titleSmallSemiBold.copyWith(
+                          color: AppColor.blackShade1,
+                        ),
                       ),
                       const SizedBox(height: 4),
                       Text(
                         'Apply a coupon code at checkout to get instant discount on your service booking.',
-                        style: AppTextStyle.bodySmallRegular
-                            .copyWith(color: AppColor.coolGrayText),
+                        style: AppTextStyle.bodySmallRegular.copyWith(
+                          color: AppColor.coolGrayText,
+                        ),
                       ),
                     ],
                   ),
@@ -166,7 +182,7 @@ class CouponScreen extends GetView<CouponController> {
           // Promo code card with dashed brown border
           CustomPaint(
             painter: _DashedRectPainter(
-              color: AppColor.brownAccentPrimary,
+              color: AppColor.blackColor,
               radius: 12,
               dashLength: 8,
               gapLength: 5,
@@ -187,21 +203,26 @@ class CouponScreen extends GetView<CouponController> {
                       color: Color(0xffEEEEEE),
                       shape: BoxShape.circle,
                     ),
-                    child: const Icon(Icons.confirmation_num_outlined,
-                        color: Color(0xff999999), size: 28),
+                    child: const Icon(
+                      Icons.confirmation_num_outlined,
+                      color: Color(0xff999999),
+                      size: 28,
+                    ),
                   ),
                   const SizedBox(height: 16),
                   Text(
                     'Have a Promo Code?',
-                    style: AppTextStyle.headlineLargeBold
-                        .copyWith(color: AppColor.blackShade1),
+                    style: AppTextStyle.headlineLargeBold.copyWith(
+                      color: AppColor.blackShade1,
+                    ),
                   ),
                   const SizedBox(height: 8),
                   Text(
                     'Enter your manual code below to\nadd it to your wallet.',
                     textAlign: TextAlign.center,
-                    style: AppTextStyle.bodyMediumRegular
-                        .copyWith(color: AppColor.coolGrayText),
+                    style: AppTextStyle.bodyMediumRegular.copyWith(
+                      color: AppColor.coolGrayText,
+                    ),
                   ),
                   const SizedBox(height: 20),
                   Row(
@@ -211,8 +232,9 @@ class CouponScreen extends GetView<CouponController> {
                           controller: controller.redeemCodeController,
                           decoration: InputDecoration(
                             hintText: 'Enter code here',
-                            hintStyle: AppTextStyle.bodyMediumRegular
-                                .copyWith(color: AppColor.coolGrayText),
+                            hintStyle: AppTextStyle.bodyMediumRegular.copyWith(
+                              color: AppColor.coolGrayText,
+                            ),
                             filled: true,
                             fillColor: const Color(0xffF2F2F2),
                             border: OutlineInputBorder(
@@ -229,7 +251,9 @@ class CouponScreen extends GetView<CouponController> {
                             ),
                             isDense: true,
                             contentPadding: const EdgeInsets.symmetric(
-                                horizontal: 14, vertical: 14),
+                              horizontal: 14,
+                              vertical: 14,
+                            ),
                           ),
                         ),
                       ),
@@ -239,17 +263,18 @@ class CouponScreen extends GetView<CouponController> {
                         child: ElevatedButton(
                           onPressed: controller.redeemCode,
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColor.brownAccentDark,
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 20),
+                            backgroundColor: AppColor.blackShade2,
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
                             shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8)),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
                             elevation: 0,
                           ),
                           child: Text(
                             'Redeem',
-                            style: AppTextStyle.titleSmallSemiBold
-                                .copyWith(color: Colors.white),
+                            style: AppTextStyle.titleSmallSemiBold.copyWith(
+                              color: Colors.white,
+                            ),
                           ),
                         ),
                       ),
@@ -299,13 +324,16 @@ class _CouponCard extends StatelessWidget {
                         children: [
                           Text(
                             coupon['code'],
-                            style: AppTextStyle.titleLargeBold
-                                .copyWith(color: AppColor.blackShade1),
+                            style: AppTextStyle.titleLargeBold.copyWith(
+                              color: AppColor.blackShade1,
+                            ),
                           ),
                           const SizedBox(height: 8),
                           Container(
                             padding: const EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 4),
+                              horizontal: 10,
+                              vertical: 4,
+                            ),
                             decoration: BoxDecoration(
                               color: AppColor.lightGreen1Color,
                               borderRadius: BorderRadius.circular(4),
@@ -314,13 +342,15 @@ class _CouponCard extends StatelessWidget {
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 const CircleAvatar(
-                                    radius: 4,
-                                    backgroundColor: AppColor.green2Color),
+                                  radius: 4,
+                                  backgroundColor: AppColor.green2Color,
+                                ),
                                 const SizedBox(width: 5),
                                 Text(
                                   'Valid',
-                                  style: AppTextStyle.bodySmallRegular
-                                      .copyWith(color: AppColor.green2Color),
+                                  style: AppTextStyle.bodySmallRegular.copyWith(
+                                    color: AppColor.green2Color,
+                                  ),
                                 ),
                               ],
                             ),
@@ -335,14 +365,16 @@ class _CouponCard extends StatelessWidget {
                         children: [
                           Text(
                             coupon['discount'],
-                            style: AppTextStyle.titleLargeBold
-                                .copyWith(color: AppColor.brownColor),
+                            style: AppTextStyle.titleLargeBold.copyWith(
+                              color: AppColor.darkGray,
+                            ),
                           ),
                           const SizedBox(height: 4),
                           Text(
                             coupon['desc'],
-                            style: AppTextStyle.bodySmallRegular
-                                .copyWith(color: AppColor.coolGrayText),
+                            style: AppTextStyle.bodySmallRegular.copyWith(
+                              color: AppColor.coolGrayText,
+                            ),
                           ),
                         ],
                       ),
@@ -350,18 +382,20 @@ class _CouponCard extends StatelessWidget {
                   ],
                 ),
               ),
-              Divider(
-                  color: const Color(0xffEEEEEE), height: 1, thickness: 1),
+              Divider(color: const Color(0xffEEEEEE), height: 1, thickness: 1),
               Padding(
                 padding: const EdgeInsets.symmetric(
-                    horizontal: 14, vertical: 10),
+                  horizontal: 14,
+                  vertical: 10,
+                ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
                       coupon['validTill'],
-                      style: AppTextStyle.bodySmallRegular
-                          .copyWith(color: AppColor.coolGrayText),
+                      style: AppTextStyle.bodySmallRegular.copyWith(
+                        color: AppColor.coolGrayText,
+                      ),
                     ),
                     Text(
                       'T&C Apply',
@@ -418,10 +452,12 @@ class _DashedRectPainter extends CustomPainter {
       ..style = PaintingStyle.stroke;
 
     final path = Path()
-      ..addRRect(RRect.fromRectAndRadius(
-        Rect.fromLTWH(0, 0, size.width, size.height),
-        Radius.circular(radius),
-      ));
+      ..addRRect(
+        RRect.fromRectAndRadius(
+          Rect.fromLTWH(0, 0, size.width, size.height),
+          Radius.circular(radius),
+        ),
+      );
 
     for (final metric in path.computeMetrics()) {
       double dist = 0;

@@ -8,10 +8,7 @@ import 'package:squadonsite/presentation/screens/home_screen/home_controller.dar
 class NeedHelpBanner extends StatelessWidget {
   final HomeController controller;
 
-  const NeedHelpBanner({
-    super.key,
-    required this.controller,
-  });
+  const NeedHelpBanner({super.key, required this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -21,19 +18,16 @@ class NeedHelpBanner extends StatelessWidget {
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
           color: Colors.black,
-          borderRadius: BorderRadius.circular(12)
+          borderRadius: BorderRadius.circular(50.0),
         ),
 
         /// Inner Glass Container
         child: Container(
-          padding: const EdgeInsets.all(10),
+          padding: EdgeInsets.only(left: 15, right: 15, top: 10, bottom: 10),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(2),
+            borderRadius: BorderRadius.circular(50.0),
 
-            border: Border.all(
-              color: Colors.white.withOpacity(.5),
-              width: 1,
-            ),
+            border: Border.all(color: Colors.white.withOpacity(.5), width: 1),
 
             gradient: LinearGradient(
               begin: Alignment.topLeft,
@@ -72,30 +66,27 @@ class NeedHelpBanner extends StatelessWidget {
               ),
 
               /// SOS Button
-              InkWell(onTap:(){
-                Get.toNamed(AppRoutes.sosScreen);
-              },
+              InkWell(
+                onTap: () {
+                  // Get.toNamed(AppRoutes.sosScreen);
+                  Get.toNamed(AppRoutes.chatSupportScreen);
+                },
                 child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 15,vertical: 8),
+                  padding: EdgeInsets.symmetric(horizontal: 15, vertical: 8),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFB8860B),
+                    color: Colors.black,
                     borderRadius: BorderRadius.circular(100),
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Icon(
-                        Icons.warning,
-                        color: Colors.black,
-                        size: 28,
-                      ),
+                      const Icon(Icons.warning, color: Colors.white, size: 28),
                       const SizedBox(width: 10),
                       Text(
                         'SOS',
                         style: AppTextStyle.titleMediumSemiBold.copyWith(
-                          color: AppColor.blackColor1,
+                          color: Colors.white,
                           fontWeight: FontWeight.w700,
-
                         ),
                       ),
                     ],

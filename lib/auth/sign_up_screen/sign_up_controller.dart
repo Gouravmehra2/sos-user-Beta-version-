@@ -1,10 +1,14 @@
+import 'package:squadonsite/core/services/google_auth_flow.dart';
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:squadonsite/constant/common_widgets/app_snackbar.dart';
 import 'package:squadonsite/auth/otp_screen/otp_controller.dart';
+import 'package:squadonsite/auth/sign_up_screen/model/sign_up_screen_model.dart';
 import 'package:squadonsite/constant/common_widgets/common_text_form_field.dart';
 import 'package:squadonsite/constant/routes/app_routes.dart';
+import 'package:squadonsite/core/services/api_repo.dart';
 import 'package:squadonsite/core/services/social_auth_service.dart';
 
 // ── Mode ──────────────────────────────────────────────────────────────────────
@@ -13,8 +17,6 @@ enum SignUpMode { phone, email }
 
 // ── Args ─────────────────────────────────────────────────────────────────────
 
-/// Pass when navigating to SignUpScreen.
-///
 /// Default (phone flow):
 /// ```dart
 /// Get.toNamed(AppRoutes.signUpScreen);
@@ -40,9 +42,9 @@ const Map<String, ({int min, int max})> _countryDigitLengths = {
   'US': (min: 10, max: 10),
   'CA': (min: 10, max: 10),
   'GB': (min: 10, max: 11),
-  'AU': (min: 9,  max: 9 ),
-  'AE': (min: 9,  max: 9 ),
-  'SA': (min: 9,  max: 9 ),
+  'AU': (min: 9, max: 9),
+  'AE': (min: 9, max: 9),
+  'SA': (min: 9, max: 9),
   'PK': (min: 10, max: 10),
   'BD': (min: 10, max: 10),
   'NG': (min: 10, max: 10),
@@ -52,57 +54,57 @@ const Map<String, ({int min, int max})> _countryDigitLengths = {
   'FR': (min: 10, max: 10),
   'BR': (min: 10, max: 11),
   'MX': (min: 10, max: 10),
-  'ZA': (min: 9,  max: 9 ),
-  'KE': (min: 9,  max: 9 ),
+  'ZA': (min: 9, max: 9),
+  'KE': (min: 9, max: 9),
   'EG': (min: 10, max: 10),
-  'IT': (min: 9,  max: 10),
-  'ES': (min: 9,  max: 9 ),
+  'IT': (min: 9, max: 10),
+  'ES': (min: 9, max: 9),
   'RU': (min: 10, max: 10),
   'TR': (min: 10, max: 10),
-  'ID': (min: 9,  max: 12),
+  'ID': (min: 9, max: 12),
   'PH': (min: 10, max: 10),
-  'TH': (min: 9,  max: 9 ),
-  'VN': (min: 9,  max: 10),
-  'MY': (min: 9,  max: 10),
-  'SG': (min: 8,  max: 8 ),
-  'NZ': (min: 8,  max: 9 ),
+  'TH': (min: 9, max: 9),
+  'VN': (min: 9, max: 10),
+  'MY': (min: 9, max: 10),
+  'SG': (min: 8, max: 8),
+  'NZ': (min: 8, max: 9),
   'AR': (min: 10, max: 10),
   'CO': (min: 10, max: 10),
-  'CL': (min: 9,  max: 9 ),
-  'GH': (min: 9,  max: 9 ),
-  'ET': (min: 9,  max: 9 ),
-  'TZ': (min: 9,  max: 9 ),
-  'UG': (min: 9,  max: 9 ),
+  'CL': (min: 9, max: 9),
+  'GH': (min: 9, max: 9),
+  'ET': (min: 9, max: 9),
+  'TZ': (min: 9, max: 9),
+  'UG': (min: 9, max: 9),
   'IQ': (min: 10, max: 10),
   'IR': (min: 10, max: 10),
-  'MA': (min: 9,  max: 9 ),
-  'DZ': (min: 9,  max: 9 ),
-  'SD': (min: 9,  max: 9 ),
-  'UA': (min: 9,  max: 9 ),
-  'PL': (min: 9,  max: 9 ),
-  'NL': (min: 9,  max: 9 ),
-  'BE': (min: 8,  max: 9 ),
-  'SE': (min: 9,  max: 10),
-  'NO': (min: 8,  max: 8 ),
-  'DK': (min: 8,  max: 8 ),
-  'FI': (min: 9,  max: 10),
-  'PT': (min: 9,  max: 9 ),
-  'CH': (min: 9,  max: 9 ),
+  'MA': (min: 9, max: 9),
+  'DZ': (min: 9, max: 9),
+  'SD': (min: 9, max: 9),
+  'UA': (min: 9, max: 9),
+  'PL': (min: 9, max: 9),
+  'NL': (min: 9, max: 9),
+  'BE': (min: 8, max: 9),
+  'SE': (min: 9, max: 10),
+  'NO': (min: 8, max: 8),
+  'DK': (min: 8, max: 8),
+  'FI': (min: 9, max: 10),
+  'PT': (min: 9, max: 9),
+  'CH': (min: 9, max: 9),
   'AT': (min: 10, max: 11),
-  'CZ': (min: 9,  max: 9 ),
-  'RO': (min: 9,  max: 9 ),
-  'HU': (min: 9,  max: 9 ),
+  'CZ': (min: 9, max: 9),
+  'RO': (min: 9, max: 9),
+  'HU': (min: 9, max: 9),
   'GR': (min: 10, max: 10),
-  'IL': (min: 9,  max: 9 ),
-  'KW': (min: 8,  max: 8 ),
-  'QA': (min: 8,  max: 8 ),
-  'BH': (min: 8,  max: 8 ),
-  'JO': (min: 9,  max: 9 ),
-  'LB': (min: 8,  max: 8 ),
-  'LK': (min: 9,  max: 9 ),
+  'IL': (min: 9, max: 9),
+  'KW': (min: 8, max: 8),
+  'QA': (min: 8, max: 8),
+  'BH': (min: 8, max: 8),
+  'JO': (min: 9, max: 9),
+  'LB': (min: 8, max: 8),
+  'LK': (min: 9, max: 9),
   'NP': (min: 10, max: 10),
-  'MM': (min: 9,  max: 10),
-  'KH': (min: 8,  max: 9 ),
+  'MM': (min: 9, max: 10),
+  'KH': (min: 8, max: 9),
   'KZ': (min: 10, max: 10),
 };
 
@@ -115,9 +117,8 @@ class SignUpController extends GetxController {
 
   bool get isEmailMode => mode == SignUpMode.email;
 
-  String get subtitleText => isEmailMode
-      ? 'signup_subtitle_email'.tr
-      : 'signup_subtitle_phone'.tr;
+  String get subtitleText =>
+      isEmailMode ? 'signup_subtitle_email'.tr : 'signup_subtitle_phone'.tr;
 
   // ── Controllers ───────────────────────────────────────────────────────────
 
@@ -126,6 +127,15 @@ class SignUpController extends GetxController {
 
   /// Used in email mode.
   final TextEditingController emailController = TextEditingController();
+
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController confirmPasswordController =
+      TextEditingController();
+
+  final RxBool isPasswordVisible = false.obs;
+  final RxBool isConfirmPasswordVisible = false.obs;
+  final RxBool isLoading = false.obs;
 
   // ── Form ──────────────────────────────────────────────────────────────────
 
@@ -147,9 +157,9 @@ class SignUpController extends GetxController {
   }
 
   List<TextInputFormatter> get phoneFormatters => [
-        FilteringTextInputFormatter.digitsOnly,
-        LengthLimitingTextInputFormatter(_digitLengths.max),
-      ];
+    FilteringTextInputFormatter.digitsOnly,
+    LengthLimitingTextInputFormatter(_digitLengths.max),
+  ];
 
   String? validatePhone(String? value) {
     if (value == null || value.trim().isEmpty) {
@@ -183,30 +193,70 @@ class SignUpController extends GetxController {
   // ── Email-only ────────────────────────────────────────────────────────────
 
   FormFieldValidator<String> get emailValidator => CommonValidators.compose([
-        CommonValidators.required(message: 'validation_email_required'.tr),
-        CommonValidators.email(message: 'validation_email'.tr),
+    CommonValidators.required(message: 'validation_email_required'.tr),
+    CommonValidators.email(message: 'validation_email'.tr),
+  ]);
+
+  FormFieldValidator<String> get nameValidator =>
+      CommonValidators.required(message: 'validation_name_required'.tr);
+
+  FormFieldValidator<String> get passwordValidator => CommonValidators.compose([
+    CommonValidators.required(message: 'validation_password_required'.tr),
+    CommonValidators.strongPassword(),
+  ]);
+
+  FormFieldValidator<String> get confirmPasswordValidator =>
+      CommonValidators.compose([
+        CommonValidators.required(
+          message: 'validation_confirm_password_required'.tr,
+        ),
+        CommonValidators.match(
+          () => passwordController.text,
+          message: 'validation_password_mismatch'.tr,
+        ),
       ]);
+
+  void togglePasswordVisibility() {
+    isPasswordVisible.value = !isPasswordVisible.value;
+  }
+
+  void toggleConfirmPasswordVisibility() {
+    isConfirmPasswordVisible.value = !isConfirmPasswordVisible.value;
+  }
 
   // ── Continue ──────────────────────────────────────────────────────────────
 
-  void handleContinue() {
+  Future<void> handleContinue() async {
     if (!formKey.currentState!.validate()) return;
+    if (isLoading.value || isAppleLoading.value || isGoogleLoading.value) {
+      return;
+    }
 
-    if (isEmailMode) {
-      Get.toNamed(
-        AppRoutes.otpScreen,
-        arguments: OtpArgs.email(email: emailController.text.trim()),
-      );
-    } else {
-      Get.toNamed(
-        AppRoutes.otpScreen,
-        arguments: OtpArgs.phone(
-          dialCode: selectedCountry.value.dialCode ?? '',
-          phone: phoneController.text.trim(),
+    isLoading.value = true;
+    final phone =
+        '${selectedCountry.value.dialCode ?? ''}${phoneController.text.trim()}';
+    try {
+      final response = await Get.find<ApiRepo>().startRegister(
+        RegisterRequest(
+          name: nameController.text.trim(),
+          email: emailController.text.trim(),
+          phone: phone,
+          password: passwordController.text,
         ),
       );
+      Get.toNamed(
+        AppRoutes.otpScreen,
+        arguments: OtpArgs.register(phone: phone, devOtp: response.devOtp),
+      );
+    } catch (error) {
+      AppSnackbar.show('signup_failed'.tr, _errorMessage(error));
+    } finally {
+      isLoading.value = false;
     }
   }
+
+  String _errorMessage(Object error) =>
+      error.toString().replaceFirst('Exception: ', '');
 
   // ── Social ────────────────────────────────────────────────────────────────
 
@@ -216,7 +266,9 @@ class SignUpController extends GetxController {
   final RxBool isGoogleLoading = false.obs;
 
   Future<void> handleAppleSignUp() async {
-    if (isAppleLoading.value || isGoogleLoading.value) return;
+    if (isLoading.value || isAppleLoading.value || isGoogleLoading.value) {
+      return;
+    }
 
     isAppleLoading.value = true;
     try {
@@ -226,7 +278,7 @@ class SignUpController extends GetxController {
           // TODO: send user.idToken to your backend, then navigate
           debugPrint('[SignUp] Apple user: ${user.uid}');
         },
-        onFailure: (msg) => Get.snackbar('signup_failed'.tr, msg),
+        onFailure: (msg) => AppSnackbar.show('signup_failed'.tr, msg),
         onCancelled: () {},
       );
     } finally {
@@ -235,18 +287,17 @@ class SignUpController extends GetxController {
   }
 
   Future<void> handleGoogleSignUp() async {
-    if (isAppleLoading.value || isGoogleLoading.value) return;
+    if (isLoading.value || isAppleLoading.value || isGoogleLoading.value) {
+      return;
+    }
 
     isGoogleLoading.value = true;
     try {
-      final result = await _socialAuth.signInWithGoogle();
-      result.fold(
-        onSuccess: (user) {
-          // TODO: send user.idToken to your backend, then navigate
-          debugPrint('[SignUp] Google user: ${user.email}');
+      await GoogleAuthFlow.run(
+        onSignup: (name, email) {
+          nameController.text = name;
+          emailController.text = email;
         },
-        onFailure: (msg) => Get.snackbar('signup_failed'.tr, msg),
-        onCancelled: () {},
       );
     } finally {
       isGoogleLoading.value = false;
@@ -268,8 +319,11 @@ class SignUpController extends GetxController {
 
   @override
   void onClose() {
-    phoneController.dispose();
-    emailController.dispose();
+    // phoneController.dispose();
+    // emailController.dispose();
+    // nameController.dispose();
+    // passwordController.dispose();
+    // confirmPasswordController.dispose();
     super.onClose();
   }
 }

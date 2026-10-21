@@ -1,197 +1,942 @@
+import 'package:squadonsite/presentation/screens/book_service_screen/widgets/addon_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:squadonsite/constant/app_assets/app_assets.dart';
 import 'package:squadonsite/constant/app_color/app_color.dart';
 import 'package:squadonsite/constant/app_text_style/app_text_style.dart';
 import 'package:squadonsite/constant/common_widgets/common_button.dart';
 import 'package:squadonsite/constant/routes/app_routes.dart';
-import 'package:squadonsite/presentation/screens/service_screen/service_controller.dart';
+import 'package:squadonsite/core/end_points/api_endpoints.dart';
+import 'package:squadonsite/presentation/screens/service_screen/model/service_screen_model.dart';
 
-class ServiceDetailBottomSheet extends StatelessWidget {
-  final ServiceModel service;
+class ServiceDetailBottomSheet extends StatefulWidget {
+  final ServiceItem service;
 
   const ServiceDetailBottomSheet({super.key, required this.service});
 
-  static void show(ServiceModel service) {
+  static void show(ServiceItem service) {
     Get.bottomSheet(
       ServiceDetailBottomSheet(service: service),
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
+      // Prevent the sheet from being dismissed by tapping outside
+      // while scrolling, which behaves inconsistently across platforms.
+      enableDrag: true,
     );
   }
 
   @override
+  State<ServiceDetailBottomSheet> createState() =>
+      _ServiceDetailBottomSheetState();
+}
+
+class _ServiceDetailBottomSheetState extends State<ServiceDetailBottomSheet> {
+  int? _selectedVariantIndex;
+  final Set<String> _selectedAddonIds = {};
+  final Map<String, bool> _expandedFaqs = {};
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.service.hasVariants && widget.service.variants.isNotEmpty) {
+      final index = widget.service.variants.indexWhere(
+            (variant) => variant.isActive,
+      );
+      _selectedVariantIndex = index < 0 ? null : index;
+    }
+  }
+
+  String _formatDuration(int minutes) {
+    if (minutes <= 0) return '';
+    if (minutes < 60) return '${minutes}m';
+    final h = minutes ~/ 60;
+    final m = minutes % 60;
+    return m == 0 ? '${h}h' : '${h}h ${m}m';
+  }
+
+  String _displayPrice() {
+    final s = widget.service;
+    final addonPriceInCents = s.addons
+        .where((addon) => addon.isActive && _selectedAddonIds.contains(addon.id))
+        .fold<int>(
+          0,
+          (total, addon) =>
+              total + (addon.price > 0 ? (addon.price * 100).round() : 0),
+        );
+
+    if (s.hasVariants && s.variants.isNotEmpty) {
+      if (_selectedVariantIndex != null) {
+        final priceInCents =
+            (s.variants[_selectedVariantIndex!].offerPrice * 100).round() +
+            addonPriceInCents;
+        return _formatPrice(priceInCents);
+      }
+      if (s.priceMin > 0 && s.priceMax > 0) {
+        final minPrice = (s.priceMin * 100).round() + addonPriceInCents;
+        final maxPrice = (s.priceMax * 100).round() + addonPriceInCents;
+        return minPrice == maxPrice
+            ? _formatPrice(minPrice)
+            : '${_formatPrice(minPrice)} – ${_formatPrice(maxPrice)}';
+      }
+    }
+    if (s.offerPrice > 0 || addonPriceInCents > 0) {
+      return _formatPrice((s.offerPrice * 100).round() + addonPriceInCents);
+    }
+    return '';
+  }
+
+  String _formatPrice(int priceInCents) {
+    final dollars = priceInCents / 100;
+    return priceInCents % 100 == 0
+        ? '\$${priceInCents ~/ 100}'
+        : '\$${dollars.toStringAsFixed(2)}';
+  }
+
+  int _displayDuration() {
+    if (widget.service.hasVariants &&
+        widget.service.variants.isNotEmpty &&
+        _selectedVariantIndex != null) {
+      return widget.service.variants[_selectedVariantIndex!].duration;
+    }
+    return widget.service.serviceDuration;
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final mq = MediaQuery.of(context);
+    final sh = mq.size.height;
+    final sw = mq.size.width;
+    // Account for the system bottom bar (Android nav bar / iOS home indicator)
+    // so the sheet and its footer always respect safe areas on both platforms.
+    final bottomInset = mq.padding.bottom;
+
+    final s = widget.service;
+    final imageUrl = s.featuredImage.isNotEmpty
+        ? '${ApiEndpoints.imageUrl}${s.featuredImage}'
+        : null;
+
     return Container(
-      height: MediaQuery.of(context).size.height * 0.90,
+      // Use 92% of screen height minus the top safe area so the sheet
+      // never goes behind the status bar on either platform.
+      height: sh * 0.92,
       decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+        color: Color(0xFFF9F9F9),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
       ),
       child: Column(
         children: [
-          // Drag handle
-          Container(
-            margin: const EdgeInsets.only(top: 12, bottom: 8),
-            width: 40, height: 4,
-            decoration: BoxDecoration(color: AppColor.lightGreyColor, borderRadius: BorderRadius.circular(2)),
+          // ── Drag handle ──────────────────────────────────────────────────
+          Padding(
+            padding: const EdgeInsets.only(top: 12, bottom: 4),
+            child: Container(
+              width: 36,
+              height: 4,
+              decoration: BoxDecoration(
+                color: AppColor.lightGreyColor,
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
           ),
+
+          // ── Hero header ──────────────────────────────────────────────────
+          _buildHeader(context, sw, imageUrl, s),
+
+          // ── Scrollable body ──────────────────────────────────────────────
           Expanded(
             child: SingleChildScrollView(
-              padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+              padding: EdgeInsets.fromLTRB(sw * 0.045, 20, sw * 0.045, 24),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Service header
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(12),
-                        child: Image.asset(service.image, width: 130, height: 110, fit: BoxFit.cover,
-                          errorBuilder: (_, __, ___) => Container(width: 130, height: 110, color: Colors.grey.shade200, child: const Icon(Icons.image, color: Colors.grey, size: 40))),
-                      ),
-                      const SizedBox(width: 14),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(service.name, style: AppTextStyle.titleLargeBold.copyWith(color: AppColor.blackShade1, fontSize: 20)),
-                            const SizedBox(height: 8),
-                            Row(children: [
-                              const Icon(Icons.star_rounded, size: 16, color: Color(0xffFFC107)),
-                              const SizedBox(width: 4),
-                              Text('${service.rating} (${service.reviews} Reviews)', style: AppTextStyle.bodySmallRegular.copyWith(color: AppColor.coolGrayText)),
-                            ]),
-                            const SizedBox(height: 10),
-                            Row(children: [
-                              Text(service.price, style: AppTextStyle.headlineLargeBold.copyWith(color: AppColor.brownAccentPrimary, fontSize: 24)),
-                              // const SizedBox(width: 12),
-                              // Container(width: 1, height: 20, color: AppColor.lightGreyColor),
-                              // const SizedBox(width: 12),
-                              // const Icon(Icons.access_time_rounded, size: 16, color: AppColor.coolGrayText),
-                              // const SizedBox(width: 4),
-                              // Text('45 - 60 min', style: AppTextStyle.bodySmallRegular.copyWith(color: AppColor.coolGrayText)),
-                            ]),
+                  // Variants
+                  if (s.hasVariants && s.variants.isNotEmpty) ...[
+                    _sectionTitle('Choose Package'),
+                    const SizedBox(height: 12),
+                    _buildVariants(sw, s.variants),
+                    _sectionDivider(),
+                  ],
 
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 24),
-
-                  // What's Included
-                  Text("What's Included", style: AppTextStyle.titleSmallSemiBold.copyWith(color: AppColor.blackShade1, fontSize: 16)),
-                  const SizedBox(height: 16),
-                  _WhatIncludedRow(),
-                  const Divider(height: 32),
+                  // Short bullet descriptions
+                  if (s.shortDescription.isNotEmpty) ...[
+                    _sectionTitle("What's Included"),
+                    const SizedBox(height: 10),
+                    _buildIncludedItems(s.includedItems),
+                    _sectionDivider(),
+                  ],
 
                   // About
-                  Text('About This Service', style: AppTextStyle.titleSmallSemiBold.copyWith(color: AppColor.blackShade1, fontSize: 16)),
-                  const SizedBox(height: 10),
-                  Text(
-                    "Our experts will install your smart thermostat and ensure it's configured for maximum comfort and energy savings. We work with all major brands including Nest, Ecobee, Honeywell and more.",
-                    style: AppTextStyle.bodyMediumRegular.copyWith(color: AppColor.blackShade1, height: 1.6),
-                  ),
-                  const Divider(height: 32),
+                  if (s.longDescription.isNotEmpty) ...[
+                    _sectionTitle('About This Service'),
+                    const SizedBox(height: 10),
+                    Text(
+                      s.longDescription,
+                      style: AppTextStyle.bodyMediumRegular.copyWith(
+                        color: AppColor.coolGrayText,
+                        height: 1.7,
+                      ),
+                    ),
+                    _sectionDivider(),
+                  ],
 
-                  // Customer Review
-                  Text('Customer Review', style: AppTextStyle.titleSmallSemiBold.copyWith(color: AppColor.blackShade1, fontSize: 16)),
-                  const SizedBox(height: 12),
-                  _ReviewCard(),
-                  const SizedBox(height: 16),
+                  // Process Steps
+                  if (s.processSteps.isNotEmpty) ...[
+                    _sectionTitle('How It Works'),
+                    const SizedBox(height: 12),
+                    _buildProcessSteps(s.processSteps),
+                    _sectionDivider(),
+                  ],
+
+                  // Excluded items
+                  if (s.excludedItems.isNotEmpty) ...[
+                    _sectionTitle('Not Included'),
+                    const SizedBox(height: 10),
+                    _buildExcludedItems(s.excludedItems),
+                    _sectionDivider(),
+                  ],
+
+                  // Requirements
+                  if (s.requirements.isNotEmpty) ...[
+                    _sectionTitle('Requirements'),
+                    const SizedBox(height: 10),
+                    _buildRequirements(s.requirements),
+                    _sectionDivider(),
+                  ],
+
+                  // Add-ons
+                  if (s.addons.isNotEmpty) ...[
+                    _sectionTitle('Available Add-ons'),
+                    const SizedBox(height: 12),
+                    _buildAddons(s.addons),
+                    _sectionDivider(),
+                  ],
+
+                  // Tools
+                  if (s.tools.isNotEmpty) ...[
+                    _sectionTitle('Tools & Equipment'),
+                    const SizedBox(height: 12),
+                    _buildTools(s.tools),
+                    _sectionDivider(),
+                  ],
+
+                  // FAQs
+                  if (s.faqs.isNotEmpty) ...[
+                    _sectionTitle('FAQs'),
+                    const SizedBox(height: 8),
+                    _buildFaqs(s.faqs),
+                    const SizedBox(height: 8),
+                  ],
                 ],
               ),
             ),
           ),
 
-          // Book Now button
-          Container(
-            padding: const EdgeInsets.fromLTRB(16, 12, 16, 28),
+          // ── Sticky Book Now footer ────────────────────────────────────────
+          _buildFooter(sw, bottomInset),
+        ],
+      ),
+    );
+  }
+
+  // ── Header ────────────────────────────────────────────────────────────────
+
+  Widget _buildHeader(BuildContext context,
+      double sw,
+      String? imageUrl,
+      ServiceItem s,) {
+    return Container(
+      padding: EdgeInsets.fromLTRB(sw * 0.045, 8, sw * 0.045, 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Featured image
+              ClipRRect(
+                borderRadius: BorderRadius.circular(14),
+                child: imageUrl != null
+                    ? Image.network(
+                  imageUrl,
+                  width: sw * 0.30,
+                  height: sw * 0.26,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stack) =>
+                      _imagePlaceholder(sw),
+                )
+                    : _imagePlaceholder(sw),
+              ),
+              SizedBox(width: sw * 0.04),
+              // Title + meta
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      s.name,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppTextStyle.titleLargeBold.copyWith(
+                        color: AppColor.blackShade1,
+                        height: 1.3,
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    // Rating row
+                    Wrap(
+                      crossAxisAlignment: WrapCrossAlignment.center,
+                      runSpacing: 4,
+                      children: [
+                        const Icon(
+                          Icons.star_rounded,
+                          size: 15,
+                          color: Color(0xFFF59E0B),
+                        ),
+                        const SizedBox(width: 3),
+                        Text(
+                          s.ratingsAverage.toStringAsFixed(1),
+                          style: AppTextStyle.bodySmallMedium.copyWith(
+                            color: AppColor.blackShade1,
+                          ),
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          '(${s.ratingsQuantity} reviews)',
+                          style: AppTextStyle.bodySmallRegular.copyWith(
+                            color: AppColor.coolGrayText,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    // Price
+                    Wrap(
+                      crossAxisAlignment: WrapCrossAlignment.center,
+                      runSpacing: 4,
+                      children: [
+                        Text(
+                          _displayPrice(),
+                          style: AppTextStyle.headlineMediumSemiBold.copyWith(
+                            color: AppColor.blackColor,
+                          ),
+                        ),
+                        if (_displayDuration() > 0)
+                          Text(
+                            '/${_formatDuration(_displayDuration())}',
+                            style: AppTextStyle.headlineMediumSemiBold.copyWith(
+                                color: AppColor.coolGrayText,
+                                fontSize: 15
+                            ),
+                          ),
+                      ],
+                    ),
+                    const SizedBox(height: 4),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ── Variants ──────────────────────────────────────────────────────────────
+
+  Widget _buildVariants(double sw, List<VariantItem> variants) {
+    return Column(
+      children: List.generate(variants.length, (i) {
+        final v = variants[i];
+        final selected = _selectedVariantIndex == i;
+        final hasDiscount = v.discountPercentage > 0;
+
+        return GestureDetector(
+          onTap: v.isActive
+              ? () => setState(() => _selectedVariantIndex = i)
+              : null,
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 180),
+            margin: const EdgeInsets.only(bottom: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+            decoration: BoxDecoration(
+              color: selected ? AppColor.blackColor : Colors.white,
+              border: Border.all(
+                color: selected ? AppColor.blackColor : AppColor.lightGreyColor,
+                width: selected ? 1.5 : 1,
+              ),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Row(
+              children: [
+                // Radio indicator
+                Container(
+                  width: 18,
+                  height: 18,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: selected ? Colors.white : AppColor.coolGrayText,
+                      width: 1.5,
+                    ),
+                  ),
+                  child: selected
+                      ? Center(
+                    child: Container(
+                      width: 8,
+                      height: 8,
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.white,
+                      ),
+                    ),
+                  )
+                      : null,
+                ),
+                const SizedBox(width: 12),
+                // Label
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        v.name,
+                        style: AppTextStyle.titleSmallSemiBold.copyWith(
+                          color: selected ? Colors.white : AppColor.blackShade1,
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      if(v.duration > 0)Row(
+                        children: [
+                          const Icon(
+                            Icons.access_time_outlined,
+                            size: 11,
+                            color: AppColor.coolGrayText,
+                          ),
+                          const SizedBox(width: 3),
+                          Text(
+                            _formatDuration(v.duration),
+                            style: AppTextStyle.labelSmallRegular.copyWith(
+                              color: selected
+                                  ? Colors.white60
+                                  : AppColor.coolGrayText,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                // Price block
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      '\$${v.offerPrice}',
+                      style: AppTextStyle.titleSmallSemiBold.copyWith(
+                        color: selected ? Colors.white : AppColor.blackColor,
+                        fontSize: 15,
+                      ),
+                    ),
+                    if (hasDiscount) ...[
+                      const SizedBox(height: 2),
+                      Text(
+                        '\$${v.actualPrice}',
+                        style: AppTextStyle.labelSmallRegular.copyWith(
+                          color: selected
+                              ? Colors.white60
+                              : AppColor.coolGrayText,
+                          decoration: TextDecoration.lineThrough,
+                        ),
+                      ),
+                    ],
+                    if (hasDiscount)
+                      Container(
+                        margin: const EdgeInsets.only(top: 3),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 6,
+                          vertical: 2,
+                        ),
+                        decoration: BoxDecoration(
+                          color: selected
+                              ? Colors.white.withValues(alpha: 0.15)
+                              : AppColor.lightGreen1Color,
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: Text(
+                          '${v.discountPercentage.toInt()}% off',
+                          style: AppTextStyle.labelSmallMedium.copyWith(
+                            color: selected
+                                ? Colors.white
+                                : AppColor.green2Color,
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      }),
+    );
+  }
+
+  // ── Included items ────────────────────────────────────────────────────────
+
+  Widget _buildIncludedItems(List<IncludedItem> items) {
+    return Column(
+      children: items
+          .map(
+            (item) =>
+            Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    margin: const EdgeInsets.only(top: 3),
+                    width: 18,
+                    height: 18,
+                    decoration: BoxDecoration(
+                      color: AppColor.lightGreen1Color,
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(
+                      Icons.check,
+                      size: 11,
+                      color: AppColor.green2Color,
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Text(
+                      item.title,
+                      style: AppTextStyle.bodyMediumRegular.copyWith(
+                        color: AppColor.blackShade1,
+                        height: 1.5,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+      )
+          .toList(),
+    );
+  }
+
+  // ── Excluded items ────────────────────────────────────────────────────────
+
+  Widget _buildExcludedItems(List<IncludedItem> items) {
+    return Column(
+      children: items
+          .map(
+            (item) =>
+            Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    margin: const EdgeInsets.only(top: 3),
+                    width: 18,
+                    height: 18,
+                    decoration: const BoxDecoration(
+                      color: Color(0xFFFFEEEE),
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(
+                      Icons.close,
+                      size: 11,
+                      color: Color(0xFFE53E3E),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Text(
+                      item.title,
+                      style: AppTextStyle.bodyMediumRegular.copyWith(
+                        color: AppColor.coolGrayText,
+                        height: 1.5,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+      )
+          .toList(),
+    );
+  }
+
+  // ── Process Steps ─────────────────────────────────────────────────────────
+
+  Widget _buildProcessSteps(List<ProcessStep> steps) {
+    return Column(
+      children: List.generate(steps.length, (i) {
+        final step = steps[i];
+        final isLast = i == steps.length - 1;
+        return IntrinsicHeight(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Step number + connector line
+              Column(
+                children: [
+                  Container(
+                    width: 30,
+                    height: 30,
+                    decoration: const BoxDecoration(
+                      color: AppColor.blackColor,
+                      shape: BoxShape.circle,
+                    ),
+                    child: Center(
+                      child: Text(
+                        '${step.stepNumber}',
+                        style: AppTextStyle.labelMediumSemiBold.copyWith(
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                  if (!isLast)
+                    Expanded(
+                      child: Container(
+                        width: 1.5,
+                        color: AppColor.lightGreyColor,
+                        margin: const EdgeInsets.symmetric(vertical: 4),
+                      ),
+                    ),
+                ],
+              ),
+              const SizedBox(width: 14),
+              // Content
+              Expanded(
+                child: Padding(
+                  padding: EdgeInsets.only(bottom: isLast ? 0 : 20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        step.title,
+                        style: AppTextStyle.titleSmallSemiBold.copyWith(
+                          color: AppColor.blackShade1,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        step.description,
+                        style: AppTextStyle.bodyMediumRegular.copyWith(
+                          color: AppColor.coolGrayText,
+                          height: 1.6,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      }),
+    );
+  }
+
+  // ── Requirements ──────────────────────────────────────────────────────────
+
+  Widget _buildRequirements(List<RequirementItem> reqs) {
+    return Column(
+      children: reqs
+          .map(
+            (r) =>
+            Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    margin: const EdgeInsets.only(top: 3),
+                    width: 18,
+                    height: 18,
+                    decoration: const BoxDecoration(
+                      color: Color(0xFFEEF2FF),
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(
+                      Icons.info_outline,
+                      size: 11,
+                      color: Color(0xFF4F6EF7),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Text(
+                      r.title,
+                      style: AppTextStyle.bodyMediumRegular.copyWith(
+                        color: AppColor.blackShade1,
+                        height: 1.5,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+      )
+          .toList(),
+    );
+  }
+
+  // ── Add-ons ───────────────────────────────────────────────────────────────
+
+  Widget _buildAddons(List<AddonItem> addons) =>
+      AddonSelector(
+        addons: addons,
+        selectedIds: _selectedAddonIds,
+        onToggle: (addon) =>
+            setState(() {
+              if (!_selectedAddonIds.add(addon.id)) _selectedAddonIds.remove(
+                  addon.id);
+            }),
+      );
+
+  // ── Tools ─────────────────────────────────────────────────────────────────
+
+  Widget _buildTools(List<ServiceToolItem> tools) {
+    return Column(
+      children: tools.map((tool) {
+        return Container(
+          margin: const EdgeInsets.only(bottom: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+          decoration: BoxDecoration(
             color: Colors.white,
+            border: Border.all(color: AppColor.lightGreyColor),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                width: 36,
+                height: 36,
+                decoration: BoxDecoration(
+                  color: AppColor.neutral1,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: const Icon(
+                  Icons.build_outlined,
+                  size: 18,
+                  color: AppColor.darkGray,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      tool.name,
+                      style: AppTextStyle.titleSmallSemiBold.copyWith(
+                        color: AppColor.blackShade1,
+                      ),
+                    ),
+                    if (tool.description.isNotEmpty) ...[
+                      const SizedBox(height: 3),
+                      Text(
+                        tool.description,
+                        style: AppTextStyle.bodySmallRegular.copyWith(
+                          color: AppColor.coolGrayText,
+                          height: 1.5,
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+      }).toList(),
+    );
+  }
+
+  // ── FAQs ──────────────────────────────────────────────────────────────────
+
+  Widget _buildFaqs(List<FaqItem> faqs) {
+    return Column(
+      children: faqs.map((faq) {
+        final expanded = _expandedFaqs[faq.question] ?? false;
+        return Container(
+          margin: const EdgeInsets.only(bottom: 8),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            border: Border.all(color: AppColor.lightGreyColor),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          // Use ExpansionTileTheme to neutralise Material default
+          // padding/divider differences between Android and iOS.
+          child: ExpansionTileTheme(
+            data: const ExpansionTileThemeData(
+              // Remove the top/bottom borders Flutter draws by default.
+              collapsedShape: RoundedRectangleBorder(side: BorderSide.none),
+              shape: RoundedRectangleBorder(side: BorderSide.none),
+            ),
+            child: ExpansionTile(
+              tilePadding: const EdgeInsets.symmetric(
+                horizontal: 14,
+                vertical: 2,
+              ),
+              childrenPadding: const EdgeInsets.fromLTRB(14, 0, 14, 14),
+              // Suppress the default top/bottom dividers that Material adds.
+              collapsedBackgroundColor: Colors.transparent,
+              backgroundColor: Colors.transparent,
+              onExpansionChanged: (val) =>
+                  setState(() => _expandedFaqs[faq.question] = val),
+              trailing: AnimatedRotation(
+                turns: expanded ? 0.5 : 0,
+                duration: const Duration(milliseconds: 200),
+                child: const Icon(
+                  Icons.keyboard_arrow_down_rounded,
+                  color: AppColor.coolGrayText,
+                  size: 20,
+                ),
+              ),
+              title: Text(
+                faq.question,
+                style: AppTextStyle.bodyMediumMedium.copyWith(
+                  color: AppColor.blackShade1,
+                ),
+              ),
+              children: [
+                Text(
+                  faq.answer,
+                  style: AppTextStyle.bodyMediumRegular.copyWith(
+                    color: AppColor.coolGrayText,
+                    height: 1.6,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      }).toList(),
+    );
+  }
+
+  // ── Footer ────────────────────────────────────────────────────────────────
+
+  Widget _buildFooter(double sw, double bottomInset) {
+    final s = widget.service;
+    final price = _displayPrice();
+    final duration = _displayDuration();
+
+    return Container(
+      // Add the system bottom inset so the footer clears the Android nav bar
+      // and the iOS home indicator on both platforms consistently.
+      padding: EdgeInsets.fromLTRB(
+        sw * 0.045,
+        12,
+        sw * 0.045,
+        12 + bottomInset,
+      ),
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        border: Border(top: BorderSide(color: AppColor.lightGreyColor)),
+      ),
+      child: Row(
+        children: [
+          // Price + duration summary
+          if (price.isNotEmpty)
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Wrap(
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    runSpacing: 4,
+                    children: [
+                      Text(
+                        price,
+                        style: AppTextStyle.headlineSmallSemiBold.copyWith(
+                          color: AppColor.blackColor,
+                        ),
+                      ),
+                      if (duration > 0)
+                        Text(
+                          '/${_formatDuration(duration)}',
+                          style: AppTextStyle.headlineSmallSemiBold.copyWith(
+                              color: AppColor.coolGrayText,
+                              fontSize: 13
+                          ),
+                        ),
+                    ],
+                  ),
+
+                ],
+              ),
+            ),
+          // Book Now button
+          Expanded(
+            flex: price.isNotEmpty ? 2 : 3,
             child: CommonButton(
               label: 'Book Now',
               onTap: () {
                 Get.back();
-                Get.toNamed(AppRoutes.bookServiceScreen, arguments: service);
+                Get.toNamed(
+                  AppRoutes.bookServiceScreen,
+                  arguments: BookingSelection(
+                    service: s,
+                    variantId: _selectedVariantIndex == null
+                        ? null
+                        : s.variants[_selectedVariantIndex!].id,
+                    addonIds: Set.of(_selectedAddonIds),
+                  ),
+                );
               },
-              backgroundColor: AppColor.brownAccentPrimary,
+              backgroundColor: AppColor.blackColor,
               foregroundColor: Colors.white,
-              trailingIcon: const Icon(Icons.chevron_right, color: Colors.white, size: 20),
+              trailingIcon: const Icon(
+                Icons.arrow_forward_rounded,
+                color: Colors.white,
+                size: 18,
+              ),
             ),
           ),
         ],
       ),
     );
   }
-}
 
-class _WhatIncludedRow extends StatelessWidget {
-  final List<Map<String, dynamic>> items = const [
-    {'icon': Icons.build_outlined, 'label': 'Device\nMounting'},
-    {'icon': Icons.electrical_services_outlined, 'label': 'Wiring\nSetup'},
-    {'icon': Icons.wifi_outlined, 'label': 'App\nPairing'},
-    {'icon': Icons.settings_outlined, 'label': 'Configuration'},
-    {'icon': Icons.checklist_outlined, 'label': 'Testing'},
-  ];
+  // ── Helpers ───────────────────────────────────────────────────────────────
 
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: items.map((item) => Column(
-        children: [
-          Container(
-            width: 52, height: 52,
-            decoration: BoxDecoration(
-              color: AppColor.brownAccentPrimary.withValues(alpha: 0.10),
-              shape: BoxShape.circle,
-            ),
-            child: Icon(item['icon'] as IconData, color: AppColor.brownAccentPrimary, size: 24),
-          ),
-          const SizedBox(height: 6),
-          Text(item['label'] as String, textAlign: TextAlign.center, style: AppTextStyle.labelSmallRegular.copyWith(color: AppColor.blackShade1, fontSize: 11)),
-        ],
-      )).toList(),
+  Widget _sectionTitle(String title) {
+    return Text(
+      title,
+      style: AppTextStyle.titleMediumSemiBold.copyWith(
+        color: AppColor.blackShade1,
+      ),
     );
   }
-}
 
-class _ReviewCard extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
+  Widget _sectionDivider() {
+    return const Padding(
+      padding: EdgeInsets.symmetric(vertical: 20),
+      child: Divider(color: AppColor.lightGreyColor, height: 1),
+    );
+  }
+
+  Widget _imagePlaceholder(double sw) {
     return Container(
-      padding: const EdgeInsets.all(14),
+      width: sw * 0.30,
+      height: sw * 0.26,
       decoration: BoxDecoration(
-        color: const Color(0xffF8F8F8),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColor.lightGreyColor),
+        color: AppColor.neutral1,
+        borderRadius: BorderRadius.circular(14),
       ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          CircleAvatar(radius: 28, backgroundColor: Colors.grey.shade300, child: Image.asset(AppAssets.customerImage,fit: BoxFit.cover,)),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(children: [
-                  Row(children: List.generate(5, (i) => const Icon(Icons.star_rounded, size: 16, color: Color(0xffFFC107)))),
-                  const SizedBox(width: 6),
-                  const Text('5.0', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13)),
-                  const Spacer(),
-                  Text('2 days ago', style: AppTextStyle.bodySmallRegular.copyWith(color: AppColor.coolGrayText)),
-                ]),
-                const SizedBox(height: 6),
-                Text('Technician arrived on time and set up my thermostat perfectly. Great service and very professional!', style: AppTextStyle.bodySmallRegular.copyWith(color: AppColor.blackShade1, height: 1.5)),
-                const SizedBox(height: 4),
-                Text('- Michael R.', style: AppTextStyle.bodySmallMedium.copyWith(color: AppColor.brownAccentPrimary)),
-              ],
-            ),
-          ),
-        ],
+      child: const Center(
+        child: Icon(
+          Icons.image_outlined,
+          color: AppColor.coolGrayText,
+          size: 36,
+        ),
       ),
     );
   }

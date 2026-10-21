@@ -24,11 +24,14 @@ class BookingConfirmationScreen extends StatelessWidget {
     }
 
     return MyScaffold(
-      backgroundColor: const Color(0xffFAF7F4),
+      backgroundColor: const Color(0xffF8F8F8),
       appBar: AppBar(
-        backgroundColor: AppColor.brownAccentPrimary,
+        backgroundColor: AppColor.blackColor,
         iconTheme: const IconThemeData(color: Colors.white),
-        title: Text('Booking Confirmation', style: AppTextStyle.titleLargeBold.copyWith(color: Colors.white)),
+        title: Text(
+          'Booking Confirmation',
+          style: AppTextStyle.titleLargeBold.copyWith(color: Colors.white),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -37,45 +40,81 @@ class BookingConfirmationScreen extends StatelessWidget {
             Spacer(),
             Container(
               padding: EdgeInsets.all(10),
-              decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: AppColor.brownAccentPrimary, width: 3)),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(color: AppColor.blackColor, width: 3),
+              ),
 
               child: Container(
                 padding: EdgeInsets.all(20),
-                decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: AppColor.brownAccentPrimary, width: 3), color: AppColor.brownAccentPrimary),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(color: AppColor.blackColor, width: 3),
+                  color: AppColor.blackColor,
+                ),
                 child: const Icon(Icons.check, color: Colors.white, size: 52),
               ),
             ),
             const SizedBox(height: 28),
-            Text('Booking Confirmed!', style: AppTextStyle.headlineLargeBold.copyWith(color: AppColor.blackShade1)),
+            Text(
+              'Booking Confirmed!',
+              style: AppTextStyle.headlineLargeBold.copyWith(
+                color: AppColor.blackShade1,
+              ),
+            ),
             const SizedBox(height: 12),
             Text(
               'Your booking has been confirmed and payment of \$${total.toStringAsFixed(0)} has been processed successfully.',
               textAlign: TextAlign.center,
-              style: AppTextStyle.bodyMediumRegular.copyWith(color: AppColor.coolGrayText, height: 1.6),
+              style: AppTextStyle.bodyMediumRegular.copyWith(
+                color: AppColor.coolGrayText,
+                height: 1.6,
+              ),
             ),
             const SizedBox(height: 28),
             Container(
               width: double.infinity,
               padding: const EdgeInsets.symmetric(vertical: 16),
-              decoration: BoxDecoration(color: Color(0xffFAF7F4), borderRadius: BorderRadius.circular(10), border: Border.all(color: Color(0xffA5732F))),
-              child: Text('Booking Service ID: SOS-1202', textAlign: TextAlign.center, style: AppTextStyle.titleSmallSemiBold.copyWith(color: AppColor.blackShade1)),
+              decoration: BoxDecoration(
+                color: Color(0xffF8F8F8),
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: Color(0xff111111)),
+              ),
+              child: Text(
+                'Booking Service ID: SOS-1202',
+                textAlign: TextAlign.center,
+                style: AppTextStyle.titleSmallSemiBold.copyWith(
+                  color: AppColor.blackShade1,
+                ),
+              ),
             ),
             const SizedBox(height: 16),
-            Text('You will receive an update once a technician is assigned.', textAlign: TextAlign.center, style: AppTextStyle.bodySmallRegular.copyWith(color: AppColor.coolGrayText)),
+            Text(
+              'You will receive an update once a technician is assigned.',
+              textAlign: TextAlign.center,
+              style: AppTextStyle.bodySmallRegular.copyWith(
+                color: AppColor.coolGrayText,
+              ),
+            ),
             const Spacer(),
             CommonButton(
               label: 'Back to Home',
-              onTap: () => Get.until((r) => r.settings.name == AppRoutes.dashboardScreen),
+              onTap: () => Get.until(
+                (r) => r.settings.name == AppRoutes.dashboardScreen,
+              ),
               backgroundColor: Colors.white,
-              foregroundColor: AppColor.brownAccentPrimary,
-              border: Border.all(color: AppColor.brownAccentPrimary),
+              foregroundColor: AppColor.blackColor,
+              border: Border.all(color: AppColor.blackColor),
               boxShadow: const [],
             ),
             const SizedBox(height: 12),
             CommonButton(
               label: 'Track Booking →',
-              onTap: () => Get.toNamed(AppRoutes.bookingStatusScreen, arguments: service),
-              backgroundColor: AppColor.brownAccentPrimary,
+              onTap: () => Get.toNamed(
+                AppRoutes.bookingStatusScreen,
+                arguments: service,
+              ),
+              backgroundColor: AppColor.blackColor,
               foregroundColor: Colors.white,
             ),
             const SizedBox(height: 32),

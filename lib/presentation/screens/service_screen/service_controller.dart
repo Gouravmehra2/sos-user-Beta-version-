@@ -1,136 +1,252 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:squadonsite/constant/common_widgets/app_snackbar.dart';
 import 'package:squadonsite/constant/app_assets/app_assets.dart';
+import 'package:squadonsite/core/services/api_repo.dart';
+import 'package:squadonsite/presentation/screens/service_screen/model/service_screen_model.dart';
 
-class ServiceModel {
-  final String name;
-  final String price;
-  final double rating;
-  final int reviews;
-  final String image;
+export 'package:squadonsite/presentation/screens/service_screen/model/service_screen_model.dart';
 
-  ServiceModel({
-    required this.name,
-    required this.price,
-    required this.rating,
-    required this.reviews,
-    required this.image,
-  });
-}
+/// Maps grid title → category ID
+const Map<String, String> kCategoryIds = {
+  'PC': '6ab2c087371b87cdfa867bb3',
+  'Printer': '6ab2c094371b87cdfa867bbb',
+  'Home Appliances': '6ab2c0a4371b87cdfa867bc3',
+  'Networking': '6ab2c0b7371b87cdfa867bcb',
+};
 
-class ServiceCategory {
-  final String name;
-  final String image;
-  final String selectedImage;
-  final List<ServiceModel> services;
-
-  ServiceCategory({
-    required this.name,
-    required this.image,
-    required this.selectedImage,
-    required this.services,
-  });
-}
+/// Maps category title → SVG asset pair
+final Map<String, List<String>> kCategoryIcons = {
+  'PC': [
+    AppAssets.computerDeviceOutlineImage,
+    AppAssets.computerDeviceFilledImage,
+  ],
+  'Printer': [AppAssets.tvOutlineImage, AppAssets.tvFilledImage],
+  'Home Appliances': [
+    AppAssets.smartHomeOutlineImage,
+    AppAssets.smartHomeFilledImage,
+  ],
+  'Networking': [AppAssets.wifiOutlineImage, AppAssets.wifiFilledImage],
+};
 
 class ServiceController extends GetxController {
+  static const int pageSize = 10;
+
+  ServiceController({this.initialTitle, this.initialCategoryId});
+  final String? initialTitle;
+  final String? initialCategoryId;
+
   final selectedIndex = 0.obs;
+  final isLoadingSubcategories = true.obs;
+  final isLoadingMoreSubcategories = false.obs;
+  final hasMoreSubcategories = true.obs;
+  final isLoadingServices = false.obs;
+  final isLoadingMoreServices = false.obs;
+  final hasMoreServices = true.obs;
+
   final rightScrollController = ScrollController();
   final leftScrollController = ScrollController();
 
-  final List<GlobalKey> categoryKeys = [];
+  int _categoryVersion = 0;
+  int _servicesVersion = 0;
+  int _subcategoryPage = 1;
+  int _servicePage = 1;
+  String? _activeSubcategoryId;
 
-  final List<ServiceCategory> categories = [
-    ServiceCategory(
-      name: 'Smart Home',
-      image:AppAssets.smartHomeOutlineImage,
-      selectedImage: AppAssets.smartHomeFilledImage,
-      services: [
-        ServiceModel(name: 'Thermostats Installation', price: '\$10', rating: 4.3, reviews: 124, image: AppAssets.dummyServiceImage),
-        ServiceModel(name: 'Video Doorbell Setup', price: '\$10', rating: 4.3, reviews: 124, image: AppAssets.dummyServiceImage),
-        ServiceModel(name: 'Smart Lock Installation', price: '\$10', rating: 4.3, reviews: 124, image: AppAssets.dummyServiceImage),
-        ServiceModel(name: 'Smart Garage Door Setup', price: '\$10', rating: 4.3, reviews: 124, image: AppAssets.dummyServiceImage),
-        ServiceModel(name: 'Smart Hubs & Speaker Setup', price: '\$10', rating: 4.3, reviews: 124, image: AppAssets.dummyServiceImage),
-      ],
-    ),
-    ServiceCategory(
-      name: 'TV Mounting',
-      image: AppAssets.tvOutlineImage,
-      selectedImage: AppAssets.tvFilledImage,
-      services: [
-        ServiceModel(name: 'TV Mounting', price: '\$10', rating: 4.3, reviews: 124, image: AppAssets.dummyServiceImage),
-        ServiceModel(name: 'TV Dismount', price: '\$10', rating: 4.3, reviews: 124, image: AppAssets.dummyServiceImage),
-        ServiceModel(name: 'Wire Concealment', price: '\$10', rating: 4.3, reviews: 124, image: AppAssets.dummyServiceImage),
-        ServiceModel(name: 'TV Remote SetUp', price: '\$10', rating: 4.3, reviews: 124, image: AppAssets.dummyServiceImage),
-      ],
-    ),
-    ServiceCategory(
-      name: 'WiFi & Networking',
-      image: AppAssets.wifiOutlineImage,
-      selectedImage: AppAssets.wifiFilledImage,
-      services: [
-        ServiceModel(name: 'Router Installation & SetUp', price: '\$10', rating: 4.3, reviews: 124, image: AppAssets.dummyServiceImage),
-        ServiceModel(name: 'Network Troubleshooting', price: '\$10', rating: 4.3, reviews: 124, image: AppAssets.dummyServiceImage),
-        ServiceModel(name: 'Mesh Wifi', price: '\$10', rating: 4.3, reviews: 124, image: AppAssets.dummyServiceImage),
-        ServiceModel(name: 'Wall-Cable Running', price: '\$10', rating: 4.3, reviews: 124, image: AppAssets.dummyServiceImage),
-      ],
-    ),
-    ServiceCategory(
-      name: 'Computer & Device',
-      image: AppAssets.computerDeviceOutlineImage,
-      selectedImage: AppAssets.computerDeviceFilledImage,
-      services: [
-        ServiceModel(name: 'Computer System Setup', price: '\$10', rating: 4.3, reviews: 124, image: AppAssets.dummyServiceImage),
-        ServiceModel(name: 'Printer Installation & Setup', price: '\$10', rating: 4.3, reviews: 124, image: AppAssets.dummyServiceImage),
-        ServiceModel(name: 'Software Setup Support', price: '\$10', rating: 4.3, reviews: 124, image: AppAssets.dummyServiceImage),
-        ServiceModel(name: 'Device Setup & Driver Installations', price: '\$10', rating: 4.3, reviews: 124, image: AppAssets.dummyServiceImage),
-        ServiceModel(name: 'Troubleshooting Support', price: '\$10', rating: 4.3, reviews: 124, image: AppAssets.dummyServiceImage),
-      ],
-    ),
-    ServiceCategory(
-      name: 'Security',
-      image: AppAssets.securityOutlineImage,
-      selectedImage: AppAssets.securityFilledImage,
-      services: [
-        ServiceModel(name: 'Smart Camera Installation', price: '\$10', rating: 4.3, reviews: 124, image: AppAssets.dummyServiceImage),
-        ServiceModel(name: 'Smart Door Lock Installation', price: '\$10', rating: 4.3, reviews: 124, image: AppAssets.dummyServiceImage),
-        ServiceModel(name: 'Smart Alarm System Setup', price: '\$10', rating: 4.3, reviews: 124, image: AppAssets.dummyServiceImage),
-        ServiceModel(name: 'Security Diagnostics', price: '\$10', rating: 4.3, reviews: 124, image: AppAssets.dummyServiceImage),
-      ],
-    ),
-    ServiceCategory(
-      name: 'Audio & Video',
-      image: AppAssets.videoOutlineImage,
-      selectedImage: AppAssets.videoFilledImage,
-      services: [
-        ServiceModel(name: 'Home Theater System Setup', price: '\$10', rating: 4.3, reviews: 124, image: AppAssets.dummyServiceImage),
-        ServiceModel(name: 'Sound System Setup', price: '\$10', rating: 4.3, reviews: 124, image: AppAssets.dummyServiceImage),
-        ServiceModel(name: 'Gaming Consoles Setup', price: '\$10', rating: 4.3, reviews: 124, image: AppAssets.dummyServiceImage),
-        ServiceModel(name: 'Streaming Devices Setup', price: '\$10', rating: 4.3, reviews: 124, image: AppAssets.dummyServiceImage),
-        ServiceModel(name: 'Universal Remote Setup', price: '\$10', rating: 4.3, reviews: 124, image: AppAssets.dummyServiceImage),
-      ],
-    ),
-  ];
+  final RxList<SubcategoryItem> subcategories = <SubcategoryItem>[].obs;
+  final RxList<ServiceItem> services = <ServiceItem>[].obs;
+
+  String categoryId = kCategoryIds['PC']!;
+  String categoryTitle = 'PC';
 
   @override
   void onInit() {
     super.onInit();
-    categoryKeys.addAll(List.generate(categories.length, (_) => GlobalKey()));
+    leftScrollController.addListener(_onSubcategoryScroll);
+    rightScrollController.addListener(_onServiceScroll);
+    final rawArgs = Get.arguments;
+    final args = rawArgs is Map<String, dynamic>
+        ? rawArgs
+        : <String, dynamic>{};
+    categoryTitle = initialTitle ?? args['title'] as String? ?? 'PC';
+    categoryId =
+        initialCategoryId ??
+        args['categoryId'] as String? ??
+        kCategoryIds['PC']!;
+    _fetchSubcategories();
   }
 
-  @override
-  void onClose() {
-    rightScrollController.dispose();
-    leftScrollController.dispose();
-    super.onClose();
+  void _onSubcategoryScroll() {
+    if (!leftScrollController.hasClients ||
+        leftScrollController.position.extentAfter > 200) {
+      return;
+    }
+    loadMoreSubcategories();
+  }
+
+  void _onServiceScroll() {
+    if (!rightScrollController.hasClients ||
+        rightScrollController.position.extentAfter > 300) {
+      return;
+    }
+    final id = _activeSubcategoryId;
+    if (id != null) loadMoreServices(id);
+  }
+
+  void setCategory({required String title, required String categoryId}) {
+    if (this.categoryId == categoryId &&
+        (isLoadingSubcategories.value || subcategories.isNotEmpty))
+      return;
+    categoryTitle = title;
+    this.categoryId = categoryId;
+    _fetchSubcategories();
+  }
+
+  Future<void> refreshData() async {
+    selectedIndex.value = 0;
+    await _fetchSubcategories();
+  }
+
+  Future<void> _fetchSubcategories() async {
+    final version = ++_categoryVersion;
+    _servicesVersion++;
+    _subcategoryPage = 1;
+    hasMoreSubcategories.value = true;
+    isLoadingMoreSubcategories.value = false;
+    _servicePage = 1;
+    hasMoreServices.value = true;
+    isLoadingMoreServices.value = false;
+    _activeSubcategoryId = null;
+    selectedIndex.value = 0;
+    services.clear();
+    isLoadingServices.value = false;
+    isLoadingSubcategories.value = true;
+    try {
+      final res = await Get.find<ApiRepo>().getSubcategories(
+        categoryId,
+        page: 1,
+        limit: pageSize,
+      );
+      if (isClosed || version != _categoryVersion) return;
+      subcategories.assignAll(res.subcategories);
+      hasMoreSubcategories.value = res.hasMore && res.subcategories.isNotEmpty;
+      _subcategoryPage = 1;
+      if (subcategories.isNotEmpty) {
+        await _fetchServices(subcategories[0].id);
+      }
+    } catch (e) {
+      if (!isClosed && version == _categoryVersion)
+        AppSnackbar.show('Error', 'Failed to load subcategories.');
+    } finally {
+      if (!isClosed && version == _categoryVersion)
+        isLoadingSubcategories.value = false;
+    }
+  }
+
+  Future<void> loadMoreSubcategories() async {
+    if (isLoadingSubcategories.value ||
+        isLoadingMoreSubcategories.value ||
+        !hasMoreSubcategories.value) {
+      return;
+    }
+    final version = _categoryVersion;
+    isLoadingMoreSubcategories.value = true;
+    try {
+      final page = _subcategoryPage + 1;
+      final res = await Get.find<ApiRepo>().getSubcategories(
+        categoryId,
+        page: page,
+        limit: pageSize,
+      );
+      if (isClosed || version != _categoryVersion) return;
+      final existingIds = subcategories.map((item) => item.id).toSet();
+      final newItems = res.subcategories
+          .where((item) => item.id.isEmpty || !existingIds.contains(item.id))
+          .toList();
+      subcategories.addAll(newItems);
+      _subcategoryPage = page;
+      hasMoreSubcategories.value = res.hasMore && newItems.isNotEmpty;
+    } catch (e) {
+      if (!isClosed && version == _categoryVersion) {
+        AppSnackbar.show('Error', 'Failed to load more subcategories.');
+      }
+    } finally {
+      if (!isClosed && version == _categoryVersion) {
+        isLoadingMoreSubcategories.value = false;
+      }
+    }
+  }
+
+  Future<void> _fetchServices(String subcategoryId) async {
+    final version = ++_servicesVersion;
+    _activeSubcategoryId = subcategoryId;
+    _servicePage = 1;
+    hasMoreServices.value = true;
+    isLoadingMoreServices.value = false;
+    isLoadingServices.value = true;
+    try {
+      final res = await Get.find<ApiRepo>().getServicesBySubcategory(
+        subcategoryId,
+        page: 1,
+        limit: pageSize,
+      );
+      if (isClosed || version != _servicesVersion) return;
+      services.assignAll(res.services);
+      hasMoreServices.value = res.hasMore && res.services.isNotEmpty;
+      _servicePage = 1;
+    } catch (e) {
+      if (!isClosed && version == _servicesVersion) {
+        AppSnackbar.show('Error', 'Failed to load services.');
+      }
+    } finally {
+      if (!isClosed && version == _servicesVersion) {
+        isLoadingServices.value = false;
+      }
+    }
+  }
+
+  Future<void> loadMoreServices(String subcategoryId) async {
+    if (isLoadingServices.value ||
+        isLoadingMoreServices.value ||
+        !hasMoreServices.value ||
+        subcategoryId != _activeSubcategoryId) {
+      return;
+    }
+    final version = _servicesVersion;
+    isLoadingMoreServices.value = true;
+    try {
+      final page = _servicePage + 1;
+      final res = await Get.find<ApiRepo>().getServicesBySubcategory(
+        subcategoryId,
+        page: page,
+        limit: pageSize,
+      );
+      if (isClosed || version != _servicesVersion) return;
+      final existingIds = services.map((item) => item.id).toSet();
+      final newItems = res.services
+          .where((item) => item.id.isEmpty || !existingIds.contains(item.id))
+          .toList();
+      services.addAll(newItems);
+      _servicePage = page;
+      hasMoreServices.value = res.hasMore && newItems.isNotEmpty;
+    } catch (_) {
+      if (!isClosed && version == _servicesVersion) {
+        AppSnackbar.show('Error', 'Failed to load more services.');
+      }
+    } finally {
+      if (!isClosed && version == _servicesVersion) {
+        isLoadingMoreServices.value = false;
+      }
+    }
   }
 
   void onCategoryTap(int index) {
+    if (index < 0 || index >= subcategories.length) return;
+    if (selectedIndex.value == index &&
+        (isLoadingServices.value || services.isNotEmpty))
+      return;
     selectedIndex.value = index;
-    final key = categoryKeys[index];
-    final ctx = key.currentContext;
-    if (ctx != null) {
-      Scrollable.ensureVisible(ctx, duration: const Duration(milliseconds: 400), curve: Curves.easeInOut);
-    }
+    _fetchServices(subcategories[index].id);
     _scrollLeftIfNeeded(index);
   }
 
@@ -141,13 +257,24 @@ class ServiceController extends GetxController {
     final itemBottom = itemTop + itemHeight;
     final offset = leftScrollController.offset;
     final viewportHeight = leftScrollController.position.viewportDimension;
-    final isVisible = itemTop >= offset && itemBottom <= offset + viewportHeight;
-    if (!isVisible) {
+    if (itemTop < offset || itemBottom > offset + viewportHeight) {
       leftScrollController.animateTo(
         itemTop,
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOut,
       );
     }
+  }
+
+  String iconFor(String title, {bool selected = false}) {
+    final icons = kCategoryIcons[title] ?? kCategoryIcons['PC']!;
+    return selected ? icons[1] : icons[0];
+  }
+
+  @override
+  void onClose() {
+    rightScrollController.dispose();
+    leftScrollController.dispose();
+    super.onClose();
   }
 }

@@ -1,7 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:squadonsite/constant/app_assets/app_assets.dart';
-import 'package:squadonsite/constant/app_color/app_color.dart';
 
 class CircularOrbitWidget extends StatefulWidget {
   const CircularOrbitWidget({super.key});
@@ -113,7 +112,8 @@ class _CircularOrbitWidgetState extends State<CircularOrbitWidget>
                     shape: BoxShape.circle,
                     boxShadow: [
                       BoxShadow(
-                        color: AppColor.brownAccentPrimary.withValues(alpha: 0.60),
+                        color: const Color(0xFF000000
+                        ).withValues(alpha: 0.60),
                         blurStyle: BlurStyle.outer,
                         blurRadius: 20.0,
                       ),
@@ -122,13 +122,14 @@ class _CircularOrbitWidgetState extends State<CircularOrbitWidget>
                   child: Container(
                     decoration: const BoxDecoration(
                       shape: BoxShape.circle,
-                      color: Colors.white,
+                      color: Colors.black,
                     ),
                     child: Center(
                       child: Image.asset(
                         AppAssets.appLogoIcon,
                         width: logoD,
                         height: logoD,
+                        fit: BoxFit.cover,
                       ),
                     ),
                   ),

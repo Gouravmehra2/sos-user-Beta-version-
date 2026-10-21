@@ -9,7 +9,7 @@ const Map<String, String> es = {
   'onboarding_slide2_title': 'Expertos de Servicio\nVerificados',
   'onboarding_slide2_desc':
       'Cada profesional ha pasado una verificación\nde antecedentes y control de calidad.',
-  'onboarding_slide3_title': 'Una App.\nTodo el Servicio.',
+  'onboarding_slide3_title': 'Aplicación SOS.\nTodo el Servicio.',
   'onboarding_slide3_desc':
       'Desde reparación de electrodomésticos hasta\nemergencias — Squad On Site te tiene\ncubierto.',
 
@@ -47,6 +47,19 @@ const Map<String, String> es = {
   // ── OTP Screen ─────────────────────────────────────────────────────────────
   'otp_title_phone': 'Verificar Número',
   'otp_title_email': 'Verificar Email',
+  'reset_otp_title': 'Restablecer contraseña',
+  'reset_otp_continue': 'Continuar',
+  'reset_otp_expires_in': 'El código vence en %s',
+  'reset_otp_expired': 'El código venció. Solicita uno nuevo.',
+  'reset_session_expired': 'La sesión venció. Solicita un código nuevo.',
+  'reset_request_timeout':
+      'La solicitud tardó demasiado. Espera el SMS antes de reenviar.',
+  'forgot_request_timeout':
+      'La solicitud tardó demasiado. Espera el SMS antes de solicitar otro código.',
+  'network_retry':
+      'No se pudo conectar. Revisa tu conexión e inténtalo de nuevo.',
+  'unexpected_server_response':
+      'Respuesta inesperada del servidor. Inténtalo de nuevo.',
   'otp_verify_btn': 'Verificar y Continuar',
   'otp_no_code': '¿No recibiste un código? ',
   'otp_subtitle': 'Enviamos un código de 6 dígitos a %s',
@@ -58,14 +71,29 @@ const Map<String, String> es = {
   // ── Forgot Password Screen ─────────────────────────────────────────────────
   'forgot_title': '¿Olvidaste tu Contraseña?',
   'forgot_subtitle_phone':
-      'Ingresa tu número de teléfono y te enviaremos\nun enlace de recuperación.',
+      'Ingresa tu teléfono y enviaremos un código\npara restablecer tu contraseña.',
   'forgot_subtitle_email':
-      'Ingresa tu email y te enviaremos\nun enlace de recuperación.',
+      'Ingresa tu email y enviaremos el código\na tu teléfono registrado.',
   'forgot_hint_phone': 'Ingresa tu número de teléfono',
   'forgot_hint_email': 'Ingresa tu email',
-  'forgot_btn': 'Obtener Enlace de Recuperación',
-  'forgot_resend': 'Reenviar Enlace',
+  'forgot_btn': 'Enviar código de restablecimiento',
+  'forgot_resend': 'Reenviar código',
   'forgot_back_to_login': 'Volver al Inicio de Sesión',
+  'reset_password_title': 'Crear nueva contraseña',
+  'reset_password_subtitle': 'Elige una contraseña de al menos 6 caracteres.',
+  'reset_password_new_label': 'Nueva contraseña',
+  'reset_password_new_hint': 'Ingresa tu nueva contraseña',
+  'reset_password_confirm_label': 'Confirmar contraseña',
+  'reset_password_confirm_hint': 'Ingresa de nuevo tu nueva contraseña',
+  'reset_password_submit': 'Restablecer contraseña',
+  'reset_password_required': 'Ingresa una nueva contraseña.',
+  'reset_password_min_length':
+      'La contraseña debe tener al menos 6 caracteres.',
+  'reset_password_confirm_required': 'Confirma tu nueva contraseña.',
+  'reset_password_mismatch': 'Las contraseñas no coinciden.',
+  'reset_password_success': 'La contraseña se restableció correctamente.',
+  'reset_password_timeout':
+      'La solicitud tardó demasiado. Puede que la contraseña haya cambiado; intenta iniciar sesión antes de volver a enviarla.',
 
   // ── Location Permission Screen ─────────────────────────────────────────────
   'location_perm_title': 'Habilitar Acceso a Ubicación',
@@ -125,7 +153,8 @@ const Map<String, String> es = {
   'home_sos_btn': 'SOS',
   'home_footer_tagline1': 'Ama tu\n',
   'home_footer_tagline2': 'Hogar',
-  'home_footer_tagline3': 'Hacemos el trabajo para que tú no tengas que hacerlo',
+  'home_footer_tagline3':
+      'Hacemos el trabajo para que tú no tengas que hacerlo',
   'home_offer_tag_exclusive': 'OFERTA EXCLUSIVA',
   'home_offer_tag_limited': 'TIEMPO LIMITADO',
   'home_offer1_title': 'Oferta de Verano\n20% Off Servicios\nde AC',
@@ -166,8 +195,9 @@ const Map<String, String> es = {
   'validation_email_required': 'El email es requerido',
   'validation_phone_required': 'El número de teléfono es requerido',
   'validation_password_required': 'La contraseña es requerida',
-    'language_english': 'English',
-    'language_spanish': 'Spanish',
+  'language_arabic': 'العربية',
+  'language_english': 'English',
+  'language_spanish': 'Spanish',
   'sign_in_failed': 'Error al iniciar sesión',
   'signup_failed': 'Error al registrarse',
 
@@ -187,10 +217,57 @@ const Map<String, String> es = {
   'profile_settings_notifications': 'Configuración de Notificaciones',
   'profile_settings_language': 'Idioma',
   'profile_settings_security': 'Seguridad',
+  'profile_settings_change_password': 'Cambiar contraseña',
   'profile_settings_booking_safety': 'Guía de Seguridad de Reservas',
+  'profile_settings_terms': 'Términos y condiciones',
   'profile_settings_privacy': 'Política de Privacidad',
   'profile_referral_code': 'Código de Referido',
   'profile_copied': 'Copiado',
   'profile_referral_copied': '¡Código de referido copiado!',
+  'profile_delete_account': 'Eliminar cuenta',
   'profile_logout': 'Cerrar Sesión de 1App',
+  'change_password_title': 'Cambiar contraseña',
+  'change_password_subtitle':
+      'Elige una contraseña segura para proteger tu cuenta.',
+  'change_password_old_label': 'Contraseña actual',
+  'change_password_old_hint': 'Ingresa tu contraseña actual',
+  'change_password_new_label': 'Nueva contraseña',
+  'change_password_new_hint': 'Ingresa una nueva contraseña',
+  'change_password_confirm_label': 'Confirmar nueva contraseña',
+  'change_password_confirm_hint': 'Vuelve a ingresar tu nueva contraseña',
+  'change_password_old_required': 'Ingresa tu contraseña actual',
+  'change_password_new_required': 'Ingresa una nueva contraseña',
+  'change_password_confirm_required': 'Confirma tu nueva contraseña',
+  'change_password_mismatch': 'Las contraseñas no coinciden',
+  'change_password_submit': 'Actualizar contraseña',
+  'change_password_success': 'Tu contraseña se actualizó correctamente.',
+  'change_password_failed':
+      'No se pudo actualizar la contraseña. Inténtalo de nuevo.',
+
+  'location_gps_off_title': 'La ubicación está desactivada',
+  'location_gps_off_body':
+      'La ubicación de tu dispositivo está desactivada. Activa los servicios de ubicación para continuar.',
+  'location_denied_forever_title': 'Se necesita permiso de ubicación',
+  'location_denied_forever_body':
+      'El permiso de ubicación está denegado permanentemente. Actívalo desde los ajustes de tu dispositivo para continuar.',
+
+  // Dialog actions
+  'location_dialog_cancel': 'Ahora no',
+  'location_dialog_open_settings': 'Activar ubicación',
+  'location_dialog_open_app_settings': 'Abrir ajustes de la app',
+
+  'location_enable_steps_title': 'Cómo activar la ubicación',
+
+  'location_enable_step_1': 'Pulsa "Abrir ajustes de la app" a continuación.',
+
+  'location_enable_step_2':
+      'Abre Ubicación o Permisos en los ajustes de tu dispositivo.',
+
+  'location_enable_step_3':
+      'Permite el acceso a la ubicación para esta aplicación.',
+
+  'location_enable_step_4': 'Regresa a la aplicación e inténtalo de nuevo.',
+  'signup_hint_name': 'Ingresa tu nombre',
+  'signup_hint_confirm_password': 'Confirma tu contraseña',
+  'register': 'Registrarse',
 };

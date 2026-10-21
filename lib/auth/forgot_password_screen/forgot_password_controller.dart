@@ -1,9 +1,14 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
+import 'package:squadonsite/constant/common_widgets/app_snackbar.dart';
+import 'package:squadonsite/core/end_points/api_endpoints.dart';
+import 'package:squadonsite/core/services/password_reset_api.dart';
 import 'package:squadonsite/auth/otp_screen/otp_controller.dart';
 import 'package:squadonsite/constant/common_widgets/common_text_form_field.dart';
 import 'package:squadonsite/constant/routes/app_routes.dart';
@@ -33,10 +38,7 @@ class ForgotPasswordArgs {
   final ForgotPasswordMode mode;
   final String prefillEmail;
 
-  const ForgotPasswordArgs._({
-    required this.mode,
-    this.prefillEmail = '',
-  });
+  const ForgotPasswordArgs._({required this.mode, this.prefillEmail = ''});
 
   factory ForgotPasswordArgs.phone() =>
       const ForgotPasswordArgs._(mode: ForgotPasswordMode.phone);
@@ -55,20 +57,26 @@ const Map<String, ({int min, int max})> _countryDigitLengths = {
   'US': (min: 10, max: 10),
   'CA': (min: 10, max: 10),
   'GB': (min: 10, max: 11),
-  'AU': (min: 9,  max: 9 ),
-  'AE': (min: 9,  max: 9 ),
-  'SA': (min: 9,  max: 9 ),
+  'AU': (min: 9, max: 9),
+  'AE': (min: 9, max: 9),
+  'SA': (min: 9, max: 9),
   'PK': (min: 10, max: 10),
   'BD': (min: 10, max: 10),
   'NG': (min: 10, max: 10),
-  'SG': (min: 8,  max: 8 ),
-  'NZ': (min: 8,  max: 9 ),
-  'MY': (min: 9,  max: 10),
+  'SG': (min: 8, max: 8),
+  'NZ': (min: 8, max: 9),
+  'MY': (min: 9, max: 10),
 };
 
 // ── Controller ────────────────────────────────────────────────────────────────
 
 class ForgotPasswordController extends GetxController {
+  ForgotPasswordController({PasswordResetApi? passwordResetApi})
+    : passwordResetApi =
+          passwordResetApi ?? PasswordResetApi(ApiEndpoints.apiBaseUrl);
+
+  final PasswordResetApi passwordResetApi;
+
   // ── Mode ──────────────────────────────────────────────────────────────────
 
   late ForgotPasswordMode mode;
@@ -76,13 +84,11 @@ class ForgotPasswordController extends GetxController {
   bool get isEmailMode => mode == ForgotPasswordMode.email;
 
   /// UI strings that adapt to mode.
-  String get subtitleText => isEmailMode
-      ? 'forgot_subtitle_email'.tr
-      : 'forgot_subtitle_phone'.tr;
+  String get subtitleText =>
+      isEmailMode ? 'forgot_subtitle_email'.tr : 'forgot_subtitle_phone'.tr;
 
-  String get fieldHintText => isEmailMode
-      ? 'forgot_hint_email'.tr
-      : 'forgot_hint_phone'.tr;
+  String get fieldHintText =>
+      isEmailMode ? 'forgot_hint_email'.tr : 'forgot_hint_phone'.tr;
 
   String get buttonLabel => 'forgot_btn'.tr;
 
@@ -115,9 +121,9 @@ class ForgotPasswordController extends GetxController {
   }
 
   List<TextInputFormatter> get phoneFormatters => [
-        FilteringTextInputFormatter.digitsOnly,
-        LengthLimitingTextInputFormatter(_digitLengths.max),
-      ];
+    FilteringTextInputFormatter.digitsOnly,
+    LengthLimitingTextInputFormatter(_digitLengths.max),
+  ];
 
   // ── Validation ────────────────────────────────────────────────────────────
 
@@ -154,71 +160,64 @@ class ForgotPasswordController extends GetxController {
 
   // ── State ─────────────────────────────────────────────────────────────────
 
-  final RxBool linkSent = false.obs;
   final RxBool isLoading = false.obs;
-
-  // ── Resend countdown ──────────────────────────────────────────────────────
-
-  static const int _resendSeconds = 30;
-
-  final RxInt secondsRemaining = _resendSeconds.obs;
-  final RxBool canResend = false.obs;
-
-  Timer? _timer;
-
-  void _startTimer() {
-    _timer?.cancel();
-    secondsRemaining.value = _resendSeconds;
-    canResend.value = false;
-
-    _timer = Timer.periodic(const Duration(seconds: 1), (t) {
-      if (secondsRemaining.value <= 1) {
-        t.cancel();
-        secondsRemaining.value = 0;
-        canResend.value = true;
-      } else {
-        secondsRemaining.value--;
-      }
-    });
-  }
-
-  String get countdownText {
-    final mins = secondsRemaining.value ~/ 60;
-    final secs = secondsRemaining.value % 60;
-    return '${mins.toString().padLeft(2, '0')}:${secs.toString().padLeft(2, '0')}';
-  }
 
   // ── Submit ────────────────────────────────────────────────────────────────
 
-  void handleGetRecoveryLink() {
-    if (!formKey.currentState!.validate()) return;
-
+  Future<void> handleGetRecoveryLink() async {
+    if (isLoading.value || !formKey.currentState!.validate()) return;
     isLoading.value = true;
-
-    // TODO: Call recovery API
-    Future.delayed(const Duration(seconds: 1), () {
+    try {
+      final identifier = isEmailMode
+          ? inputController.text.trim()
+          : '${selectedCountry.value.dialCode ?? ''}'
+                '${inputController.text.replaceAll(RegExp(r'\D'), '')}';
+      final response = await passwordResetApi.forgotPassword(identifier);
+      final phone = response['phone'];
+      if (phone is! String || phone.trim().isEmpty) {
+        throw const FormatException(
+          'The server did not return a valid phone number.',
+        );
+      }
+      final resendAfter = _responseSeconds(response['resendAfter'], 60);
+      final expiresIn = _responseSeconds(response['expiresIn'], 300);
+      unawaited(
+        Get.toNamed(
+          AppRoutes.otpScreen,
+          arguments: OtpArgs.passwordReset(
+            api: passwordResetApi,
+            identifier: identifier.trim(),
+            phone: phone,
+            resendAfter: resendAfter,
+            expiresIn: expiresIn,
+          ),
+        ),
+      );
+    } on ResetApiException catch (error) {
+      _showError(error.message);
+    } on TimeoutException {
+      _showError('forgot_request_timeout'.tr);
+    } on SocketException {
+      _showError('network_retry'.tr);
+    } on http.ClientException {
+      _showError('network_retry'.tr);
+    } on FormatException catch (error) {
+      _showError(
+        error.message.isEmpty ? 'unexpected_server_response'.tr : error.message,
+      );
+    } catch (error, stackTrace) {
+      debugPrint('Forgot-password request failed: $error\n$stackTrace');
+      _showError('network_retry'.tr);
+    } finally {
       isLoading.value = false;
-      linkSent.value = true;
-      _startTimer();
-
-      final OtpArgs otpArgs = isEmailMode
-          ? OtpArgs.email(email: inputController.text.trim())
-          : OtpArgs.phone(
-              dialCode: selectedCountry.value.dialCode ?? '',
-              phone: inputController.text.trim(),
-            );
-
-      Get.toNamed(AppRoutes.otpScreen, arguments: otpArgs);
-    });
+    }
   }
 
-  // ── Resend ────────────────────────────────────────────────────────────────
+  int _responseSeconds(dynamic value, int fallback) =>
+      value is num && value >= 0 ? value.toInt() : fallback;
 
-  void handleResend() {
-    if (!canResend.value) return;
-    _startTimer();
-    debugPrint('Resending recovery link');
-  }
+  void _showError(String message) =>
+      AppSnackbar.show('forgot_title'.tr, message);
 
   // ── Navigation ────────────────────────────────────────────────────────────
 
@@ -244,8 +243,8 @@ class ForgotPasswordController extends GetxController {
 
   @override
   void onClose() {
-    _timer?.cancel();
     inputController.dispose();
+    passwordResetApi.close();
     super.onClose();
   }
 }

@@ -46,7 +46,7 @@ class CommonDialog {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                 decoration: const BoxDecoration(
-                  color: AppColor.brownAccentPrimary,
+                  color: AppColor.blackColor,
                   borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
                 ),
                 child: Row(
@@ -139,7 +139,7 @@ class CommonDialog {
                     CommonButton(
                       label: "Cancel",
                       onTap: Get.back,
-                      backgroundColor: AppColor.brownAccentPrimary,
+                      backgroundColor: AppColor.blackColor,
                       height: 46,
                     ),
                   ],
@@ -198,13 +198,13 @@ class _ImageSourceCard extends StatelessWidget {
                 width: 54,
                 height: 54,
                 decoration: BoxDecoration(
-                  color: AppColor.brownAccentPrimary.withOpacity(0.1),
+                  color: AppColor.blackColor.withOpacity(0.08),
                   borderRadius: BorderRadius.circular(14),
                 ),
                 child: Icon(
                   icon,
                   size: 28,
-                  color: AppColor.brownAccentPrimary,
+                  color: AppColor.blackColor,
                 ),
               ),
 

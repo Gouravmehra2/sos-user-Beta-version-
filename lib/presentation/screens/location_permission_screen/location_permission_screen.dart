@@ -61,15 +61,18 @@ class LocationPermissionScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 28),
-                    CommonButton(
-                      label: 'location_perm_allow_btn'.tr,
-                      onTap: () => _onAllowTapped(controller),
-                      backgroundColor: AppColor.blackColor,
-                      foregroundColor: Colors.white,
-                      leadingIcon: const Icon(
-                        Icons.near_me_rounded,
-                        color: AppColor.brownAccentPrimary,
-                        size: 18,
+                    Obx(
+                      () => CommonButton(
+                        isLoading: controller.isFetching.value,
+                        label: 'location_perm_allow_btn'.tr,
+                        onTap: () => _onAllowTapped(controller),
+                        backgroundColor: AppColor.blackColor,
+                        foregroundColor: Colors.white,
+                        leadingIcon: const Icon(
+                          Icons.near_me_rounded,
+                          color: AppColor.blackColor,
+                          size: 18,
+                        ),
                       ),
                     ),
                     const SizedBox(height: 14),
@@ -78,7 +81,7 @@ class LocationPermissionScreen extends StatelessWidget {
                       onTap: _onEnterManuallyTapped,
                       backgroundColor: AppColor.lightGrey2Color,
                       foregroundColor: AppColor.blackShade1,
-                      border: Border.all(color: const Color(0xffCFC4C5)),
+                      border: Border.all(color: const Color(0xffDDDDDD)),
                       boxShadow: const [],
                     ),
                   ],
@@ -92,129 +95,20 @@ class LocationPermissionScreen extends StatelessWidget {
   }
 
   void _onAllowTapped(LocationPermissionController controller) async {
-    Get.dialog(
-      const _FetchingLocationDialog(),
-      barrierDismissible: false,
-    );
-    await controller.requestLocationAndFetch();
-    if (Get.isDialogOpen ?? false) Get.back();
+    final point = await controller.requestLocationAndFetch();
+    if (point != null &&
+        Get.currentRoute == AppRoutes.locationPermissionScreen) {
+      Get.toNamed(
+        AppRoutes.mapPickerScreen,
+        arguments: {'initialLatLng': point, 'addressOnboarding': true},
+      );
+    }
   }
 
   void _onEnterManuallyTapped() {
-    Get.toNamed(AppRoutes.locationDetailScreen);
-  }
-}
-
-class _FetchingLocationDialog extends StatefulWidget {
-  const _FetchingLocationDialog();
-
-  @override
-  State<_FetchingLocationDialog> createState() =>
-      _FetchingLocationDialogState();
-}
-
-class _FetchingLocationDialogState extends State<_FetchingLocationDialog>
-    with SingleTickerProviderStateMixin {
-  late final AnimationController _pulse;
-  late final Animation<double> _scale;
-
-  @override
-  void initState() {
-    super.initState();
-    _pulse = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 900),
-    )..repeat(reverse: true);
-    _scale = Tween<double>(begin: 0.92, end: 1.08).animate(
-      CurvedAnimation(parent: _pulse, curve: Curves.easeInOut),
-    );
-  }
-
-  @override
-  void dispose() {
-    _pulse.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final controller = Get.find<LocationPermissionController>();
-
-    return Dialog(
-      backgroundColor: Colors.transparent,
-      elevation: 0,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 32),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(24),
-          boxShadow: [
-            BoxShadow(
-              color: AppColor.shadowGrey.withValues(alpha: 0.6),
-              blurRadius: 30,
-              offset: const Offset(0, 8),
-            ),
-          ],
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ScaleTransition(
-              scale: _scale,
-              child: Container(
-                width: 72,
-                height: 72,
-                decoration: BoxDecoration(
-                  color: AppColor.brownAccentPrimary.withValues(alpha: 0.12),
-                  shape: BoxShape.circle,
-                ),
-                child: const Icon(
-                  Icons.near_me_rounded,
-                  size: 36,
-                  color: AppColor.brownAccentPrimary,
-                ),
-              ),
-            ),
-            const SizedBox(height: 20),
-            Text(
-              'Fetching your location…',
-              style: AppTextStyle.titleMediumSemiBold.copyWith(
-                color: AppColor.blackShade1,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Obx(() {
-              final addr = controller.address.value;
-              return AnimatedSwitcher(
-                duration: const Duration(milliseconds: 400),
-                child: addr.isEmpty
-                    ? Text(
-                        'Please wait a moment',
-                        key: const ValueKey('waiting'),
-                        style: AppTextStyle.bodyMediumRegular.copyWith(
-                          color: AppColor.grey1Color,
-                        ),
-                        textAlign: TextAlign.center,
-                      )
-                    : Text(
-                        addr,
-                        key: const ValueKey('address'),
-                        style: AppTextStyle.bodyMediumRegular.copyWith(
-                          color: AppColor.brownAccentPrimary,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-              );
-            }),
-            const SizedBox(height: 20),
-            const LinearProgressIndicator(
-              backgroundColor: AppColor.lightGreyColor,
-              color: AppColor.brownAccentPrimary,
-              borderRadius: BorderRadius.all(Radius.circular(8)),
-            ),
-          ],
-        ),
-      ),
+    Get.toNamed(
+      AppRoutes.mapPickerScreen,
+      arguments: {'addressOnboarding': true},
     );
   }
 }

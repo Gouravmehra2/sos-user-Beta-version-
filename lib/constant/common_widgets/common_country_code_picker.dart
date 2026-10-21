@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:squadonsite/constant/app_color/app_color.dart';
 
 /// A reusable country code picker widget that wraps [CountryCodePicker]
-/// with a consistent pill/rounded border style matching the app design.
+/// with a rounded-rectangle border style matching the app's form fields.
 ///
 /// Usage:
 /// ```dart
@@ -39,7 +39,7 @@ class CommonCountryCodePicker extends StatelessWidget {
   /// Height of the picker container. Defaults to 52.
   final double height;
 
-  /// Corner radius of the container. Defaults to 30 (pill shape).
+  /// Corner radius of the container. Defaults to 12.
   final double borderRadius;
 
   /// Text style for the dial-code label shown on the picker button.
@@ -102,11 +102,14 @@ class CommonCountryCodePicker extends StatelessWidget {
         showCountryOnly: false,
         showOnlyCountryWhenClosed: false,
         alignLeft: false,
-        padding: EdgeInsets.zero,
+        padding: const EdgeInsets.symmetric(horizontal: 12),
         textStyle: resolvedTextStyle,
         dialogTextStyle: resolvedDialogTextStyle,
         searchStyle: resolvedDialogTextStyle,
         flagWidth: flagWidth,
+        flagDecoration: const BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(2)),
+        ),
         showDropDownButton: showDropDownButton,
         boxDecoration: BoxDecoration(
           color: Colors.white,

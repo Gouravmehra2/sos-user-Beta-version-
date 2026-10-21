@@ -17,7 +17,7 @@ class MapScreen extends StatelessWidget {
         return MyScaffold(
           body: Stack(
             children: [
-              // _buildMap(controller),
+              _buildMap(controller),
               _buildTopBar(),
               _buildCurrentLocationButton(controller),
               _buildBottomSheet(controller),
@@ -45,6 +45,9 @@ class MapScreen extends StatelessWidget {
       zoomControlsEnabled: false,
       mapToolbarEnabled: false,
       compassEnabled: false,
+      minMaxZoomPreference: const MinMaxZoomPreference(3, 21),
+      scrollGesturesEnabled: true,
+      zoomGesturesEnabled: true,
     );
   }
 
@@ -97,15 +100,17 @@ class MapScreen extends StatelessWidget {
     return Positioned(
       right: 16,
       bottom: 200,
-      child: Obx(() => _CircleIconButton(
-            icon: Icons.my_location_rounded,
-            onTap: controller.isLoadingLocation.value
-                ? null
-                : controller.goToCurrentLocation,
-            isLoading: controller.isLoadingLocation.value,
-            backgroundColor: Colors.white,
-            iconColor: AppColor.brownAccentPrimary,
-          )),
+      child: Obx(
+        () => _CircleIconButton(
+          icon: Icons.my_location_rounded,
+          onTap: controller.isLoadingLocation.value
+              ? null
+              : controller.goToCurrentLocation,
+          isLoading: controller.isLoadingLocation.value,
+          backgroundColor: Colors.white,
+          iconColor: AppColor.blackColor,
+        ),
+      ),
     );
   }
 

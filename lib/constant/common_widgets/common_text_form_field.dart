@@ -25,18 +25,15 @@ class CommonValidators {
   /// Must be a valid email address.
   static FormFieldValidator<String> email({
     String message = 'Enter a valid email address',
-  }) =>
-      (v) {
-        if (v == null || v.trim().isEmpty) return null; // let required() catch empty
-        final emailRegex = RegExp(r'^[\w.+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$');
-        return emailRegex.hasMatch(v.trim()) ? null : message;
-      };
+  }) => (v) {
+    if (v == null || v.trim().isEmpty)
+      return null; // let required() catch empty
+    final emailRegex = RegExp(r'^[\w.+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$');
+    return emailRegex.hasMatch(v.trim()) ? null : message;
+  };
 
   /// Must be exactly [length] digits (default 10 for Indian numbers).
-  static FormFieldValidator<String> phone({
-    int length = 10,
-    String? message,
-  }) =>
+  static FormFieldValidator<String> phone({int length = 10, String? message}) =>
       (v) {
         if (v == null || v.trim().isEmpty) return null;
         final digits = v.trim().replaceAll(RegExp(r'\D'), '');
@@ -46,10 +43,7 @@ class CommonValidators {
       };
 
   /// Minimum character length.
-  static FormFieldValidator<String> minLength(
-    int min, {
-    String? message,
-  }) =>
+  static FormFieldValidator<String> minLength(int min, {String? message}) =>
       (v) {
         if (v == null || v.isEmpty) return null;
         return v.length >= min
@@ -58,10 +52,7 @@ class CommonValidators {
       };
 
   /// Maximum character length.
-  static FormFieldValidator<String> maxLength(
-    int max, {
-    String? message,
-  }) =>
+  static FormFieldValidator<String> maxLength(int max, {String? message}) =>
       (v) {
         if (v == null || v.isEmpty) return null;
         return v.length <= max
@@ -71,46 +62,42 @@ class CommonValidators {
 
   static FormFieldValidator<String> strongPassword({
     String message =
-    'Password must contain uppercase, lowercase, number, special character and be at least 8 characters',
-  }) =>
-          (v) {
-        if (v == null || v.isEmpty) return null;
+        'Password must contain uppercase, lowercase, number, special character and be at least 8 characters',
+  }) => (v) {
+    if (v == null || v.isEmpty) return null;
 
-        final regex = RegExp(
-          r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$',
-        );
+    final regex = RegExp(
+      r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$',
+    );
 
-        return regex.hasMatch(v) ? null : message;
-      };
+    return regex.hasMatch(v) ? null : message;
+  };
 
   /// Must contain at least one uppercase letter.
   static FormFieldValidator<String> hasUppercase({
     String message = 'Must contain at least one uppercase letter',
-  }) =>
-      (v) {
-        if (v == null || v.isEmpty) return null;
-        return v.contains(RegExp(r'[A-Z]')) ? null : message;
-      };
+  }) => (v) {
+    if (v == null || v.isEmpty) return null;
+    return v.contains(RegExp(r'[A-Z]')) ? null : message;
+  };
 
   /// Must contain at least one digit.
   static FormFieldValidator<String> hasDigit({
     String message = 'Must contain at least one number',
-  }) =>
-      (v) {
-        if (v == null || v.isEmpty) return null;
-        return v.contains(RegExp(r'[0-9]')) ? null : message;
-      };
+  }) => (v) {
+    if (v == null || v.isEmpty) return null;
+    return v.contains(RegExp(r'[0-9]')) ? null : message;
+  };
 
   /// Must contain at least one special character.
   static FormFieldValidator<String> hasSpecialChar({
     String message = 'Must contain at least one special character',
-  }) =>
-      (v) {
-        if (v == null || v.isEmpty) return null;
-        return v.contains(RegExp(r'[!@#\$&*~%^()\-_=+\[\]{};:,.<>?/\\|`]'))
-            ? null
-            : message;
-      };
+  }) => (v) {
+    if (v == null || v.isEmpty) return null;
+    return v.contains(RegExp(r'[!@#\$&*~%^()\-_=+\[\]{};:,.<>?/\\|`]'))
+        ? null
+        : message;
+  };
 
   /// Value must match [other] (useful for confirm-password).
   static FormFieldValidator<String> match(
@@ -123,23 +110,21 @@ class CommonValidators {
   static FormFieldValidator<String> pattern(
     String pattern, {
     String message = 'Invalid format',
-  }) =>
-      (v) {
-        if (v == null || v.trim().isEmpty) return null;
-        return RegExp(pattern).hasMatch(v.trim()) ? null : message;
-      };
+  }) => (v) {
+    if (v == null || v.trim().isEmpty) return null;
+    return RegExp(pattern).hasMatch(v.trim()) ? null : message;
+  };
 
   /// Chains multiple validators. Returns the first non-null error message.
   static FormFieldValidator<String> compose(
     List<FormFieldValidator<String>> validators,
-  ) =>
-      (v) {
-        for (final validator in validators) {
-          final result = validator(v);
-          if (result != null) return result;
-        }
-        return null;
-      };
+  ) => (v) {
+    for (final validator in validators) {
+      final result = validator(v);
+      if (result != null) return result;
+    }
+    return null;
+  };
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -199,6 +184,7 @@ class CommonTextFormField extends StatefulWidget {
 
   final TextInputType keyboardType;
   final TextInputAction textInputAction;
+  final TextCapitalization textCapitalization;
   final List<TextInputFormatter>? inputFormatters;
   final bool autocorrect;
   final bool enableSuggestions;
@@ -231,7 +217,7 @@ class CommonTextFormField extends StatefulWidget {
   /// Border color when idle. Defaults to [AppColor.lightGreyColor].
   final Color borderColor;
 
-  /// Border color when focused. Defaults to [AppColor.brownAccentPrimary].
+  /// Border color when focused. Defaults to [AppColor.blackColor].
   final Color focusedBorderColor;
 
   /// Border color on error. Defaults to [Colors.red].
@@ -280,6 +266,7 @@ class CommonTextFormField extends StatefulWidget {
     this.focusNode,
     this.keyboardType = TextInputType.text,
     this.textInputAction = TextInputAction.next,
+    this.textCapitalization = TextCapitalization.none,
     this.inputFormatters,
     this.autocorrect = true,
     this.enableSuggestions = true,
@@ -293,7 +280,7 @@ class CommonTextFormField extends StatefulWidget {
     this.prefixWidget,
     this.backgroundColor = Colors.white,
     this.borderColor = AppColor.lightGreyColor,
-    this.focusedBorderColor = AppColor.brownAccentPrimary,
+    this.focusedBorderColor = AppColor.blackColor,
     this.errorBorderColor = Colors.red,
     this.borderWidth = 1.2,
     this.height = 52,
@@ -330,30 +317,29 @@ class CommonTextFormField extends StatefulWidget {
     TextInputAction textInputAction = TextInputAction.done,
     Color backgroundColor = Colors.white,
     Color borderColor = AppColor.lightGreyColor,
-    Color focusedBorderColor = AppColor.brownAccentPrimary,
+    Color focusedBorderColor = AppColor.blackColor,
     double borderRadius = 30,
     double height = 52,
-  }) =>
-      CommonTextFormField(
-        key: key,
-        label: label,
-        hintText: hintText,
-        controller: controller,
-        focusNode: focusNode,
-        keyboardType: TextInputType.visiblePassword,
-        textInputAction: textInputAction,
-        obscureText: obscureText,
-        onToggleObscure: onToggleObscure,
-        autocorrect: false,
-        enableSuggestions: false,
-        validator: validator,
-        onChanged: onChanged,
-        backgroundColor: backgroundColor,
-        borderColor: borderColor,
-        focusedBorderColor: focusedBorderColor,
-        borderRadius: borderRadius,
-        height: height,
-      );
+  }) => CommonTextFormField(
+    key: key,
+    label: label,
+    hintText: hintText,
+    controller: controller,
+    focusNode: focusNode,
+    keyboardType: TextInputType.visiblePassword,
+    textInputAction: textInputAction,
+    obscureText: obscureText,
+    onToggleObscure: onToggleObscure,
+    autocorrect: false,
+    enableSuggestions: false,
+    validator: validator,
+    onChanged: onChanged,
+    backgroundColor: backgroundColor,
+    borderColor: borderColor,
+    focusedBorderColor: focusedBorderColor,
+    borderRadius: borderRadius,
+    height: height,
+  );
 
   /// Pre-configured phone number field (numeric keyboard, 10-digit formatter).
   factory CommonTextFormField.phone({
@@ -367,34 +353,34 @@ class CommonTextFormField extends StatefulWidget {
     TextInputAction textInputAction = TextInputAction.next,
     Color backgroundColor = Colors.white,
     Color borderColor = AppColor.lightGreyColor,
-    Color focusedBorderColor = AppColor.brownAccentPrimary,
+    Color focusedBorderColor = AppColor.blackColor,
     double borderRadius = 30,
     double height = 52,
-  }) =>
-      CommonTextFormField(
-        key: key,
-        label: label,
-        hintText: hintText.tr,
-        controller: controller,
-        focusNode: focusNode,
-        keyboardType: TextInputType.phone,
-        textInputAction: textInputAction,
-        inputFormatters: [
-          FilteringTextInputFormatter.digitsOnly,
-          LengthLimitingTextInputFormatter(10),
-        ],
-        validator: validator ??
-            CommonValidators.compose([
-              CommonValidators.required(message: 'Phone number is required'),
-              CommonValidators.phone(),
-            ]),
-        onChanged: onChanged,
-        backgroundColor: backgroundColor,
-        borderColor: borderColor,
-        focusedBorderColor: focusedBorderColor,
-        borderRadius: borderRadius,
-        height: height,
-      );
+  }) => CommonTextFormField(
+    key: key,
+    label: label,
+    hintText: hintText.tr,
+    controller: controller,
+    focusNode: focusNode,
+    keyboardType: TextInputType.phone,
+    textInputAction: textInputAction,
+    inputFormatters: [
+      FilteringTextInputFormatter.digitsOnly,
+      LengthLimitingTextInputFormatter(10),
+    ],
+    validator:
+        validator ??
+        CommonValidators.compose([
+          CommonValidators.required(message: 'Phone number is required'),
+          CommonValidators.phone(),
+        ]),
+    onChanged: onChanged,
+    backgroundColor: backgroundColor,
+    borderColor: borderColor,
+    focusedBorderColor: focusedBorderColor,
+    borderRadius: borderRadius,
+    height: height,
+  );
 
   /// Pre-configured email field.
   factory CommonTextFormField.email({
@@ -407,33 +393,33 @@ class CommonTextFormField extends StatefulWidget {
     ValueChanged<String>? onChanged,
     Color backgroundColor = Colors.white,
     Color borderColor = AppColor.lightGreyColor,
-    Color focusedBorderColor = AppColor.brownAccentPrimary,
+    Color focusedBorderColor = AppColor.blackColor,
     double borderRadius = 30,
     double height = 52,
-  }) =>
-      CommonTextFormField(
-        key: key,
-        label: label,
-        hintText: hintText.tr,
-        controller: controller,
-        focusNode: focusNode,
-        keyboardType: TextInputType.emailAddress,
-        textInputAction: TextInputAction.next,
-        autocorrect: false,
-        enableSuggestions: false,
-        prefixIcon: Icons.email_outlined,
-        validator: validator ??
-            CommonValidators.compose([
-              CommonValidators.required(message: 'Email is required'),
-              CommonValidators.email(),
-            ]),
-        onChanged: onChanged,
-        backgroundColor: backgroundColor,
-        borderColor: borderColor,
-        focusedBorderColor: focusedBorderColor,
-        borderRadius: borderRadius,
-        height: height,
-      );
+  }) => CommonTextFormField(
+    key: key,
+    label: label,
+    hintText: hintText.tr,
+    controller: controller,
+    focusNode: focusNode,
+    keyboardType: TextInputType.emailAddress,
+    textInputAction: TextInputAction.next,
+    autocorrect: false,
+    enableSuggestions: false,
+    prefixIcon: Icons.email_outlined,
+    validator:
+        validator ??
+        CommonValidators.compose([
+          CommonValidators.required(message: 'Email is required'),
+          CommonValidators.email(),
+        ]),
+    onChanged: onChanged,
+    backgroundColor: backgroundColor,
+    borderColor: borderColor,
+    focusedBorderColor: focusedBorderColor,
+    borderRadius: borderRadius,
+    height: height,
+  );
 
   @override
   State<CommonTextFormField> createState() => _CommonTextFormFieldState();
@@ -476,11 +462,15 @@ class _CommonTextFormFieldState extends State<CommonTextFormField> {
 
   @override
   Widget build(BuildContext context) {
-    final resolvedTextStyle = (widget.textStyle ?? AppTextStyle.titleSmallMedium)
-        .copyWith(color: AppColor.blackShade1);
+    final resolvedTextStyle =
+        (widget.textStyle ?? AppTextStyle.titleSmallMedium).copyWith(
+          color: AppColor.blackShade1,
+        );
 
-    final resolvedHintStyle = (widget.hintStyle ?? AppTextStyle.titleSmallMedium)
-        .copyWith(color: AppColor.coolGrayText);
+    final resolvedHintStyle =
+        (widget.hintStyle ?? AppTextStyle.titleSmallMedium).copyWith(
+          color: AppColor.coolGrayText,
+        );
 
     final isMultiline = widget.maxLines > 1;
 
@@ -492,7 +482,8 @@ class _CommonTextFormFieldState extends State<CommonTextFormField> {
         if (widget.label != null) ...[
           Text(
             widget.label!,
-            style: widget.labelStyle ??
+            style:
+                widget.labelStyle ??
                 AppTextStyle.titleSmallSemiBold.copyWith(
                   color: AppColor.blackShade1,
                 ),
@@ -522,6 +513,7 @@ class _CommonTextFormFieldState extends State<CommonTextFormField> {
                   focusNode: _focusNode,
                   keyboardType: widget.keyboardType,
                   textInputAction: widget.textInputAction,
+                  textCapitalization: widget.textCapitalization,
                   inputFormatters: widget.inputFormatters,
                   autocorrect: widget.autocorrect,
                   enableSuggestions: widget.enableSuggestions,
@@ -570,6 +562,7 @@ class _CommonTextFormFieldState extends State<CommonTextFormField> {
                     focusNode: _focusNode,
                     keyboardType: widget.keyboardType,
                     textInputAction: widget.textInputAction,
+                    textCapitalization: widget.textCapitalization,
                     inputFormatters: widget.inputFormatters,
                     autocorrect: widget.autocorrect,
                     enableSuggestions: widget.enableSuggestions,

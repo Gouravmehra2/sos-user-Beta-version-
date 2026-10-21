@@ -7,6 +7,7 @@ import 'package:squadonsite/constant/common_widgets/common_button.dart';
 import 'package:squadonsite/constant/common_widgets/my_scaffold.dart';
 import 'package:squadonsite/constant/routes/app_routes.dart';
 import 'package:squadonsite/presentation/screens/booking_status_screen/booking_status_controller.dart';
+import 'package:squadonsite/core/end_points/api_endpoints.dart';
 
 class BookingStatusScreen extends GetView<BookingStatusController> {
   const BookingStatusScreen({super.key});
@@ -16,7 +17,7 @@ class BookingStatusScreen extends GetView<BookingStatusController> {
     return MyScaffold(
       backgroundColor: const Color(0xffF6F6F6),
       appBar: AppBar(
-        backgroundColor: AppColor.brownAccentPrimary,
+        backgroundColor: AppColor.blackColor,
         iconTheme: const IconThemeData(color: Colors.white),
         title: Text('Booking Status', style: AppTextStyle.titleLargeBold.copyWith(color: Colors.white)),
         actions: [
@@ -47,13 +48,13 @@ class BookingStatusScreen extends GetView<BookingStatusController> {
                   ? CommonButton(
                       label: 'Completed',
                       onTap: () => Get.toNamed(AppRoutes.serviceReviewScreen, arguments: controller.service),
-                      backgroundColor: AppColor.brownAccentPrimary,
+                      backgroundColor: AppColor.blackColor,
                       foregroundColor: Colors.white,
                     )
                   : CommonButton(
                       label: 'Back to Home',
                       onTap: () => Get.until((r) => r.settings.name == AppRoutes.dashboardScreen),
-                      backgroundColor: AppColor.brownAccentPrimary,
+                      backgroundColor: AppColor.blackColor,
                       foregroundColor: Colors.white,
                     ),
             ),
@@ -80,8 +81,10 @@ class _ServiceCard extends StatelessWidget {
       child: Row(children: [
         ClipRRect(
           borderRadius: BorderRadius.circular(8),
-          child: Image.asset(
-            controller.service.image,
+          child: Image.network(
+            controller.service.featuredImage.isNotEmpty
+                ? '${ApiEndpoints.baseUrl}/${controller.service.featuredImage}'
+                : '',
             width: 80,
             height: 70,
             fit: BoxFit.cover,
@@ -99,14 +102,14 @@ class _ServiceCard extends StatelessWidget {
             Text(controller.service.name, style: AppTextStyle.titleSmallSemiBold.copyWith(color: AppColor.blackShade1)),
             const SizedBox(height: 4),
             Row(children: [
-              const Icon(Icons.star, size: 12, color: Color(0xffFFC107)),
+              const Icon(Icons.star, size: 12, color: AppColor.darkGray),
               const SizedBox(width: 2),
-              Text('${controller.service.rating} (${controller.service.reviews} Reviews)', style: AppTextStyle.bodySmallRegular.copyWith(color: AppColor.coolGrayText)),
+              Text('${controller.service.ratingsAverage} (${controller.service.ratingsQuantity} Reviews)', style: AppTextStyle.bodySmallRegular.copyWith(color: AppColor.coolGrayText)),
             ]),
             const SizedBox(height: 4),
             Row(children: [
               Text('\$10 ', style: AppTextStyle.bodySmallRegular.copyWith(color: AppColor.coolGrayText, decoration: TextDecoration.lineThrough)),
-              Text('\$7', style: AppTextStyle.titleSmallSemiBold.copyWith(color: AppColor.brownAccentPrimary)),
+              Text('\$7', style: AppTextStyle.titleSmallSemiBold.copyWith(color: AppColor.blackColor)),
             ]),
           ]),
         ),
@@ -265,9 +268,9 @@ class _TimelineItem extends StatelessWidget {
       padding: isHighlighted ? const EdgeInsets.all(12) : EdgeInsets.zero,
       decoration: isHighlighted
           ? BoxDecoration(
-              color: AppColor.brownAccentPrimary.withValues(alpha: 0.08),
+              color: AppColor.blackColor.withValues(alpha: 0.08),
               borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: Color(0xffFFF8EC))
+        border: Border.all(color: Color(0xffF5F5F5))
             )
           : null,
       child: Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
@@ -295,7 +298,7 @@ class _TimelineItem extends StatelessWidget {
                   isHighlighted ? currentLabel! : title,
                   style: AppTextStyle.titleSmallSemiBold.copyWith(
                     color: isHighlighted
-                        ? AppColor.brownAccentPrimary
+                        ? AppColor.blackColor
                         : isDone
                             ? AppColor.blackShade1
                             : AppColor.coolGrayText,
@@ -316,7 +319,7 @@ class _TimelineItem extends StatelessWidget {
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
-                    color: AppColor.brownAccentPrimary,
+                    color: AppColor.blackColor,
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text('Track Now', style: AppTextStyle.labelSmallMedium.copyWith(color: Colors.white)),
@@ -327,9 +330,9 @@ class _TimelineItem extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: AppColor.brownAccentPrimary),
+                  border: Border.all(color: AppColor.blackColor),
                 ),
-                child: Text(otpBadge!, style: AppTextStyle.labelSmallMedium.copyWith(color: AppColor.brownAccentPrimary, fontWeight: FontWeight.w600)),
+                child: Text(otpBadge!, style: AppTextStyle.labelSmallMedium.copyWith(color: AppColor.blackColor, fontWeight: FontWeight.w600)),
               ),
           ]),
         ),
@@ -353,7 +356,7 @@ class _DashedCirclePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = AppColor.brownAccentPrimary
+      ..color = AppColor.blackColor
       ..strokeWidth = 2.5
       ..style = PaintingStyle.stroke;
     const dashCount = 10;
@@ -415,9 +418,9 @@ class _BottomInfoCard extends StatelessWidget {
       return Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: Color(0xffFAF7F4),
+          color: Color(0xffF8F8F8),
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color:Color(0xffA5732F).withValues(alpha: 0.30)),
+          border: Border.all(color:Color(0xff111111).withValues(alpha: 0.30)),
         ),
         child: Row(children: [
           Expanded(
@@ -428,7 +431,7 @@ class _BottomInfoCard extends StatelessWidget {
               Text(description, style: AppTextStyle.bodySmallRegular.copyWith(color: AppColor.coolGrayText)),
             ]),
           ),
-          Icon(illustrationIcon, size: 80, color: AppColor.brownAccentPrimary),
+          Icon(illustrationIcon, size: 80, color: AppColor.blackColor),
         ]),
       );
     });
