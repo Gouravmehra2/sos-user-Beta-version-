@@ -44,7 +44,10 @@ class CommonDialog {
             children: [
               /// Header — matches project AppBar theming
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 14,
+                ),
                 decoration: const BoxDecoration(
                   color: AppColor.blackColor,
                   borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
@@ -56,7 +59,7 @@ class CommonDialog {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "Upload Profile Photo",
+                            "Upload Profile Photo".tr,
                             style: AppTextStyle.titleLargeSemiBold.copyWith(
                               color: Colors.white,
                               fontSize: 18,
@@ -64,7 +67,8 @@ class CommonDialog {
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            "Choose how you'd like to add your profile photo",
+                            "Choose how you'd like to add your profile photo"
+                                .tr,
                             style: AppTextStyle.bodySmallRegular.copyWith(
                               color: Colors.white70,
                               height: 1.4,
@@ -105,8 +109,8 @@ class CommonDialog {
                         Expanded(
                           child: _ImageSourceCard(
                             icon: Icons.photo_library_outlined,
-                            title: "Gallery",
-                            subtitle: "Select Photo",
+                            title: "Gallery".tr,
+                            subtitle: "Select Photo".tr,
                             onTap: () async {
                               final image = await ImagePicker().pickImage(
                                 source: ImageSource.gallery,
@@ -120,8 +124,8 @@ class CommonDialog {
                         Expanded(
                           child: _ImageSourceCard(
                             icon: Icons.camera_alt_outlined,
-                            title: "Camera",
-                            subtitle: "Take Photo",
+                            title: "Camera".tr,
+                            subtitle: "Take Photo".tr,
                             onTap: () async {
                               final image = await ImagePicker().pickImage(
                                 source: ImageSource.camera,
@@ -137,7 +141,7 @@ class CommonDialog {
                     const SizedBox(height: 16),
 
                     CommonButton(
-                      label: "Cancel",
+                      label: "Cancel".tr,
                       onTap: Get.back,
                       backgroundColor: AppColor.blackColor,
                       height: 46,
@@ -174,16 +178,11 @@ class _ImageSourceCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(18),
         onTap: onTap,
         child: Container(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 12,
-            vertical: 20,
-          ),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 20),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(18),
-            border: Border.all(
-              color: AppColor.lightGreyColor,
-            ),
+            border: Border.all(color: AppColor.lightGreyColor),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withOpacity(0.04),
@@ -201,24 +200,17 @@ class _ImageSourceCard extends StatelessWidget {
                   color: AppColor.blackColor.withOpacity(0.08),
                   borderRadius: BorderRadius.circular(14),
                 ),
-                child: Icon(
-                  icon,
-                  size: 28,
-                  color: AppColor.blackColor,
-                ),
+                child: Icon(icon, size: 28, color: AppColor.blackColor),
               ),
 
               const SizedBox(height: 12),
 
-              Text(
-                title,
-                style: AppTextStyle.titleSmallSemiBold,
-              ),
+              Text((title).tr, style: AppTextStyle.titleSmallSemiBold),
 
               const SizedBox(height: 4),
 
               Text(
-                subtitle,
+                (subtitle).tr,
                 textAlign: TextAlign.center,
                 style: AppTextStyle.bodySmallRegular.copyWith(
                   color: AppColor.coolGrayText,

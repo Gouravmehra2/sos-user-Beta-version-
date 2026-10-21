@@ -1,3 +1,4 @@
+import 'package:squadonsite/core/services/apple_auth_flow.dart';
 import 'package:squadonsite/core/services/google_auth_flow.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -8,7 +9,6 @@ import 'package:squadonsite/constant/routes/app_routes.dart';
 import 'package:squadonsite/constant/common_widgets/common_text_form_field.dart';
 import 'package:squadonsite/core/services/api_repo.dart';
 import 'package:squadonsite/core/services/auth_api_service.dart';
-import 'package:squadonsite/core/services/social_auth_service.dart';
 import 'package:squadonsite/model/auth_model.dart';
 
 class EmailLoginController extends GetxController {
@@ -61,8 +61,8 @@ class EmailLoginController extends GetxController {
         ),
       );
       if (response.accessToken.trim().isEmpty) {
-        throw const FormatException(
-          'The server did not return a login token. Please try again.',
+        throw FormatException(
+          "The server did not return a login token. Please try again.".tr,
         );
       }
       await Get.find<AuthSession>().update(response);
@@ -79,8 +79,6 @@ class EmailLoginController extends GetxController {
 
   // ── Social ────────────────────────────────────────────────────────────────
 
-  final _socialAuth = Get.find<SocialAuthService>();
-
   final RxBool isAppleLoading = false.obs;
   final RxBool isGoogleLoading = false.obs;
 
@@ -91,15 +89,7 @@ class EmailLoginController extends GetxController {
 
     isAppleLoading.value = true;
     try {
-      final result = await _socialAuth.signInWithApple();
-      result.fold(
-        onSuccess: (user) {
-          // TODO: send user.idToken to your backend, then navigate
-          debugPrint('[EmailLogin] Apple user: ${user.uid}');
-        },
-        onFailure: (msg) => AppSnackbar.show('sign_in_failed'.tr, msg),
-        onCancelled: () {},
-      );
+      await AppleAuthFlow.run();
     } finally {
       isAppleLoading.value = false;
     }

@@ -1,3 +1,4 @@
+import 'package:get/get.dart' hide Response;
 import 'package:flutter/material.dart';
 import 'package:readmore/readmore.dart';
 import 'package:squadonsite/constant/app_color/app_color.dart';
@@ -87,7 +88,7 @@ class _AddonCard extends StatelessWidget {
 
           // Name
           Text(
-            addon.name,
+            (addon.name).tr,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: AppTextStyle.titleSmallSemiBold.copyWith(
@@ -123,7 +124,7 @@ class _AddonCard extends StatelessWidget {
 
           // Price
           Text(
-            '\$${addon.price.toStringAsFixed(2)}',
+            ('\$${addon.price.toStringAsFixed(2)}').tr,
             style: AppTextStyle.titleSmallSemiBold.copyWith(
               color: AppColor.blackShade1,
             ),
@@ -159,7 +160,7 @@ class _AddonCard extends StatelessWidget {
                   ),
                   const SizedBox(width: 4),
                   Text(
-                    selected ? 'Remove' : 'Add',
+                    (selected ? "Remove".tr : "Add".tr).tr,
                     style: AppTextStyle.bodySmallMedium.copyWith(
                       color: selected ? Colors.white : AppColor.blackShade1,
                     ),

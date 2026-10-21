@@ -48,7 +48,7 @@ class NeedHelpBanner extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Need urgent help?',
+                      "home_sos_need_help".tr,
                       style: AppTextStyle.titleMediumSemiBold.copyWith(
                         color: Colors.white,
                         fontWeight: FontWeight.w700,
@@ -56,7 +56,7 @@ class NeedHelpBanner extends StatelessWidget {
                     ),
                     const SizedBox(height: 6),
                     Text(
-                      'Emergency SOS Support',
+                      "home_sos_subtitle".tr,
                       style: AppTextStyle.bodySmallMedium.copyWith(
                         color: Colors.white.withOpacity(.8),
                       ),
@@ -83,7 +83,7 @@ class NeedHelpBanner extends StatelessWidget {
                       const Icon(Icons.warning, color: Colors.white, size: 28),
                       const SizedBox(width: 10),
                       Text(
-                        'SOS',
+                        ('SOS').tr,
                         style: AppTextStyle.titleMediumSemiBold.copyWith(
                           color: Colors.white,
                           fontWeight: FontWeight.w700,

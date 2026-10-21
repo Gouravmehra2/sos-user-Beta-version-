@@ -28,7 +28,7 @@ class OnboardingController extends GetxController {
   void backPage() {
     if (currentPage.value > 0) {
       pageController.animateToPage(
-        currentPage.value -1,
+        currentPage.value - 1,
         duration: const Duration(milliseconds: 350),
         curve: Curves.easeInOut,
       );

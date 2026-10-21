@@ -29,29 +29,45 @@ class _SignUpView extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
 
-    return Scaffold(
-      backgroundColor: const Color(0xFFE8E8E8),
-      body: Stack(
-        children: [
-          const _BackgroundPattern(),
-          Positioned(
-            top: MediaQuery.paddingOf(context).top + 12,
-            left: 18,
-            child: IconButton(
-              onPressed: Get.back,
-              icon: const Icon(Icons.arrow_back_ios_new_rounded),
-              color: Colors.white,
-              style: IconButton.styleFrom(
-                backgroundColor: Colors.black.withValues(alpha: 0.18),
-                padding: const EdgeInsets.all(12),
+    return Obx(
+      () => PopScope(
+        canPop: !controller.isLoading.value,
+        child: Scaffold(
+          backgroundColor: const Color(0xFFE8E8E8),
+          body: Stack(
+            children: [
+              const _BackgroundPattern(),
+              Positioned(
+                top: MediaQuery.paddingOf(context).top + 12,
+                left: 18,
+                child: IconButton(
+                  onPressed: Get.back,
+                  icon: const Icon(Icons.arrow_back_ios_new_rounded),
+                  color: Colors.white,
+                  style: IconButton.styleFrom(
+                    backgroundColor: Colors.black.withValues(alpha: 0.18),
+                    padding: const EdgeInsets.all(12),
+                  ),
+                ),
               ),
-            ),
+              Positioned.fill(
+                top: size.height * 0.225,
+                child: _SignUpCard(controller: controller),
+              ),
+              if (controller.isLoading.value)
+                const Positioned.fill(
+                  child: Stack(
+                    children: [
+                      ModalBarrier(dismissible: false, color: Colors.black45),
+                      Center(
+                        child: CircularProgressIndicator(color: Colors.white),
+                      ),
+                    ],
+                  ),
+                ),
+            ],
           ),
-          Positioned.fill(
-            top: size.height * 0.225,
-            child: _SignUpCard(controller: controller),
-          ),
-        ],
+        ),
       ),
     );
   }
@@ -168,7 +184,7 @@ class _SignUpCard extends StatelessWidget {
                       height: 49,
                       onChanged: controller.onCountryChanged,
                       initialSelection:
-                          controller.selectedCountry.value.code ?? 'IN',
+                          controller.selectedCountry.value.code ?? 'US',
                       backgroundColor: Colors.white,
                       borderColor: AppColor.lightGreyColor,
                     ),
@@ -284,7 +300,7 @@ class _SignUpCard extends StatelessWidget {
                     ),
                     children: [
                       TextSpan(
-                        text: 'Log In',
+                        text: "Log In".tr,
                         style: const TextStyle(
                           color: AppColor.blackColor,
                           fontWeight: FontWeight.w600,

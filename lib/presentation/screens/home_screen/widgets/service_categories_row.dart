@@ -1,3 +1,4 @@
+import 'package:get/get.dart' hide Response;
 import 'package:flutter/material.dart';
 import 'package:squadonsite/constant/app_color/app_color.dart';
 import 'package:squadonsite/constant/app_text_style/app_text_style.dart';
@@ -76,12 +77,17 @@ class _ServiceCategoryTile extends StatelessWidget {
                 color: Color(0xfff2f2f2),
                 shape: BoxShape.circle,
               ),
-              child: Image.asset(icon, height: 20, width: 20, fit: BoxFit.contain),
+              child: Image.asset(
+                icon,
+                height: 20,
+                width: 20,
+                fit: BoxFit.contain,
+              ),
             ),
             const SizedBox(width: 6),
             Expanded(
               child: Text(
-                label,
+                (label).tr,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 style: AppTextStyle.titleMediumMedium.copyWith(

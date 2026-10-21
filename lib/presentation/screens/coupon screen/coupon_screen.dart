@@ -17,7 +17,7 @@ class CouponScreen extends GetView<CouponController> {
         backgroundColor: AppColor.blackColor,
         iconTheme: const IconThemeData(color: Colors.white),
         title: Text(
-          'Coupons',
+          "profile_coupons".tr,
           style: AppTextStyle.titleLargeBold.copyWith(color: Colors.white),
         ),
       ),
@@ -37,7 +37,7 @@ class CouponScreen extends GetView<CouponController> {
                   child: TextField(
                     controller: controller.couponCodeController,
                     decoration: InputDecoration(
-                      hintText: 'Enter coupon code',
+                      hintText: "Enter coupon code".tr,
                       hintStyle: AppTextStyle.bodyMediumRegular.copyWith(
                         color: AppColor.coolGrayText,
                       ),
@@ -67,7 +67,7 @@ class CouponScreen extends GetView<CouponController> {
                     elevation: 0,
                   ),
                   child: Text(
-                    'Apply',
+                    "Apply".tr,
                     style: AppTextStyle.titleSmallSemiBold.copyWith(
                       color: Colors.white,
                     ),
@@ -81,7 +81,7 @@ class CouponScreen extends GetView<CouponController> {
 
           // Available Coupons label
           Text(
-            'Available Coupons',
+            "Available Coupons".tr,
             style: AppTextStyle.titleMediumSemiBold.copyWith(
               color: AppColor.blackShade1,
             ),
@@ -112,7 +112,7 @@ class CouponScreen extends GetView<CouponController> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'View Used Coupons',
+                  "View Used Coupons".tr,
                   style: AppTextStyle.bodyMediumRegular.copyWith(
                     color: AppColor.blackShade1,
                   ),
@@ -158,14 +158,15 @@ class CouponScreen extends GetView<CouponController> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'How it works?',
+                        "How it works?".tr,
                         style: AppTextStyle.titleSmallSemiBold.copyWith(
                           color: AppColor.blackShade1,
                         ),
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        'Apply a coupon code at checkout to get instant discount on your service booking.',
+                        "Apply a coupon code at checkout to get instant discount on your service booking."
+                            .tr,
                         style: AppTextStyle.bodySmallRegular.copyWith(
                           color: AppColor.coolGrayText,
                         ),
@@ -211,14 +212,15 @@ class CouponScreen extends GetView<CouponController> {
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    'Have a Promo Code?',
+                    "Have a Promo Code?".tr,
                     style: AppTextStyle.headlineLargeBold.copyWith(
                       color: AppColor.blackShade1,
                     ),
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'Enter your manual code below to\nadd it to your wallet.',
+                    "Enter your manual code below to\nadd it to your wallet."
+                        .tr,
                     textAlign: TextAlign.center,
                     style: AppTextStyle.bodyMediumRegular.copyWith(
                       color: AppColor.coolGrayText,
@@ -231,7 +233,7 @@ class CouponScreen extends GetView<CouponController> {
                         child: TextField(
                           controller: controller.redeemCodeController,
                           decoration: InputDecoration(
-                            hintText: 'Enter code here',
+                            hintText: "Enter code here".tr,
                             hintStyle: AppTextStyle.bodyMediumRegular.copyWith(
                               color: AppColor.coolGrayText,
                             ),
@@ -271,7 +273,7 @@ class CouponScreen extends GetView<CouponController> {
                             elevation: 0,
                           ),
                           child: Text(
-                            'Redeem',
+                            "Redeem".tr,
                             style: AppTextStyle.titleSmallSemiBold.copyWith(
                               color: Colors.white,
                             ),
@@ -323,7 +325,7 @@ class _CouponCard extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            coupon['code'],
+                            (coupon['code']).tr,
                             style: AppTextStyle.titleLargeBold.copyWith(
                               color: AppColor.blackShade1,
                             ),
@@ -347,7 +349,7 @@ class _CouponCard extends StatelessWidget {
                                 ),
                                 const SizedBox(width: 5),
                                 Text(
-                                  'Valid',
+                                  "Valid".tr,
                                   style: AppTextStyle.bodySmallRegular.copyWith(
                                     color: AppColor.green2Color,
                                   ),
@@ -364,14 +366,14 @@ class _CouponCard extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            coupon['discount'],
+                            (coupon['discount']).tr,
                             style: AppTextStyle.titleLargeBold.copyWith(
                               color: AppColor.darkGray,
                             ),
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            coupon['desc'],
+                            (coupon['desc']).tr,
                             style: AppTextStyle.bodySmallRegular.copyWith(
                               color: AppColor.coolGrayText,
                             ),
@@ -392,13 +394,13 @@ class _CouponCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      coupon['validTill'],
+                      (coupon['validTill']).tr,
                       style: AppTextStyle.bodySmallRegular.copyWith(
                         color: AppColor.coolGrayText,
                       ),
                     ),
                     Text(
-                      'T&C Apply',
+                      "T&C Apply".tr,
                       style: AppTextStyle.bodySmallRegular.copyWith(
                         color: AppColor.coolGrayText,
                         decoration: TextDecoration.underline,

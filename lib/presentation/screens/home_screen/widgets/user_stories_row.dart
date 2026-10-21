@@ -1,3 +1,4 @@
+import 'package:get/get.dart' hide Response;
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 import 'package:squadonsite/constant/app_text_style/app_text_style.dart';
@@ -154,15 +155,15 @@ class _StoryPlayerState extends State<_StoryPlayer>
         Align(
           alignment: Alignment.topRight,
           child: IconButton(
-            tooltip: 'Close video',
+            tooltip: "Close video".tr,
             icon: const Icon(Icons.close),
             onPressed: () => Navigator.of(context).pop(),
           ),
         ),
         if (_failed)
-          const Padding(
+          Padding(
             padding: EdgeInsets.all(24),
-            child: Text('Unable to play this video.'),
+            child: Text("Unable to play this video.".tr),
           )
         else if (!_ready)
           const Padding(
@@ -180,7 +181,7 @@ class _StoryPlayerState extends State<_StoryPlayer>
           ValueListenableBuilder<VideoPlayerValue>(
             valueListenable: _controller,
             builder: (_, value, _) => IconButton(
-              tooltip: value.isPlaying ? 'Pause' : 'Play',
+              tooltip: value.isPlaying ? "Pause".tr : "Play".tr,
               icon: Icon(value.isPlaying ? Icons.pause : Icons.play_arrow),
               onPressed: () =>
                   value.isPlaying ? _controller.pause() : _controller.play(),
@@ -220,7 +221,7 @@ class _TitleLabel extends StatelessWidget {
       right: 10,
       bottom: 12,
       child: Text(
-        title,
+        (title).tr,
         maxLines: 2,
         style: AppTextStyle.bodySmallMedium.copyWith(
           color: Colors.white,

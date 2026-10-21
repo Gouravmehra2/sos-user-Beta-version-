@@ -17,7 +17,7 @@ class CallSupportScreen extends GetView<CallSupportController> {
         backgroundColor: AppColor.blackColor,
         iconTheme: const IconThemeData(color: Colors.white),
         title: Text(
-          'Call Support',
+          "Call Support".tr,
           style: AppTextStyle.titleLargeBold.copyWith(color: Colors.white),
         ),
       ),
@@ -26,7 +26,7 @@ class CallSupportScreen extends GetView<CallSupportController> {
         child: Column(
           children: [
             Text(
-              "We're here to help",
+              "We're here to help".tr,
               style: AppTextStyle.headlineLargeBold.copyWith(
                 color: AppColor.blackShade1,
                 fontSize: 26,
@@ -35,7 +35,7 @@ class CallSupportScreen extends GetView<CallSupportController> {
             ),
             const SizedBox(height: 8),
             Text(
-              'Connect instantly with our technical experts.',
+              "Connect instantly with our technical experts.".tr,
               style: AppTextStyle.bodyMediumRegular.copyWith(
                 color: AppColor.coolGrayText,
               ),
@@ -49,7 +49,7 @@ class CallSupportScreen extends GetView<CallSupportController> {
             const SizedBox(height: 40),
 
             Text(
-              'Speak with our support team',
+              "Speak with our support team".tr,
               style: AppTextStyle.titleLargeBold.copyWith(
                 color: AppColor.blackShade1,
                 fontSize: 20,
@@ -58,7 +58,8 @@ class CallSupportScreen extends GetView<CallSupportController> {
             ),
             const SizedBox(height: 10),
             Text(
-              'Our expert agents are ready to assist you with any technical hurdles or service requests.',
+              "Our expert agents are ready to assist you with any technical hurdles or service requests."
+                  .tr,
               style: AppTextStyle.bodyMediumRegular.copyWith(
                 color: AppColor.coolGrayText,
                 height: 1.6,
@@ -96,13 +97,13 @@ class CallSupportScreen extends GetView<CallSupportController> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Support Hours',
+                          "Support Hours".tr,
                           style: AppTextStyle.titleSmallSemiBold.copyWith(
                             color: AppColor.blackShade1,
                           ),
                         ),
                         Text(
-                          'Monday — Sunday',
+                          "Monday — Sunday".tr,
                           style: AppTextStyle.bodySmallRegular.copyWith(
                             color: AppColor.coolGrayText,
                           ),
@@ -111,7 +112,7 @@ class CallSupportScreen extends GetView<CallSupportController> {
                     ),
                   ),
                   Text(
-                    '24 Hours',
+                    "24 Hours".tr,
                     style: AppTextStyle.titleSmallSemiBold.copyWith(
                       color: AppColor.blackShade1,
                     ),
@@ -142,7 +143,7 @@ class CallSupportScreen extends GetView<CallSupportController> {
                   ),
                   const SizedBox(width: 8),
                   Text(
-                    'Average wait time: ~ 2 mins',
+                    "Average wait time: ~ 2 mins".tr,
                     style: AppTextStyle.bodySmallMedium.copyWith(
                       color: AppColor.coolGrayText,
                     ),
@@ -154,7 +155,7 @@ class CallSupportScreen extends GetView<CallSupportController> {
 
             // Call now button
             CommonButton(
-              label: 'Call Now',
+              label: "Call Now".tr,
               onTap: controller.onCallNow,
               backgroundColor: AppColor.blackColor,
               foregroundColor: Colors.white,
@@ -167,7 +168,7 @@ class CallSupportScreen extends GetView<CallSupportController> {
             const SizedBox(height: 14),
 
             Text(
-              'Prefer not to call?',
+              "Prefer not to call?".tr,
               style: AppTextStyle.bodySmallRegular.copyWith(
                 color: AppColor.coolGrayText,
               ),
@@ -188,7 +189,7 @@ class CallSupportScreen extends GetView<CallSupportController> {
                       ),
                       const SizedBox(width: 4),
                       Text(
-                        'Live Chat',
+                        "Live Chat".tr,
                         style: AppTextStyle.bodySmallMedium.copyWith(
                           color: AppColor.blackColor,
                         ),
@@ -199,7 +200,7 @@ class CallSupportScreen extends GetView<CallSupportController> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 12),
                   child: Text(
-                    '•',
+                    ('•').tr,
                     style: AppTextStyle.bodySmallRegular.copyWith(
                       color: AppColor.coolGrayText,
                     ),
@@ -216,7 +217,7 @@ class CallSupportScreen extends GetView<CallSupportController> {
                       ),
                       const SizedBox(width: 4),
                       Text(
-                        'Email Us',
+                        "Email Us".tr,
                         style: AppTextStyle.bodySmallMedium.copyWith(
                           color: AppColor.blackColor,
                         ),

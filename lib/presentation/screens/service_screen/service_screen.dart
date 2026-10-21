@@ -27,7 +27,7 @@ class ServiceScreen extends GetView<ServiceController> {
         foregroundColor: Colors.white,
         automaticallyImplyLeading: true,
         title: Text(
-          controller.categoryTitle,
+          (controller.categoryTitle).tr,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
           style: const TextStyle(
@@ -139,7 +139,7 @@ class _LeftCategoryRail extends StatelessWidget {
                     ),
                     // const SizedBox(height: 3),
                     Text(
-                      subs[i].name,
+                      (subs[i].name).tr,
                       style: AppTextStyle.labelSmallRegular.copyWith(
                         color: isSelected
                             ? AppColor.blackColor
@@ -210,7 +210,7 @@ class _RightServiceList extends StatelessWidget {
       if (services.isEmpty) {
         return Center(
           child: Text(
-            'No services available.',
+            "No services available.".tr,
             style: AppTextStyle.bodyMediumRegular.copyWith(
               color: AppColor.coolGrayText,
             ),
@@ -319,14 +319,14 @@ class _ServiceCard extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               Text(
-                service.name,
+                (service.name).tr,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: AppTextStyle.titleSmallSemiBold.copyWith(fontSize: 13),
               ),
               const SizedBox(height: 4),
               Text(
-                'Starting From',
+                "Starting From".tr,
                 style: AppTextStyle.labelSmallRegular.copyWith(
                   fontSize: 10,
                   color: const Color(0xff000000).withValues(alpha: 0.5),
@@ -334,7 +334,8 @@ class _ServiceCard extends StatelessWidget {
               ),
               const SizedBox(height: 2),
               Text(
-                '\$${service.hasVariants ? service.priceMin : service.offerPrice}',
+                ('\$${service.hasVariants ? service.priceMin : service.offerPrice}')
+                    .tr,
                 style: AppTextStyle.titleLargeBold.copyWith(
                   fontSize: 13,
                   color: AppColor.blackColor,
@@ -348,7 +349,10 @@ class _ServiceCard extends StatelessWidget {
                     const SizedBox(width: 2),
                     Expanded(
                       child: Text(
-                        '${service.ratingsAverage} (${service.ratingsQuantity} Reviews)',
+                        "@p0 (@p1 Reviews)".trParams({
+                          "p0": (service.ratingsAverage).toString(),
+                          "p1": (service.ratingsQuantity).toString(),
+                        }),
                         overflow: TextOverflow.ellipsis,
                         style: AppTextStyle.labelSmallRegular.copyWith(
                           fontSize: 10,
@@ -373,7 +377,7 @@ class _ServiceCard extends StatelessWidget {
                   ),
                   child: Center(
                     child: Text(
-                      'BOOK NOW',
+                      "BOOK NOW".tr,
                       style: AppTextStyle.buttonLarge.copyWith(
                         color: Colors.white,
                         fontSize: 13,
@@ -412,7 +416,7 @@ class _SuggestServiceBanner extends StatelessWidget {
               Container(width: 32, height: 1, color: AppColor.coolGrayText),
               const SizedBox(width: 8),
               Text(
-                'HEY!',
+                "HEY!".tr,
                 style: AppTextStyle.labelSmallMedium.copyWith(
                   color: AppColor.coolGrayText,
                   letterSpacing: 1,
@@ -427,9 +431,9 @@ class _SuggestServiceBanner extends StatelessWidget {
                 color: AppColor.coolGrayText,
               ),
               children: [
-                const TextSpan(text: "Didn't find\nwhat you were\n"),
+                TextSpan(text: "Didn't find\nwhat you were\n".tr),
                 TextSpan(
-                  text: 'Looking for?',
+                  text: "Looking for?".tr,
                   style: AppTextStyle.displayMediumBold.copyWith(
                     color: AppColor.blackColor,
                   ),
@@ -439,7 +443,7 @@ class _SuggestServiceBanner extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           Text(
-            "Suggest us a service & we'll look into it",
+            "Suggest us a service & we'll look into it".tr,
             style: AppTextStyle.bodyMediumRegular.copyWith(
               color: AppColor.coolGrayText,
             ),
@@ -455,7 +459,7 @@ class _SuggestServiceBanner extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
             ),
             child: Text(
-              'Suggest us a Service',
+              "Suggest us a Service".tr,
               style: AppTextStyle.bodyMediumMedium.copyWith(
                 color: AppColor.blackColor,
               ),

@@ -17,7 +17,7 @@ class BookingSafetyScreen extends GetView<BookingSafetyController> {
         backgroundColor: AppColor.blackColor,
         iconTheme: const IconThemeData(color: Colors.white),
         title: Text(
-          'Booking Safety Guide',
+          "profile_settings_booking_safety".tr,
           style: AppTextStyle.titleLargeBold.copyWith(color: Colors.white),
         ),
       ),
@@ -43,7 +43,7 @@ class BookingSafetyScreen extends GetView<BookingSafetyController> {
                 ),
                 const SizedBox(height: 14),
                 Text(
-                  'Protecting You Every Step of the Way',
+                  "Protecting You Every Step of the Way".tr,
                   textAlign: TextAlign.center,
                   style: AppTextStyle.titleLargeBold.copyWith(
                     color: AppColor.blackColor,
@@ -52,7 +52,8 @@ class BookingSafetyScreen extends GetView<BookingSafetyController> {
                 ),
                 const SizedBox(height: 10),
                 Text(
-                  'All services booked through 1App are monitored and supported to ensure a safe, transparent, and reliable experience. Follow these simple steps for a smooth service journey.',
+                  "All services booked through SOS are monitored and supported to ensure a safe, transparent, and reliable experience. Follow these simple steps for a smooth service journey."
+                      .tr,
                   textAlign: TextAlign.center,
                   style: AppTextStyle.bodyMediumRegular.copyWith(
                     color: AppColor.coolGrayText,
@@ -106,7 +107,7 @@ class _StepCard extends StatelessWidget {
                 ),
                 alignment: Alignment.center,
                 child: Text(
-                  '${step.number}',
+                  ('${step.number}').tr,
                   style: AppTextStyle.titleSmallSemiBold.copyWith(
                     color: Colors.white,
                     fontSize: 13,
@@ -154,14 +155,14 @@ class _StepCard extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            step.title,
+                            (step.title).tr,
                             style: AppTextStyle.titleSmallSemiBold.copyWith(
                               color: AppColor.blackShade1,
                               fontSize: 15,
                             ),
                           ),
                           Text(
-                            step.subtitle,
+                            (step.subtitle).tr,
                             style: AppTextStyle.bodySmallMedium.copyWith(
                               color: AppColor.blackColor,
                             ),
@@ -175,7 +176,7 @@ class _StepCard extends StatelessWidget {
 
                 // Body text
                 Text(
-                  step.body,
+                  (step.body).tr,
                   style: AppTextStyle.bodyMediumRegular.copyWith(
                     color: AppColor.coolGrayText,
                     height: 1.6,
@@ -204,7 +205,7 @@ class _StepCard extends StatelessWidget {
                       const SizedBox(width: 6),
                       Expanded(
                         child: Text(
-                          step.tip,
+                          (step.tip).tr,
                           style: AppTextStyle.bodySmallRegular.copyWith(
                             color: AppColor.blackColor,
                             height: 1.5,
@@ -253,7 +254,7 @@ class _ReportCard extends StatelessWidget {
               ),
               const SizedBox(width: 8),
               Text(
-                'Report Safety Concerns',
+                "Report Safety Concerns".tr,
                 style: AppTextStyle.titleSmallSemiBold.copyWith(
                   color: Colors.redAccent,
                   fontSize: 16,
@@ -281,7 +282,7 @@ class _ReportCard extends StatelessWidget {
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
-                      item,
+                      (item).tr,
                       style: AppTextStyle.bodyMediumRegular.copyWith(
                         color: AppColor.blackShade1,
                         height: 1.5,
@@ -295,7 +296,7 @@ class _ReportCard extends StatelessWidget {
 
           const SizedBox(height: 10),
           Text(
-            'Please report it immediately through the app.',
+            "Please report it immediately through the app.".tr,
             style: AppTextStyle.bodyMediumRegular.copyWith(
               color: AppColor.coolGrayText,
               height: 1.5,
@@ -308,7 +309,7 @@ class _ReportCard extends StatelessWidget {
             children: [
               Expanded(
                 child: CommonButton(
-                  label: 'Report an Issue',
+                  label: "Report an Issue".tr,
                   onTap: controller.onReportIssue,
                   backgroundColor: Colors.white,
                   foregroundColor: Colors.redAccent,
@@ -328,7 +329,7 @@ class _ReportCard extends StatelessWidget {
               const SizedBox(width: 12),
               Expanded(
                 child: CommonButton(
-                  label: 'Contact Support',
+                  label: "Contact Support".tr,
                   onTap: controller.onContactSupport,
                   backgroundColor: Colors.white,
                   foregroundColor: AppColor.blackColor,

@@ -39,8 +39,9 @@ class LocationDetailController extends GetxController {
       if (requested == LocationPermission.denied ||
           requested == LocationPermission.deniedForever) {
         AppSnackbar.show(
-          'Location access required',
-          'Please allow location access so we can use your current location.',
+          "Location access required".tr,
+          "Please allow location access so we can use your current location."
+              .tr,
         );
         return;
       }
@@ -48,8 +49,8 @@ class LocationDetailController extends GetxController {
 
     if (permission == LocationPermission.deniedForever) {
       AppSnackbar.show(
-        'Location access denied',
-        'Please enable location access in app settings to continue.',
+        "Location access denied".tr,
+        "Please enable location access in app settings to continue.".tr,
       );
       return;
     }
@@ -99,8 +100,8 @@ class LocationDetailController extends GetxController {
       hasCurrentLocation.value = false;
       searchController.text = '';
       AppSnackbar.show(
-        'Unable to fetch location',
-        'Please try again or allow location access.',
+        "Unable to fetch location".tr,
+        "Please try again or allow location access.".tr,
       );
     } finally {
       isLocationLoading.value = false;
@@ -110,8 +111,8 @@ class LocationDetailController extends GetxController {
   void confirmLocation() {
     if (!hasCurrentLocation.value) {
       AppSnackbar.show(
-        'Location required',
-        'Please allow current location access to continue.',
+        "Location required".tr,
+        "Please allow current location access to continue.".tr,
       );
       return;
     }

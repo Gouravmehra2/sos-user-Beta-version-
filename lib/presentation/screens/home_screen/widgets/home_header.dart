@@ -24,7 +24,7 @@ class HomeHeader extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '${controller.greeting}, ${controller.userName}',
+                  ('${controller.greeting}, ${controller.userName}').tr,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: AppTextStyle.titleLargeSemiBold.copyWith(
@@ -48,7 +48,7 @@ class HomeHeader extends StatelessWidget {
                       const SizedBox(width: 4),
                       Expanded(
                         child: Text(
-                          controller.address,
+                          (controller.address).tr,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: AppTextStyle.bodySmallRegular.copyWith(

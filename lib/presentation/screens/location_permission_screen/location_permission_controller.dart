@@ -17,8 +17,8 @@ class LocationPermissionController extends GetxController {
       return LatLng(position.latitude, position.longitude);
     } catch (_) {
       AppSnackbar.show(
-        'Location unavailable',
-        'Please try again or enter your address manually.',
+        "Location unavailable".tr,
+        "Please try again or enter your address manually.".tr,
       );
       return null;
     } finally {

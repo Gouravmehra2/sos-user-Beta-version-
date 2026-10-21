@@ -92,7 +92,8 @@ class NotificationController extends GetxController {
       unreadCount.value = response.data.unreadCount;
     } catch (_) {
       if (generation == _generation && !isClosed) {
-        errorMessage.value = 'Unable to load notifications. Please try again.';
+        errorMessage.value =
+            "Unable to load notifications. Please try again.".tr;
       }
     } finally {
       _requestInProgress = false;
@@ -116,7 +117,8 @@ class NotificationController extends GetxController {
       await Get.find<ApiRepo>().markAllNotificationsAsRead();
       await _refreshLoadedPages();
     } catch (_) {
-      errorMessage.value = 'Unable to update notifications. Please try again.';
+      errorMessage.value =
+          "Unable to update notifications. Please try again.".tr;
     } finally {
       isMarkingAllRead.value = false;
     }
@@ -134,7 +136,8 @@ class NotificationController extends GetxController {
       await Get.find<ApiRepo>().markNotificationAsRead(notification.id);
       await _refreshLoadedPages();
     } catch (_) {
-      errorMessage.value = 'Unable to update notification. Please try again.';
+      errorMessage.value =
+          "Unable to update notification. Please try again.".tr;
     } finally {
       updatingNotificationIds.remove(notification.id);
     }

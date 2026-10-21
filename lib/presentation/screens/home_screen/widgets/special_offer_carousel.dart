@@ -106,7 +106,7 @@ class SpecialOfferCarousel extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(6),
                                 ),
                                 child: Text(
-                                  offer.tag,
+                                  (offer.tag).tr,
                                   style: AppTextStyle.labelSmallMedium.copyWith(
                                     color: AppColor.blackShade2,
                                     letterSpacing: 0.5,
@@ -116,11 +116,12 @@ class SpecialOfferCarousel extends StatelessWidget {
 
                               // Title
                               Text(
-                                offer.title,
-                                style: AppTextStyle.titleMediumSemiBold.copyWith(
-                                  color: AppColor.blackShade1,
-                                  height: 1.2,
-                                ),
+                                (offer.title).tr,
+                                style: AppTextStyle.titleMediumSemiBold
+                                    .copyWith(
+                                      color: AppColor.blackShade1,
+                                      height: 1.2,
+                                    ),
                               ),
 
                               // Book Now button
@@ -137,7 +138,7 @@ class SpecialOfferCarousel extends StatelessWidget {
                                     borderRadius: BorderRadius.circular(20),
                                   ),
                                   child: Text(
-                                    offer.buttonLabel,
+                                    (offer.buttonLabel).tr,
                                     style: AppTextStyle.buttonSmall.copyWith(
                                       color: Colors.white,
                                     ),

@@ -20,21 +20,22 @@ class BookingSafetyStep {
 }
 
 class BookingSafetyController extends GetxController {
-  final List<BookingSafetyStep> steps = const [
+  final List<BookingSafetyStep> steps = [
     BookingSafetyStep(
       number: 1,
       icon: Icons.person_outline_rounded,
-      title: 'Verify Professional Arrival',
-      subtitle: 'Start Service with OTP',
+      title: "Verify Professional Arrival".tr,
+      subtitle: "Start Service with OTP".tr,
       body:
           'Before work begins, verify the professional assigned to your booking and share the OTP only after they arrive at your location.',
-      tip: 'This helps ensure the right professional is attending your service.',
+      tip:
+          'This helps ensure the right professional is attending your service.',
     ),
     BookingSafetyStep(
       number: 2,
       icon: Icons.receipt_long_outlined,
-      title: 'Review & Approve Estimate',
-      subtitle: 'Check Pricing Before Work Starts',
+      title: "Review & Approve Estimate".tr,
+      subtitle: "Check Pricing Before Work Starts".tr,
       body:
           'Review the service estimate and any additional work recommendations carefully. Approve only the charges you agree with.',
       tip: 'All approved estimates remain recorded for your reference.',
@@ -42,8 +43,8 @@ class BookingSafetyController extends GetxController {
     BookingSafetyStep(
       number: 3,
       icon: Icons.phone_android_outlined,
-      title: 'Track Service Updates',
-      subtitle: 'Stay Informed Throughout the Job',
+      title: "Track Service Updates".tr,
+      subtitle: "Stay Informed Throughout the Job".tr,
       body:
           'Monitor booking progress, service status, and important updates directly within the app.',
       tip: 'Real-time tracking keeps everything transparent and documented.',
@@ -51,8 +52,8 @@ class BookingSafetyController extends GetxController {
     BookingSafetyStep(
       number: 4,
       icon: Icons.credit_card_outlined,
-      title: 'Complete Secure Payment',
-      subtitle: 'Pay After Service Completion',
+      title: "Complete Secure Payment".tr,
+      subtitle: "Pay After Service Completion".tr,
       body:
           'Make payments only after the service has been completed and reviewed.',
       tip:
@@ -61,8 +62,8 @@ class BookingSafetyController extends GetxController {
     BookingSafetyStep(
       number: 5,
       icon: Icons.star_border_rounded,
-      title: 'Rate & Share Feedback',
-      subtitle: 'Help Us Maintain Quality',
+      title: "Rate & Share Feedback".tr,
+      subtitle: "Help Us Maintain Quality".tr,
       body:
           'Rate your service experience and provide feedback once the job is completed.',
       tip:

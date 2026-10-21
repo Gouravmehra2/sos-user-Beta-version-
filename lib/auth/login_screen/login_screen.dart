@@ -61,7 +61,6 @@ class _LoginPanel extends StatelessWidget {
                 ),
                 const SizedBox(height: 10),
 
-
                 /// Phone Number Row — rebuilds when country or live error changes
                 Obx(() {
                   // Registering observables as Obx dependencies
@@ -75,7 +74,7 @@ class _LoginPanel extends StatelessWidget {
                       CommonCountryCodePicker(
                         onChanged: controller.onCountryChanged,
                         initialSelection:
-                            controller.selectedCountry.value.code ?? 'IN',
+                            controller.selectedCountry.value.code ?? 'US',
                         backgroundColor: Colors.white,
                         borderColor: AppColor.lightGreyColor,
                       ),

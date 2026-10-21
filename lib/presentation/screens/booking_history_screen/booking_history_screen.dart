@@ -74,8 +74,8 @@ class _BookingHistoryScreenState extends State<BookingHistoryScreen>
   Widget build(BuildContext context) => Scaffold(
     backgroundColor: bookingBackground,
     appBar: AppBar(
-      title: const Text(
-        'My bookings',
+      title: Text(
+        "My bookings".tr,
         style: TextStyle(fontWeight: FontWeight.w700),
       ),
       backgroundColor: Colors.black,
@@ -98,7 +98,7 @@ class _BookingHistoryScreenState extends State<BookingHistoryScreen>
         labelColor: Colors.white,
         unselectedLabelColor: Colors.white70,
         labelStyle: const TextStyle(fontWeight: FontWeight.w700, fontSize: 13),
-        tabs: [for (final filter in _filters) Tab(text: filter)],
+        tabs: [for (final filter in _filters) Tab(text: (filter).tr)],
       ),
     ),
     body: SafeArea(
@@ -123,7 +123,7 @@ class _BookingHistoryScreenState extends State<BookingHistoryScreen>
                           _requestFilter(debounce: true);
                         },
                         decoration: InputDecoration(
-                          hintText: 'Search services, ID or location',
+                          hintText: "Search services, ID or location".tr,
                           prefixIcon: const Icon(
                             Icons.search_rounded,
                             color: bookingMuted,
@@ -131,7 +131,7 @@ class _BookingHistoryScreenState extends State<BookingHistoryScreen>
                           suffixIcon: _queries[_activeTab].isEmpty
                               ? null
                               : IconButton(
-                                  tooltip: 'Clear search',
+                                  tooltip: "Clear search".tr,
                                   onPressed: () => setState(() {
                                     _searches[_activeTab].clear();
                                     _queries[_activeTab] = '';
@@ -172,13 +172,13 @@ class _BookingHistoryScreenState extends State<BookingHistoryScreen>
                       children: [
                         Expanded(
                           child: Text(
-                            controller.errorMessage.value,
+                            (controller.errorMessage.value).tr,
                             style: const TextStyle(color: bookingMuted),
                           ),
                         ),
                         TextButton(
                           onPressed: controller.fetchBookings,
-                          child: const Text('Retry'),
+                          child: Text("Retry".tr),
                         ),
                       ],
                     ),
@@ -295,8 +295,8 @@ class _BookingCardState extends State<_BookingCard> {
     final serviceId = _serviceReviewId;
     if (serviceReview && serviceId.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('This booking does not contain a valid service ID.'),
+        SnackBar(
+          content: Text("This booking does not contain a valid service ID.".tr),
           behavior: SnackBarBehavior.floating,
         ),
       );
@@ -335,9 +335,10 @@ class _BookingCardState extends State<_BookingCard> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-              serviceReview
-                  ? 'Service review submitted successfully.'
-                  : 'Technician review submitted successfully.',
+              (serviceReview
+                      ? "Service review submitted successfully.".tr
+                      : "Technician review submitted successfully.".tr)
+                  .tr,
             ),
             behavior: SnackBarBehavior.floating,
           ),
@@ -347,7 +348,9 @@ class _BookingCardState extends State<_BookingCard> {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(error.toString().replaceFirst('Exception: ', '')),
+            content: Text(
+              (error.toString().replaceFirst('Exception: ', '')).tr,
+            ),
             backgroundColor: const Color(0xFFA83B3B),
             behavior: SnackBarBehavior.floating,
           ),
@@ -370,7 +373,7 @@ class _BookingCardState extends State<_BookingCard> {
           children: [
             BookingStatus(booking.status),
             Text(
-              'Booking ID: $id',
+              "Booking ID: @p0".trParams({"p0": (id).toString()}),
               style: const TextStyle(color: bookingMuted, fontSize: 12),
             ),
           ],
@@ -390,7 +393,7 @@ class _BookingCardState extends State<_BookingCard> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    bookingTitle(booking),
+                    (bookingTitle(booking)).tr,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
@@ -402,7 +405,10 @@ class _BookingCardState extends State<_BookingCard> {
                   ),
                   const SizedBox(height: 5),
                   Text(
-                    '${booking.services.length} booked service${booking.services.length == 1 ? '' : 's'}',
+                    (booking.services.length == 1
+                            ? '@count booked service'
+                            : '@count booked services')
+                        .trParams({'count': '${booking.services.length}'}),
                     style: const TextStyle(color: bookingMuted, fontSize: 12),
                   ),
                 ],
@@ -438,7 +444,7 @@ class _BookingCardState extends State<_BookingCard> {
           crossAxisAlignment: WrapCrossAlignment.center,
           children: [
             Text(
-              bookingMoney(booking.totalAmount),
+              (bookingMoney(booking.totalAmount)).tr,
               style: const TextStyle(
                 fontSize: 22,
                 color: bookingInk,
@@ -475,8 +481,8 @@ class _BookingCardState extends State<_BookingCard> {
                 builder: (_) => BookingDetailsScreen(booking: booking),
               ),
             ),
-            child: const Text(
-              'View details',
+            child: Text(
+              "View details".tr,
               style: TextStyle(fontWeight: FontWeight.w600),
             ),
           ),
@@ -518,7 +524,7 @@ class _InlineRatingRow extends StatelessWidget {
           children: [
             Expanded(
               child: _RatingCell(
-                label: 'Service Rating',
+                label: "Service Rating".tr,
                 rating: serviceRating,
                 onTap: onRateService,
               ),
@@ -526,7 +532,7 @@ class _InlineRatingRow extends StatelessWidget {
             const VerticalDivider(width: 1, color: bookingBorder),
             Expanded(
               child: _RatingCell(
-                label: 'Technician Rating',
+                label: "Technician Rating".tr,
                 rating: technicianRating,
                 onTap: onRateTechnician,
               ),
@@ -561,7 +567,7 @@ class _RatingCell extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              label,
+              (label).tr,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
               style: const TextStyle(color: bookingMuted, fontSize: 12),
@@ -660,7 +666,7 @@ class _RatingBottomSheetState extends State<_RatingBottomSheet> {
             ),
             const SizedBox(height: 20),
             Text(
-              title,
+              (title).tr,
               style: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w800,
@@ -669,7 +675,7 @@ class _RatingBottomSheetState extends State<_RatingBottomSheet> {
             ),
             const SizedBox(height: 4),
             Text(
-              subtitle,
+              (subtitle).tr,
               style: const TextStyle(color: bookingMuted, fontSize: 13),
             ),
             if (isEdit) ...[
@@ -683,7 +689,10 @@ class _RatingBottomSheetState extends State<_RatingBottomSheet> {
                   ),
                   const SizedBox(width: 4),
                   Text(
-                    'Previous rating: ${widget.existingRating} star${widget.existingRating == 1 ? '' : 's'}',
+                    (widget.existingRating == 1
+                            ? 'Previous rating: @count star'
+                            : 'Previous rating: @count stars')
+                        .trParams({'count': '${widget.existingRating}'}),
                     style: const TextStyle(color: bookingMuted, fontSize: 12),
                   ),
                 ],
@@ -718,16 +727,17 @@ class _RatingBottomSheetState extends State<_RatingBottomSheet> {
             const SizedBox(height: 6),
             Center(
               child: Text(
-                _rating == 0
-                    ? 'Tap to rate'
-                    : const [
-                        '',
-                        'Poor',
-                        'Fair',
-                        'Good',
-                        'Very Good',
-                        'Excellent',
-                      ][_rating],
+                (_rating == 0
+                        ? "Tap to rate".tr
+                        : [
+                            '',
+                            "Poor".tr,
+                            "Fair".tr,
+                            "Good".tr,
+                            "Very Good".tr,
+                            "Excellent".tr,
+                          ][_rating])
+                    .tr,
                 style: TextStyle(
                   color: _rating == 0 ? bookingMuted : Colors.amber.shade700,
                   fontWeight: FontWeight.w600,
@@ -741,7 +751,7 @@ class _RatingBottomSheetState extends State<_RatingBottomSheet> {
               enabled: !_submitting,
               maxLines: 3,
               decoration: InputDecoration(
-                hintText: 'Share your experience (optional)',
+                hintText: "Share your experience (optional)".tr,
                 hintStyle: const TextStyle(color: bookingMuted, fontSize: 13),
                 filled: true,
                 fillColor: bookingBackground,
@@ -795,7 +805,7 @@ class _RatingBottomSheetState extends State<_RatingBottomSheet> {
                         ),
                       )
                     : Text(
-                        isEdit ? 'Update Rating' : 'Submit Rating',
+                        (isEdit ? "Update Rating".tr : "Submit Rating".tr).tr,
                         style: const TextStyle(fontWeight: FontWeight.w700),
                       ),
               ),
@@ -838,13 +848,14 @@ class _EmptyBookings extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           Text(
-            loading
-                ? 'Loading your bookings…'
-                : error.isNotEmpty
-                ? 'Unable to load bookings'
-                : filtered
-                ? 'No matching bookings'
-                : 'No bookings yet',
+            (loading
+                    ? "Loading your bookings…".tr
+                    : error.isNotEmpty
+                    ? "Unable to load bookings".tr
+                    : filtered
+                    ? "No matching bookings".tr
+                    : "No bookings yet".tr)
+                .tr,
             textAlign: TextAlign.center,
             style: const TextStyle(
               fontSize: 19,
@@ -854,18 +865,21 @@ class _EmptyBookings extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            error.isNotEmpty
-                ? error
-                : filtered
-                ? 'Try another search or view all bookings.'
-                : 'Your service bookings will appear here.',
+            (error.isNotEmpty
+                    ? error
+                    : filtered
+                    ? "Try another search or view all bookings.".tr
+                    : "Your service bookings will appear here.".tr)
+                .tr,
             textAlign: TextAlign.center,
             style: const TextStyle(color: bookingMuted, height: 1.5),
           ),
           if (!loading && (error.isNotEmpty || filtered))
             TextButton(
               onPressed: error.isNotEmpty ? retry : clear,
-              child: Text(error.isNotEmpty ? 'Try again' : 'Clear filters'),
+              child: Text(
+                (error.isNotEmpty ? "Try again".tr : "Clear filters".tr).tr,
+              ),
             ),
         ],
       ),

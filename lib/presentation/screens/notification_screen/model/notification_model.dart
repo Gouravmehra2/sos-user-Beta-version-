@@ -22,10 +22,7 @@ class NotificationResponse {
     );
   }
 
-  Map<String, dynamic> toJson() => {
-    'success': success,
-    'data': data.toJson(),
-  };
+  Map<String, dynamic> toJson() => {'success': success, 'data': data.toJson()};
 }
 
 class NotificationResponseData {

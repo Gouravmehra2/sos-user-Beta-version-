@@ -145,11 +145,12 @@ class LocationDetailScreen extends StatelessWidget {
             ),
             const SizedBox(width: 8),
             Text(
-              controller.isLocationLoading.value
-                  ? 'Fetching your location...'
-                  : (controller.hasCurrentLocation.value
-                        ? 'Current location updated'
-                        : 'location_detail_use_current'.tr),
+              (controller.isLocationLoading.value
+                      ? "Fetching your location...".tr
+                      : (controller.hasCurrentLocation.value
+                            ? "Current location updated".tr
+                            : 'location_detail_use_current'.tr))
+                  .tr,
               style: AppTextStyle.titleSmallSemiBold.copyWith(
                 color: controller.hasCurrentLocation.value
                     ? Colors.green
@@ -256,7 +257,7 @@ class LocationDetailScreen extends StatelessWidget {
 
   Widget _buildFieldLabel(String label) {
     return Text(
-      label,
+      (label).tr,
       style: AppTextStyle.bodyMediumRegular.copyWith(
         color: AppColor.grey2Color,
       ),
@@ -346,7 +347,7 @@ class _SaveAsChip extends StatelessWidget {
             ),
             const SizedBox(width: 6),
             Text(
-              label,
+              (label).tr,
               style: AppTextStyle.bodyMediumMedium.copyWith(
                 color: _isSelected ? Colors.white : AppColor.blackShade1,
               ),

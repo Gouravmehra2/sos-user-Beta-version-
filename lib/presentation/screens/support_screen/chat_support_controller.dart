@@ -55,7 +55,7 @@ class ChatMessage {
     if (date == null) return '';
     final hour = date.hour % 12 == 0 ? 12 : date.hour % 12;
     final minute = date.minute.toString().padLeft(2, '0');
-    return '$hour:$minute ${date.hour < 12 ? 'AM' : 'PM'}';
+    return '$hour:$minute ${(date.hour < 12 ? 'AM' : 'PM').tr}';
   }
 }
 
@@ -149,7 +149,7 @@ class ChatSupportController extends GetxController {
       await markAsRead();
       _scrollToBottom();
     } catch (_) {
-      _showError('Unable to load chat history.');
+      _showError("Unable to load chat history.".tr);
     } finally {
       isLoading.value = false;
     }
@@ -196,7 +196,7 @@ class ChatSupportController extends GetxController {
             itemCount: loaded.length,
           ).hasMore;
     } catch (_) {
-      _showError('Unable to load more chat messages.');
+      _showError("Unable to load more chat messages.".tr);
     } finally {
       isLoadingMore.value = false;
     }
@@ -218,7 +218,7 @@ class ChatSupportController extends GetxController {
       onAck: (success, error) {
         isSending.value = false;
         if (!success) {
-          _showError(error ?? 'Message was not sent.');
+          _showError(error ?? "Message was not sent.".tr);
           return;
         }
         messageController.clear();
@@ -236,8 +236,8 @@ class ChatSupportController extends GetxController {
     if (size > maxSize) {
       _showError(
         isVideo
-            ? 'Video must be 50 MB or smaller.'
-            : 'Image must be 5 MB or smaller.',
+            ? "Video must be 50 MB or smaller.".tr
+            : "Image must be 5 MB or smaller.".tr,
       );
       return;
     }
@@ -270,7 +270,7 @@ class ChatSupportController extends GetxController {
       if (message is Map) _addMessage(Map<String, dynamic>.from(message));
       messageController.clear();
     } catch (_) {
-      _showError('Unable to send attachment.');
+      _showError("Unable to send attachment.".tr);
     } finally {
       isUploading.value = false;
       uploadProgress.value = 0;
@@ -312,7 +312,7 @@ class ChatSupportController extends GetxController {
     '.webm',
   ].any((extension) => path.toLowerCase().endsWith(extension));
 
-  void _showError(String message) => AppSnackbar.show('Chat', message);
+  void _showError(String message) => AppSnackbar.show("Chat".tr, message);
 
   void _scrollToBottom() {
     WidgetsBinding.instance.addPostFrameCallback((_) {

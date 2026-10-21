@@ -78,7 +78,8 @@ class HomeScreen extends StatelessWidget {
                               child: Column(
                                 children: [
                                   SizedBox(
-                                    height: MediaQuery.of(context).padding.top - 20,
+                                    height:
+                                        MediaQuery.of(context).padding.top - 20,
                                   ),
                                   HomeHeader(controller: controller),
 
@@ -129,7 +130,7 @@ class HomeScreen extends StatelessWidget {
                                 children: [
                                   Row(
                                     crossAxisAlignment:
-                                    CrossAxisAlignment.center,
+                                        CrossAxisAlignment.center,
                                     children: [
                                       Container(
                                         width: 28,
@@ -139,7 +140,12 @@ class HomeScreen extends StatelessWidget {
                                       const SizedBox(width: 8),
                                       Expanded(
                                         child: Text(
-                                          'HEY, ${controller.userName.toUpperCase()}!',
+                                          "HEY, @p0!".trParams({
+                                            "p0":
+                                                (controller.userName
+                                                        .toUpperCase())
+                                                    .toString(),
+                                          }),
                                           style: const TextStyle(
                                             fontFamily: 'Inter',
                                             fontWeight: FontWeight.w700,
@@ -170,10 +176,10 @@ class HomeScreen extends StatelessWidget {
                     // Top offset: status bar + header height + search bar offset
                     final topOffset =
                         MediaQuery.of(context).padding.top +
-                            16 +
-                            56 +
-                            56 +
-                            35.0;
+                        16 +
+                        56 +
+                        56 +
+                        35.0;
                     return Positioned(
                       top: topOffset,
                       left: _hPad,
@@ -185,70 +191,70 @@ class HomeScreen extends StatelessWidget {
                         clipBehavior: Clip.antiAlias,
                         child: controller.isLoadingSearch.value
                             ? const Padding(
-                          padding: EdgeInsets.all(20),
-                          child: Center(
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                            ),
-                          ),
-                        )
+                                padding: EdgeInsets.all(20),
+                                child: Center(
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                  ),
+                                ),
+                              )
                             : controller.searchResults.isEmpty
                             ? Padding(
-                          padding: const EdgeInsets.all(16),
-                          child: Text(
-                            'No services found.',
-                            style: AppTextStyle.bodyMediumRegular
-                                .copyWith(color: AppColor.coolGrayText),
-                          ),
-                        )
+                                padding: const EdgeInsets.all(16),
+                                child: Text(
+                                  "No services found.".tr,
+                                  style: AppTextStyle.bodyMediumRegular
+                                      .copyWith(color: AppColor.coolGrayText),
+                                ),
+                              )
                             : ConstrainedBox(
-                          constraints: const BoxConstraints(
-                            maxHeight: 280,
-                          ),
-                          child: NotificationListener<ScrollNotification>(
-                            onNotification: (notification) {
-                              if (notification.metrics.extentAfter < 80) {
-                                controller.loadMoreSearchResults();
-                              }
-                              return false;
-                            },
-                            child: ListView.separated(
-                              padding: EdgeInsets.zero,
-                              shrinkWrap: true,
-                              itemCount:
-                              controller.searchResults.length +
-                                  (controller.isLoadingMoreSearch.value
-                                      ? 1
-                                      : 0),
-                              separatorBuilder: (_, __) =>
-                              const Divider(height: 1),
-                              itemBuilder: (_, i) {
-                                if (i >=
-                                    controller.searchResults.length) {
-                                  return const Padding(
-                                    padding: EdgeInsets.all(12),
-                                    child: Center(
-                                      child: CircularProgressIndicator(
-                                        strokeWidth: 2,
-                                      ),
-                                    ),
-                                  );
-                                }
-                                final s = controller.searchResults[i];
-                                return _SearchResultTile(
-                                  service: s,
-                                  onBook: () {
-                                    controller.clearSearch();
-                                    Get.toNamed(
-                                      AppRoutes.bookServiceScreen,
-                                      arguments: s,
-                                    );
+                                constraints: const BoxConstraints(
+                                  maxHeight: 280,
+                                ),
+                                child: NotificationListener<ScrollNotification>(
+                                  onNotification: (notification) {
+                                    if (notification.metrics.extentAfter < 80) {
+                                      controller.loadMoreSearchResults();
+                                    }
+                                    return false;
                                   },
-                                );
-                              },
-                            ),
-                          ),
-                        ),
+                                  child: ListView.separated(
+                                    padding: EdgeInsets.zero,
+                                    shrinkWrap: true,
+                                    itemCount:
+                                        controller.searchResults.length +
+                                        (controller.isLoadingMoreSearch.value
+                                            ? 1
+                                            : 0),
+                                    separatorBuilder: (_, __) =>
+                                        const Divider(height: 1),
+                                    itemBuilder: (_, i) {
+                                      if (i >=
+                                          controller.searchResults.length) {
+                                        return const Padding(
+                                          padding: EdgeInsets.all(12),
+                                          child: Center(
+                                            child: CircularProgressIndicator(
+                                              strokeWidth: 2,
+                                            ),
+                                          ),
+                                        );
+                                      }
+                                      final s = controller.searchResults[i];
+                                      return _SearchResultTile(
+                                        service: s,
+                                        onBook: () {
+                                          controller.clearSearch();
+                                          Get.toNamed(
+                                            AppRoutes.bookServiceScreen,
+                                            arguments: s,
+                                          );
+                                        },
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ),
                       ),
                     );
                   }),
@@ -262,10 +268,9 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget _buildServiceFilterRow(
-      BuildContext context,
-      HomeController controller,
-      )
-  {
+    BuildContext context,
+    HomeController controller,
+  ) {
     final sw = MediaQuery.sizeOf(context).width;
     final bool isSmallScreen = sw < 360;
     final double fontSize = isSmallScreen ? 13 : 14;
@@ -294,7 +299,7 @@ class HomeScreen extends StatelessWidget {
         height: fieldHeight,
         decoration: fieldDecoration,
         child: Obx(
-              () => TextField(
+          () => TextField(
             controller: controller.searchController,
             cursorColor: Colors.white,
             maxLines: 1,
@@ -308,7 +313,7 @@ class HomeScreen extends StatelessWidget {
             ),
             decoration: InputDecoration(
               isDense: true,
-              hintText: 'Search service & book your service',
+              hintText: "Search service & book your service".tr,
               hintStyle: AppTextStyle.bodyLargeMedium.copyWith(
                 color: Colors.white.withValues(alpha: 0.8),
                 fontSize: fontSize,
@@ -324,13 +329,13 @@ class HomeScreen extends StatelessWidget {
               ),
               suffixIcon: controller.isSearchMode.value
                   ? GestureDetector(
-                onTap: controller.clearSearch,
-                child: const Icon(
-                  Icons.close,
-                  size: 18,
-                  color: Colors.white,
-                ),
-              )
+                      onTap: controller.clearSearch,
+                      child: const Icon(
+                        Icons.close,
+                        size: 18,
+                        color: Colors.white,
+                      ),
+                    )
                   : null,
               contentPadding: const EdgeInsets.symmetric(horizontal: 14),
               border: InputBorder.none,
@@ -376,7 +381,7 @@ class _SearchResultTile extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  service.name,
+                  (service.name).tr,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: AppTextStyle.bodyMediumMedium.copyWith(
@@ -395,7 +400,7 @@ class _SearchResultTile extends StatelessWidget {
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Text(
-                'BOOK',
+                "BOOK".tr,
                 style: AppTextStyle.labelSmallMedium.copyWith(
                   color: Colors.white,
                   fontWeight: FontWeight.w700,
@@ -409,14 +414,11 @@ class _SearchResultTile extends StatelessWidget {
   }
 }
 
-
-
 class AnimatedServiceHeading extends StatefulWidget {
   const AnimatedServiceHeading({super.key});
 
   @override
-  State<AnimatedServiceHeading> createState() =>
-      _AnimatedServiceHeadingState();
+  State<AnimatedServiceHeading> createState() => _AnimatedServiceHeadingState();
 }
 
 class _AnimatedServiceHeadingState extends State<AnimatedServiceHeading>
@@ -443,25 +445,21 @@ class _AnimatedServiceHeadingState extends State<AnimatedServiceHeading>
       duration: const Duration(milliseconds: 1000),
     );
 
-    _firstLineAnimation = Tween<Offset>(
-      begin: const Offset(-1.0, 0),
-      end: Offset.zero,
-    ).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: const Interval(0.0, 0.55, curve: Curves.easeOutCubic),
-      ),
-    );
+    _firstLineAnimation =
+        Tween<Offset>(begin: const Offset(-1.0, 0), end: Offset.zero).animate(
+          CurvedAnimation(
+            parent: _controller,
+            curve: const Interval(0.0, 0.55, curve: Curves.easeOutCubic),
+          ),
+        );
 
-    _secondLineAnimation = Tween<Offset>(
-      begin: const Offset(0, 1.0),
-      end: Offset.zero,
-    ).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: const Interval(0.4, 1.0, curve: Curves.easeOutCubic),
-      ),
-    );
+    _secondLineAnimation =
+        Tween<Offset>(begin: const Offset(0, 1.0), end: Offset.zero).animate(
+          CurvedAnimation(
+            parent: _controller,
+            curve: const Interval(0.4, 1.0, curve: Curves.easeOutCubic),
+          ),
+        );
 
     _controller.forward();
     _startTextRotation();
@@ -521,7 +519,7 @@ class _AnimatedServiceHeadingState extends State<AnimatedServiceHeading>
             child: SizedBox(
               width: double.infinity,
               child: Text(
-                lines[0],
+                (lines[0]).tr,
                 maxLines: 1,
                 overflow: TextOverflow.visible,
                 style: firstStyle,
@@ -535,7 +533,7 @@ class _AnimatedServiceHeadingState extends State<AnimatedServiceHeading>
             child: SizedBox(
               width: double.infinity,
               child: Text(
-                lines[1],
+                (lines[1]).tr,
                 maxLines: 1,
                 overflow: TextOverflow.visible,
                 style: secondStyle,
@@ -547,9 +545,3 @@ class _AnimatedServiceHeadingState extends State<AnimatedServiceHeading>
     );
   }
 }
-
-
-
-
-
-

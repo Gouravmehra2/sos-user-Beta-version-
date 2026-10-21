@@ -55,11 +55,11 @@ class DioClient {
       dio.interceptors.add(
         PrettyDioLogger(
           request: true,
-          requestHeader: true,
-          requestBody: true,
-          responseHeader: true,
-          responseBody: true,
-          error: true,
+          requestHeader: false,
+          requestBody: false,
+          responseHeader: false,
+          responseBody: false,
+          error: false,
           compact: true,
           maxWidth: 120,
           logPrint: (object) => debugPrint(object.toString(), wrapWidth: 120),

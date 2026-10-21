@@ -173,9 +173,7 @@ abstract final class LocationPermissionHelper {
           vertical: 20,
         ),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(
-            isSmallScreen ? 18 : 22,
-          ),
+          borderRadius: BorderRadius.circular(isSmallScreen ? 18 : 22),
         ),
         child: Padding(
           padding: EdgeInsets.fromLTRB(
@@ -190,11 +188,8 @@ abstract final class LocationPermissionHelper {
               // ==========================================================
               // SMALL LOCATION ICON
               // ==========================================================
-
               Container(
-                padding: EdgeInsets.all(
-                  isSmallScreen ? 9 : 10,
-                ),
+                padding: EdgeInsets.all(isSmallScreen ? 9 : 10),
                 decoration: const BoxDecoration(
                   color: Color(0xFFF3F3F3),
                   shape: BoxShape.circle,
@@ -206,14 +201,11 @@ abstract final class LocationPermissionHelper {
                 ),
               ),
 
-              SizedBox(
-                height: isSmallScreen ? 10 : 12,
-              ),
+              SizedBox(height: isSmallScreen ? 10 : 12),
 
               // ==========================================================
               // TITLE
               // ==========================================================
-
               Text(
                 'location_denied_forever_title'.tr,
                 textAlign: TextAlign.center,
@@ -228,14 +220,11 @@ abstract final class LocationPermissionHelper {
                 ),
               ),
 
-              SizedBox(
-                height: isSmallScreen ? 6 : 8,
-              ),
+              SizedBox(height: isSmallScreen ? 6 : 8),
 
               // ==========================================================
               // DESCRIPTION
               // ==========================================================
-
               Text(
                 'location_denied_forever_body'.tr,
                 textAlign: TextAlign.center,
@@ -250,14 +239,11 @@ abstract final class LocationPermissionHelper {
                 ),
               ),
 
-              SizedBox(
-                height: isSmallScreen ? 12 : 16,
-              ),
+              SizedBox(height: isSmallScreen ? 12 : 16),
 
               // ==========================================================
               // STEPS TITLE
               // ==========================================================
-
               Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
@@ -271,14 +257,11 @@ abstract final class LocationPermissionHelper {
                 ),
               ),
 
-              SizedBox(
-                height: isSmallScreen ? 7 : 9,
-              ),
+              SizedBox(height: isSmallScreen ? 7 : 9),
 
               // ==========================================================
               // STEP 1
               // ==========================================================
-
               _locationStep(
                 number: '1',
                 text: 'location_enable_step_1'.tr,
@@ -288,7 +271,6 @@ abstract final class LocationPermissionHelper {
               // ==========================================================
               // STEP 2
               // ==========================================================
-
               _locationStep(
                 number: '2',
                 text: 'location_enable_step_2'.tr,
@@ -298,7 +280,6 @@ abstract final class LocationPermissionHelper {
               // ==========================================================
               // STEP 3
               // ==========================================================
-
               _locationStep(
                 number: '3',
                 text: 'location_enable_step_3'.tr,
@@ -308,37 +289,25 @@ abstract final class LocationPermissionHelper {
               // ==========================================================
               // STEP 4
               // ==========================================================
-
               _locationStep(
                 number: '4',
                 text: 'location_enable_step_4'.tr,
                 isSmallScreen: isSmallScreen,
               ),
 
-              SizedBox(
-                height: isSmallScreen ? 14 : 16,
-              ),
+              SizedBox(height: isSmallScreen ? 14 : 16),
 
               // ==========================================================
               // BUTTONS - ALWAYS ONE ROW
               // ==========================================================
-
               Row(
                 children: [
-                  Expanded(
-                    child: _cancelButton(
-                      isSmallScreen: isSmallScreen,
-                    ),
-                  ),
+                  Expanded(child: _cancelButton(isSmallScreen: isSmallScreen)),
 
-                  SizedBox(
-                    width: isSmallScreen ? 8 : 10,
-                  ),
+                  SizedBox(width: isSmallScreen ? 8 : 10),
 
                   Expanded(
-                    child: _openSettingsButton(
-                      isSmallScreen: isSmallScreen,
-                    ),
+                    child: _openSettingsButton(isSmallScreen: isSmallScreen),
                   ),
                 ],
               ),
@@ -351,7 +320,6 @@ abstract final class LocationPermissionHelper {
     );
   }
 
-
   /// ----------------------------------------------------------------------
   /// Location permission step
   /// ----------------------------------------------------------------------
@@ -362,23 +330,19 @@ abstract final class LocationPermissionHelper {
     required bool isSmallScreen,
   }) {
     return Padding(
-      padding: EdgeInsets.only(
-        bottom: isSmallScreen ? 6 : 7,
-      ),
+      padding: EdgeInsets.only(bottom: isSmallScreen ? 6 : 7),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           // Number
           Container(
-            padding: EdgeInsets.all(
-              isSmallScreen ? 4 : 5,
-            ),
+            padding: EdgeInsets.all(isSmallScreen ? 4 : 5),
             decoration: const BoxDecoration(
               color: Color(0xFF111111),
               shape: BoxShape.circle,
             ),
             child: Text(
-              number,
+              (number).tr,
               style: TextStyle(
                 fontFamily: 'Inter',
                 fontSize: isSmallScreen ? 9 : 10,
@@ -388,14 +352,12 @@ abstract final class LocationPermissionHelper {
             ),
           ),
 
-          SizedBox(
-            width: isSmallScreen ? 8 : 9,
-          ),
+          SizedBox(width: isSmallScreen ? 8 : 9),
 
           // Step text
           Expanded(
             child: Text(
-              text,
+              (text).tr,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
@@ -412,14 +374,11 @@ abstract final class LocationPermissionHelper {
     );
   }
 
-
   /// ----------------------------------------------------------------------
   /// Cancel button
   /// ----------------------------------------------------------------------
 
-  static Widget _cancelButton({
-    required bool isSmallScreen,
-  }) {
+  static Widget _cancelButton({required bool isSmallScreen}) {
     return OutlinedButton(
       onPressed: () {
         Get.back();
@@ -427,13 +386,8 @@ abstract final class LocationPermissionHelper {
       style: OutlinedButton.styleFrom(
         foregroundColor: const Color(0xFF111111),
         backgroundColor: Colors.white,
-        side: const BorderSide(
-          color: Color(0xFFD1D5DB),
-          width: 1,
-        ),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        side: const BorderSide(color: Color(0xFFD1D5DB), width: 1),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         padding: EdgeInsets.symmetric(
           vertical: isSmallScreen ? 11 : 12,
           horizontal: 8,
@@ -453,14 +407,11 @@ abstract final class LocationPermissionHelper {
     );
   }
 
-
   /// ----------------------------------------------------------------------
   /// Open App Settings button
   /// ----------------------------------------------------------------------
 
-  static Widget _openSettingsButton({
-    required bool isSmallScreen,
-  }) {
+  static Widget _openSettingsButton({required bool isSmallScreen}) {
     return ElevatedButton(
       onPressed: () async {
         Get.back();
@@ -471,9 +422,7 @@ abstract final class LocationPermissionHelper {
         elevation: 0,
         backgroundColor: const Color(0xFF111111),
         foregroundColor: Colors.white,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         padding: EdgeInsets.symmetric(
           vertical: isSmallScreen ? 11 : 12,
           horizontal: 8,
@@ -492,5 +441,4 @@ abstract final class LocationPermissionHelper {
       ),
     );
   }
-
 }

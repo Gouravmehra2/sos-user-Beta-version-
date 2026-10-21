@@ -15,7 +15,14 @@ class PaymentController extends GetxController {
     {'label': 'PayPal Payments', 'icon': 'paypal'},
   ];
 
-  final List<String> banks = ['HDFC\nBank', 'HSBC\nBank', 'SBI\nBank', 'Axis\nBank', 'ICICI\nBank', 'IOB\nBank'];
+  final List<String> banks = [
+    'HDFC\nBank',
+    'HSBC\nBank',
+    'SBI\nBank',
+    'Axis\nBank',
+    'ICICI\nBank',
+    'IOB\nBank',
+  ];
 
   @override
   void onInit() {
@@ -28,6 +35,9 @@ class PaymentController extends GetxController {
   void selectMethod(String method) => selectedMethod.value = method;
 
   void confirmPayment() {
-    Get.toNamed(AppRoutes.bookingConfirmationScreen, arguments: {'service': service, 'total': total});
+    Get.toNamed(
+      AppRoutes.bookingConfirmationScreen,
+      arguments: {'service': service, 'total': total},
+    );
   }
 }

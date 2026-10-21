@@ -1,53 +1,42 @@
-# Google authentication
+# Google mobile authentication
 
-The app initializes Firebase before launch with the generated platform options,
-uses google_sign_in 7.x to exchange Google's ID token for a Firebase session,
-then sends the Firebase ID token to the app backend. Firebase alone never
-grants an app session.
+Google authorization uses google_sign_in 7.x with userinfo.email and userinfo.profile
+scopes. The native service obtains an OAuth access token using authorizationForScopes
+or authorizeScopes. Google ID tokens and Firebase ID tokens are not sent to this API.
+Firebase remains available for push notifications; Firebase Authentication is not part
+of Google login.
 
-## Required backend contract
+- POST `/api/auth/google`: `{ "accessToken": "GOOGLE_OAUTH_ACCESS_TOKEN", "fcmToken": "optional" }`.
+  Require success plus both app access and refresh tokens before saving AuthSession.
+- POST `/api/auth/google-signup`: `{ "accessToken": "GOOGLE_OAUTH_ACCESS_TOKEN" }`.
+  Returns name/email only. No app session is created. Missing name is collected in
+  the existing form; the controller preserves the returned Google email.
+- Existing start-register and verify-register complete phone/password signup.
+  Keep the same full phone number throughout. Resend repeats start-register with
+  the same in-memory form data; passwords are never persisted. No devOtp is passed
+  to the OTP screen in release builds.
 
-- POST /api/auth/google: `{ "firebaseIdToken": "...", "fcmToken": "..." }`.
-  Verify the token with Firebase Admin for this Firebase project, derive the
-  verified email from its claims, enforce account status, and return
-  `success: true`, `accessToken`, and `refreshToken` (top-level or under `data`).
-  Return 404 for an identity with no app account.
-- POST /api/auth/google-signup: `{ "firebaseIdToken": "..." }`.
-  Verify the identity and return `name` and `email` (top-level or under `data`).
-  Return 409 for an existing app email. No app tokens are persisted at this step.
-- Return 400 for invalid fields/missing email, 401 for invalid/expired tokens,
-  and 403 for inactive/disallowed accounts. The app displays retry guidance for
-  connection/server failures and sign-up/login actions for 404/409.
+The backend currently matches by Google email; this is not cryptographically bound
+Google identity linking. Do not claim that Google signup verifies the new account's
+email. Backend audience/email_verified/sub hardening needs a new backend contract.
 
-Do not send Firebase tokens as `accessToken` to legacy OAuth endpoints. The
-backend implementation is not in this Flutter repository and must be updated
-before this flow can work end to end. Firebase Admin credentials stay on the server.
+Cancellation restores idle state without an error. 404 offers signup; 409 offers
+existing sign-in; 403 displays the backend message. Network/server failures do not
+save a session. Google SDK signOut clears transient credentials after each flow;
+disconnect is not called. HTTP request/response bodies and headers are excluded
+from debug logs.
 
-## Signup and sessions
+Initialization uses the web OAuth client ID from android/app/google-services.json,
+with optional GOOGLE_WEB_CLIENT_ID dart-define override. iOS reads GIDClientID and
+its callback scheme from Info.plist; these match GoogleService-Info.plist for
+com.sosuser.in. No Google client secret belongs in the app. Register Android debug,
+release and Play signing fingerprints and configure the OAuth consent screen.
 
-Google signup prefills the existing name/email form using the backend response.
-Phone and password remain required; start-register and verify-register retain the
-existing phone OTP flow. No fabricated password or Firebase-only login is used.
+Remaining session lifecycle differences from the supplied backend guide: the current
+app has no automatic refresh-token/retry interceptor, and logout retains the local
+session when network logout fails. These behaviors are separate from the provider
+token exchange changed here and need a dedicated session lifecycle update.
 
-App credentials are stored with flutter_secure_storage. Existing preference
-credentials migrate on startup and are removed from preferences. HTTP logging
-omits headers and bodies to avoid exposing credentials. Temporary Firebase and
-Google sessions are cleared after each attempt and during app logout.
-
-## Platform setup and verification
-
-Enable Google in Firebase Authentication, register Android SHA-1/SHA-256 for all
-signing configurations, and keep Android/iOS Firebase and Google URL scheme
-configuration aligned with that project. iOS uses Runner.entitlements for Keychain
-Sharing. Install updated native dependencies when building after pub get.
-
-Automated checks:
-
-```
-flutter test test/google_auth_api_test.dart test/auth_fcm_payload_test.dart test/session_address_routing_test.dart
-```
-
-On physical Android/iOS devices check account selection/cancellation, returning
-login, new-account 404, existing-email 409, inactive account, offline retry,
-Google signup followed by phone OTP, restart persistence, and logout. These need
-an enabled Firebase project and the Firebase-aware backend contract above.
+Run Google, Apple and auth payload tests after auth changes. Device verification is
+still required for native account selection, scope consent and cancellation, plus
+login/signup/OTP on both Android release signing and a provisioned iPhone.

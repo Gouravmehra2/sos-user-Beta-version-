@@ -73,7 +73,7 @@ class BookServiceController extends GetxController {
     } catch (_) {
       if (!isClosed) {
         profileError.value =
-            'Unable to load your address and phone. Please retry.';
+            "Unable to load your address and phone. Please retry.".tr;
       }
     } finally {
       if (!isClosed) isLoadingProfile.value = false;
@@ -319,13 +319,16 @@ class BookServiceController extends GetxController {
         .trim()
         .isEmpty) {
       AppSnackbar.show(
-        'Enter an address',
-        'Choose a saved address or enter a new service address.',
+        "Enter an address".tr,
+        "Choose a saved address or enter a new service address.".tr,
       );
       return;
     }
     if (service.hasVariants && selectedVariant.value == null) {
-      AppSnackbar.show('Select a package', 'Please choose a service package.');
+      AppSnackbar.show(
+        "Select a package".tr,
+        "Please choose a service package.".tr,
+      );
       return;
     }
 
@@ -352,9 +355,9 @@ class BookServiceController extends GetxController {
       // the USD total the customer reviewed, including selected add-ons.
       if (!matchesCheckoutAmount(attempt.amountInCents, attempt.currency)) {
         AppSnackbar.show(
-          'Price mismatch',
+          "Price mismatch".tr,
           'The checkout amount does not match your service and add-ons total. '
-              'No payment was taken. Please refresh the service prices and try again.',
+          'No payment was taken. Please refresh the service prices and try again.',
           duration: const Duration(seconds: 6),
         );
         return;
@@ -501,8 +504,9 @@ class BookServiceController extends GetxController {
       // Canceled = user dismissed the sheet — silent, no snackbar.
       if (e.error.code != FailureCode.Canceled) {
         AppSnackbar.show(
-          'Payment Failed',
-          e.error.localizedMessage ?? 'Something went wrong with your payment.',
+          "Payment Failed".tr,
+          e.error.localizedMessage ??
+              "Something went wrong with your payment.".tr,
           duration: const Duration(seconds: 5),
         );
       }
@@ -525,29 +529,33 @@ class BookServiceController extends GetxController {
         // Payment not yet confirmed by Stripe — cart must stay intact.
         // User can retry verification; a second checkout must NOT be started.
         AppSnackbar.show(
-          'Payment Pending',
+          "Payment Pending".tr,
           serverMessage.isNotEmpty
               ? serverMessage
-              : 'Your payment is still being processed. Please wait and try again.',
+              : "Your payment is still being processed. Please wait and try again."
+                    .tr,
           duration: const Duration(seconds: 6),
         );
       } else if (statusCode == 400) {
         AppSnackbar.show(
-          'Booking Error',
-          serverMessage.isNotEmpty ? serverMessage : 'Invalid booking details.',
+          "Booking Error".tr,
+          serverMessage.isNotEmpty
+              ? serverMessage
+              : "Invalid booking details.".tr,
         );
       } else if (statusCode == 404) {
         AppSnackbar.show(
-          'Not Found',
+          "Not Found".tr,
           serverMessage.isNotEmpty
               ? serverMessage
-              : 'Payment attempt not found.',
+              : "Payment attempt not found.".tr,
         );
       } else {
         // 5xx or unknown — retain checkout state, user can retry.
         AppSnackbar.show(
-          'Server Error',
-          'Something went wrong on our end. Your payment may still be processing — please check My Bookings before retrying.',
+          "Server Error".tr,
+          "Something went wrong on our end. Your payment may still be processing — please check My Bookings before retrying."
+              .tr,
           duration: const Duration(seconds: 8),
         );
       }
@@ -559,7 +567,7 @@ class BookServiceController extends GetxController {
       debugPrint('│  $stack');
       debugPrint('└─────────────────────────────────────────────────────────┘');
 
-      AppSnackbar.show('Error', e.toString());
+      AppSnackbar.show("Error".tr, e.toString());
     } finally {
       isVerifyingPayment.value = false;
       isLoading.value = false;
@@ -597,7 +605,7 @@ class BookServiceController extends GetxController {
               ),
               const SizedBox(height: 20),
               Text(
-                'Booking Confirmed!',
+                "Booking Confirmed!".tr,
                 style: AppTextStyle.titleLargeBold.copyWith(
                   color: AppColor.blackColor,
                   fontSize: 20,
@@ -605,7 +613,8 @@ class BookServiceController extends GetxController {
               ),
               const SizedBox(height: 8),
               Text(
-                'Payment received. Your booking is pending service confirmation.',
+                "Payment received. Your booking is pending service confirmation."
+                    .tr,
                 textAlign: TextAlign.center,
                 style: AppTextStyle.bodyMediumRegular.copyWith(
                   color: AppColor.coolGrayText,
@@ -628,17 +637,17 @@ class BookServiceController extends GetxController {
                   child: Column(
                     children: [
                       _DetailRow(
-                        label: 'Booking ID',
+                        label: "Booking ID".tr,
                         value: verified.bookingId,
                       ),
                       const SizedBox(height: 6),
                       _DetailRow(
-                        label: 'Amount Paid',
+                        label: "Amount Paid".tr,
                         value: '\$${(verified.totalAmount).toStringAsFixed(2)}',
                       ),
                       const SizedBox(height: 6),
                       _DetailRow(
-                        label: 'Status',
+                        label: "Status".tr,
                         value: verified.paymentStatus,
                       ),
                     ],
@@ -667,7 +676,7 @@ class BookServiceController extends GetxController {
                     ),
                   ),
                   child: Text(
-                    'View My Bookings',
+                    "View My Bookings".tr,
                     style: AppTextStyle.bodyMediumMedium.copyWith(
                       color: Colors.white,
                       fontWeight: FontWeight.w600,
@@ -694,7 +703,7 @@ class BookServiceController extends GetxController {
                     ),
                   ),
                   child: Text(
-                    'Go to Home',
+                    "Go to Home".tr,
                     style: AppTextStyle.bodyMediumMedium.copyWith(
                       color: AppColor.blackColor,
                       fontWeight: FontWeight.w600,
@@ -722,14 +731,14 @@ class _DetailRow extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
-          label,
+          (label).tr,
           style: AppTextStyle.bodySmallRegular.copyWith(
             color: AppColor.coolGrayText,
           ),
         ),
         Flexible(
           child: Text(
-            value,
+            (value).tr,
             textAlign: TextAlign.end,
             style: AppTextStyle.bodySmallMedium.copyWith(
               color: AppColor.blackShade1,

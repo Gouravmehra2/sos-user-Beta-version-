@@ -34,13 +34,16 @@ class Debouncer {
   // ── Named constructors for common timings ──────────────────────────────────
 
   /// 200 ms — suited for fast local / in-memory filtering.
-  factory Debouncer.fast() => Debouncer(delay: const Duration(milliseconds: 200));
+  factory Debouncer.fast() =>
+      Debouncer(delay: const Duration(milliseconds: 200));
 
   /// 400 ms — default timing for most network search calls.
-  factory Debouncer.normal() => Debouncer(delay: const Duration(milliseconds: 400));
+  factory Debouncer.normal() =>
+      Debouncer(delay: const Duration(milliseconds: 400));
 
   /// 700 ms — suited for slow or expensive remote API calls.
-  factory Debouncer.slow() => Debouncer(delay: const Duration(milliseconds: 700));
+  factory Debouncer.slow() =>
+      Debouncer(delay: const Duration(milliseconds: 700));
 
   // ── API ────────────────────────────────────────────────────────────────────
 

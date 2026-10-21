@@ -14,13 +14,20 @@ class StartupTasks {
     if (_scheduled) return;
     _scheduled = true;
     SchedulerBinding.instance.addPostFrameCallback((_) {
-      unawaited(SchedulerBinding.instance.scheduleTask(() async {
-        try {
-          await initializeNotifications();
-        } catch (error) {
-          if (kDebugMode) debugPrint('Notification initialization failed: $error');
-        }
-      }, Priority.idle, debugLabel: 'Optional notification setup'));
+      unawaited(
+        SchedulerBinding.instance.scheduleTask(
+          () async {
+            try {
+              await initializeNotifications();
+            } catch (error) {
+              if (kDebugMode)
+                debugPrint('Notification initialization failed: $error');
+            }
+          },
+          Priority.idle,
+          debugLabel: 'Optional notification setup',
+        ),
+      );
     });
   }
 }

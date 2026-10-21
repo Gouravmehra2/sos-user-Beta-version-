@@ -16,7 +16,7 @@ class SupportScreen extends GetView<SupportController> {
         backgroundColor: AppColor.blackColor,
         iconTheme: const IconThemeData(color: Colors.white),
         title: Text(
-          'Support',
+          "profile_quick_support".tr,
           style: AppTextStyle.titleLargeBold.copyWith(color: Colors.white),
         ),
       ),
@@ -69,7 +69,7 @@ class _SupportOptionCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    option.title,
+                    (option.title).tr,
                     style: AppTextStyle.titleSmallSemiBold.copyWith(
                       color: AppColor.blackShade1,
                       fontSize: 16,
@@ -77,7 +77,7 @@ class _SupportOptionCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 2),
                   Text(
-                    option.subtitle,
+                    (option.subtitle).tr,
                     style: AppTextStyle.bodySmallRegular.copyWith(
                       color: AppColor.coolGrayText,
                     ),
@@ -85,7 +85,7 @@ class _SupportOptionCard extends StatelessWidget {
                   if (option.badge != null) ...[
                     const SizedBox(height: 4),
                     Text(
-                      option.badge!,
+                      (option.badge!).tr,
                       style: AppTextStyle.bodySmallMedium.copyWith(
                         color: AppColor.blackColor,
                       ),
@@ -114,15 +114,22 @@ class _PriorityBanner extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Icon(Icons.verified_user_outlined, color: AppColor.blackColor, size: 28),
+          const Icon(
+            Icons.verified_user_outlined,
+            color: AppColor.blackColor,
+            size: 28,
+          ),
           const SizedBox(height: 12),
           Text(
-            'Your support is our priority',
-            style: AppTextStyle.titleSmallSemiBold.copyWith(color: Colors.white, fontSize: 16),
+            "Your support is our priority".tr,
+            style: AppTextStyle.titleSmallSemiBold.copyWith(
+              color: Colors.white,
+              fontSize: 16,
+            ),
           ),
           const SizedBox(height: 6),
           Text(
-            "We're here to help you 24/7 with expert technical assistance.",
+            "We're here to help you 24/7 with expert technical assistance.".tr,
             style: AppTextStyle.bodySmallRegular.copyWith(
               color: Colors.white70,
               height: 1.5,

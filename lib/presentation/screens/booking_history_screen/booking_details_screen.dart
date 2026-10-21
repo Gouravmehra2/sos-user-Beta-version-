@@ -1,3 +1,4 @@
+import 'package:get/get.dart' hide Response;
 import 'package:flutter/material.dart';
 import 'model/booking_history_model.dart';
 import 'invoice_screen.dart';
@@ -14,8 +15,8 @@ class BookingDetailsScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: bookingBackground,
       appBar: AppBar(
-        title: const Text(
-          'Booking details',
+        title: Text(
+          "Booking details".tr,
           style: TextStyle(fontWeight: FontWeight.w700),
         ),
         backgroundColor: Colors.black,
@@ -47,7 +48,7 @@ class BookingDetailsScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: 16),
                       Text(
-                        bookingTitle(booking),
+                        (bookingTitle(booking)).tr,
                         style: const TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.w800,
@@ -62,13 +63,13 @@ class BookingDetailsScreen extends StatelessWidget {
                         selectable: true,
                       ),
                       const Divider(color: bookingBorder, height: 20),
-                      const Text(
-                        'Booking total',
+                      Text(
+                        "Booking total".tr,
                         style: TextStyle(color: bookingMuted, fontSize: 13),
                       ),
                       const SizedBox(height: 5),
                       Text(
-                        bookingMoney(booking.totalAmount),
+                        (bookingMoney(booking.totalAmount)).tr,
                         style: const TextStyle(
                           fontSize: 30,
                           fontWeight: FontWeight.w800,
@@ -82,7 +83,7 @@ class BookingDetailsScreen extends StatelessWidget {
                     ],
                   ),
                   BookingPanel(
-                    title: 'Schedule & location',
+                    title: "Schedule & location".tr,
                     icon: Icons.event_outlined,
                     children: [
                       BookingValue(
@@ -91,9 +92,10 @@ class BookingDetailsScreen extends StatelessWidget {
                       ),
                       const Divider(color: bookingBorder, height: 20),
                       Text(
-                        booking.address.label.isEmpty
-                            ? 'Service address'
-                            : booking.address.label,
+                        (booking.address.label.isEmpty
+                                ? "Service address".tr
+                                : booking.address.label)
+                            .tr,
                         style: const TextStyle(
                           fontWeight: FontWeight.w700,
                           color: bookingInk,
@@ -101,7 +103,7 @@ class BookingDetailsScreen extends StatelessWidget {
                       ),
                       if (booking.address.name.isNotEmpty) ...[
                         const SizedBox(height: 6),
-                        Text(booking.address.name),
+                        Text((booking.address.name).tr),
                       ],
                       BookingInfo(
                         icon: Icons.location_on_outlined,
@@ -114,10 +116,10 @@ class BookingDetailsScreen extends StatelessWidget {
                         ),
                     ],
                   ),
-                  const Padding(
+                  Padding(
                     padding: EdgeInsets.fromLTRB(2, 8, 0, 14),
                     child: Text(
-                      'Booked services',
+                      "Booked services".tr,
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w700,
@@ -126,13 +128,13 @@ class BookingDetailsScreen extends StatelessWidget {
                     ),
                   ),
                   if (booking.services.isEmpty)
-                    const BookingPanel(
-                      children: [Text('Service details are not available.')],
+                    BookingPanel(
+                      children: [Text("Service details are not available.".tr)],
                     ),
                   for (final item in booking.services)
                     _ServicePanel(item: item),
                   BookingPanel(
-                    title: 'Your technician',
+                    title: "Your technician".tr,
                     icon: Icons.person_outline,
                     children: [
                       Row(
@@ -144,8 +146,9 @@ class BookingDetailsScreen extends StatelessWidget {
                             child: technician.name.isEmpty
                                 ? const Icon(Icons.person_outline)
                                 : Text(
-                                    technician.name.characters.first
-                                        .toUpperCase(),
+                                    (technician.name.characters.first
+                                            .toUpperCase())
+                                        .tr,
                                   ),
                           ),
                           const SizedBox(width: 12),
@@ -154,9 +157,10 @@ class BookingDetailsScreen extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  technician.name.isEmpty
-                                      ? 'Technician not assigned'
-                                      : technician.name,
+                                  (technician.name.isEmpty
+                                          ? "Technician not assigned".tr
+                                          : technician.name)
+                                      .tr,
                                   style: const TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.w700,
@@ -166,14 +170,16 @@ class BookingDetailsScreen extends StatelessWidget {
                                 const SizedBox(height: 5),
                                 if (technician.phone.isNotEmpty)
                                   SelectableText(
-                                    technician.phone,
+                                    (technician.phone).tr,
                                     style: const TextStyle(color: bookingMuted),
                                   )
                                 else
                                   Text(
-                                    technician.name.isEmpty
-                                        ? 'Assignment details will appear here when available.'
-                                        : 'Contact number not available',
+                                    (technician.name.isEmpty
+                                            ? "Assignment details will appear here when available."
+                                                  .tr
+                                            : "Contact number not available".tr)
+                                        .tr,
                                     style: const TextStyle(
                                       color: bookingMuted,
                                       height: 1.5,
@@ -188,11 +194,11 @@ class BookingDetailsScreen extends StatelessWidget {
                   ),
                   if (booking.specialInstructions.trim().isNotEmpty)
                     BookingPanel(
-                      title: 'Special instructions',
+                      title: "Special instructions".tr,
                       icon: Icons.notes_rounded,
                       children: [
                         Text(
-                          booking.specialInstructions,
+                          (booking.specialInstructions).tr,
                           style: const TextStyle(
                             color: bookingMuted,
                             height: 1.6,
@@ -201,7 +207,7 @@ class BookingDetailsScreen extends StatelessWidget {
                       ],
                     ),
                   BookingPanel(
-                    title: 'Payment details',
+                    title: "Payment details".tr,
                     icon: Icons.account_balance_wallet_outlined,
                     children: [
                       BookingStatus(booking.paymentStatus),
@@ -238,7 +244,7 @@ class BookingDetailsScreen extends StatelessWidget {
                   ),
                   if (booking.createdAt != null || booking.updatedAt != null)
                     BookingPanel(
-                      title: 'Booking activity',
+                      title: "Booking activity".tr,
                       icon: Icons.history_rounded,
                       children: [
                         if (booking.createdAt != null)
@@ -286,7 +292,7 @@ class _InvoiceLink extends StatelessWidget {
           border: Border.all(color: bookingBorder),
           borderRadius: BorderRadius.circular(12),
         ),
-        child: const Row(
+        child: Row(
           children: [
             Icon(Icons.receipt_long_outlined, color: bookingInk),
             SizedBox(width: 12),
@@ -295,7 +301,7 @@ class _InvoiceLink extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Invoice',
+                    "Invoice".tr,
                     style: TextStyle(
                       color: bookingInk,
                       fontWeight: FontWeight.w700,
@@ -303,7 +309,7 @@ class _InvoiceLink extends StatelessWidget {
                   ),
                   SizedBox(height: 3),
                   Text(
-                    'View and download your invoice',
+                    "View and download your invoice".tr,
                     style: TextStyle(color: bookingMuted, fontSize: 12),
                   ),
                 ],
@@ -344,7 +350,7 @@ class _ServicePanel extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    service.name.isEmpty ? 'Service' : service.name,
+                    (service.name.isEmpty ? "Service".tr : service.name).tr,
                     style: const TextStyle(
                       fontSize: 17,
                       fontWeight: FontWeight.w700,
@@ -353,12 +359,16 @@ class _ServicePanel extends StatelessWidget {
                   ),
                   const SizedBox(height: 6),
                   Text(
-                    'Quantity: ${item.quantity}',
+                    "Quantity: @p0".trParams({
+                      "p0": (item.quantity).toString(),
+                    }),
                     style: const TextStyle(color: bookingMuted, fontSize: 13),
                   ),
                   if (duration > 0)
                     Text(
-                      '$duration min per service',
+                      "@p0 min per service".trParams({
+                        "p0": (duration).toString(),
+                      }),
                       style: const TextStyle(color: bookingMuted, fontSize: 13),
                     ),
                 ],
@@ -387,8 +397,8 @@ class _ServicePanel extends StatelessWidget {
               child: ExpansionTile(
                 tilePadding: EdgeInsets.zero,
                 childrenPadding: EdgeInsets.zero,
-                title: const Text(
-                  'Service information',
+                title: Text(
+                  "Service information".tr,
                   style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
                 ),
                 children: [
@@ -396,7 +406,7 @@ class _ServicePanel extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.only(bottom: 12),
                       child: Text(
-                        description,
+                        (description).tr,
                         style: const TextStyle(
                           color: bookingMuted,
                           height: 1.6,
@@ -407,22 +417,22 @@ class _ServicePanel extends StatelessWidget {
                     for (final line in service.shortDescription)
                       BookingInfo(icon: Icons.check, text: line),
                   _ServiceList(
-                    title: 'What’s included',
+                    title: "What’s included".tr,
                     entries: service.includedItems.map((e) => e.title).toList(),
                     icon: Icons.check_circle_outline,
                   ),
                   _ServiceList(
-                    title: 'Not included',
+                    title: "Not included".tr,
                     entries: service.excludedItems.map((e) => e.title).toList(),
                     icon: Icons.remove_circle_outline,
                   ),
                   _ServiceList(
-                    title: 'Before your service',
+                    title: "Before your service".tr,
                     entries: service.requirements.map((e) => e.title).toList(),
                     icon: Icons.task_alt,
                   ),
                   _ServiceList(
-                    title: 'Tools & equipment',
+                    title: "Tools & equipment".tr,
                     entries: service.tools
                         .map(
                           (e) => [
@@ -447,7 +457,7 @@ class _ServicePanel extends StatelessWidget {
                       ExpansionTile(
                         tilePadding: EdgeInsets.zero,
                         title: Text(
-                          faq.question,
+                          (faq.question).tr,
                           style: const TextStyle(
                             fontSize: 13,
                             fontWeight: FontWeight.w600,
@@ -459,7 +469,7 @@ class _ServicePanel extends StatelessWidget {
                             child: Align(
                               alignment: Alignment.centerLeft,
                               child: Text(
-                                faq.answer,
+                                (faq.answer).tr,
                                 style: const TextStyle(
                                   color: bookingMuted,
                                   height: 1.5,
@@ -507,9 +517,9 @@ class _AdditionalItems extends StatelessWidget {
             children: [
               const Icon(Icons.add_circle_outline, size: 18, color: bookingInk),
               const SizedBox(width: 8),
-              const Expanded(
+              Expanded(
                 child: Text(
-                  'Additional items',
+                  "Additional items".tr,
                   style: TextStyle(
                     color: bookingInk,
                     fontSize: 14,
@@ -518,7 +528,7 @@ class _AdditionalItems extends StatelessWidget {
                 ),
               ),
               Text(
-                '${items.length}',
+                ('${items.length}').tr,
                 style: const TextStyle(
                   color: bookingMuted,
                   fontSize: 12,
@@ -538,7 +548,7 @@ class _AdditionalItems extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        items[index].name,
+                        (items[index].name).tr,
                         style: const TextStyle(
                           color: bookingInk,
                           fontSize: 13,
@@ -548,7 +558,7 @@ class _AdditionalItems extends StatelessWidget {
                       if (items[index].serviceName.isNotEmpty) ...[
                         const SizedBox(height: 3),
                         Text(
-                          items[index].serviceName,
+                          (items[index].serviceName).tr,
                           style: const TextStyle(
                             color: bookingMuted,
                             fontSize: 11,
@@ -561,7 +571,7 @@ class _AdditionalItems extends StatelessWidget {
                 if (items[index].price != null) ...[
                   const SizedBox(width: 12),
                   Text(
-                    bookingMoney(items[index].price!),
+                    (bookingMoney(items[index].price!)).tr,
                     style: const TextStyle(
                       color: bookingInk,
                       fontSize: 13,
@@ -645,7 +655,7 @@ class _Subheading extends StatelessWidget {
     child: Padding(
       padding: const EdgeInsets.only(top: 14, bottom: 8),
       child: Text(
-        text,
+        (text).tr,
         style: const TextStyle(color: bookingInk, fontWeight: FontWeight.w700),
       ),
     ),

@@ -102,9 +102,9 @@ class ForgotPasswordController extends GetxController {
   // ── Phone-only: country picker ────────────────────────────────────────────
 
   final Rx<CountryCode> selectedCountry = CountryCode(
-    code: 'IN',
-    dialCode: '+91',
-    name: 'India',
+    code: 'US',
+    dialCode: '+1',
+    name: 'United States',
   ).obs;
 
   final RxString phoneError = ''.obs;
@@ -142,9 +142,12 @@ class ForgotPasswordController extends GetxController {
     final lengths = _digitLengths;
     if (digits.length < lengths.min || digits.length > lengths.max) {
       final rangeText = lengths.min == lengths.max
-          ? '${lengths.min}-digit'
-          : '${lengths.min}–${lengths.max}-digit';
-      return 'Enter a valid $rangeText number for ${selectedCountry.value.name}';
+          ? '${lengths.min}'
+          : '${lengths.min}–${lengths.max}';
+      return 'Enter a valid @count-digit number for @country'.trParams({
+        'count': rangeText,
+        'country': (selectedCountry.value.name ?? '').tr,
+      });
     }
     return null;
   }
@@ -175,8 +178,8 @@ class ForgotPasswordController extends GetxController {
       final response = await passwordResetApi.forgotPassword(identifier);
       final phone = response['phone'];
       if (phone is! String || phone.trim().isEmpty) {
-        throw const FormatException(
-          'The server did not return a valid phone number.',
+        throw FormatException(
+          "The server did not return a valid phone number.".tr,
         );
       }
       final resendAfter = _responseSeconds(response['resendAfter'], 60);

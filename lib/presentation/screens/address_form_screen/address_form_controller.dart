@@ -270,7 +270,8 @@ class AddressFormController extends GetxController {
           updated = await repo.setDefaultAddress(_editAddressId);
         } catch (_) {
           saveError.value =
-              'Address updated, but could not set the default. Retry setting the default from your saved addresses.';
+              "Address updated, but could not set the default. Retry setting the default from your saved addresses."
+                  .tr;
         }
       }
       if (Get.isRegistered<SelectLocationController>()) {
@@ -283,7 +284,8 @@ class AddressFormController extends GetxController {
         );
         if (saved == null) {
           saveError.value =
-              'Your address was saved, but could not be selected. Choose it from saved addresses.';
+              "Your address was saved, but could not be selected. Choose it from saved addresses."
+                  .tr;
           saveToProfile.value = false;
           return;
         }
@@ -292,12 +294,12 @@ class AddressFormController extends GetxController {
       }
 
       AppSnackbar.show(
-        saveError.value.isEmpty ? 'Success' : 'Address updated',
+        saveError.value.isEmpty ? "Success".tr : "Address updated".tr,
         saveError.value.isNotEmpty
             ? saveError.value
             : isEditMode
-            ? 'Address updated successfully.'
-            : 'Address saved successfully.',
+            ? "Address updated successfully.".tr
+            : "Address saved successfully.".tr,
         margin: const EdgeInsets.all(16),
         duration: const Duration(seconds: 2),
       );
@@ -313,11 +315,12 @@ class AddressFormController extends GetxController {
     } catch (e) {
       if (isClosed) return;
       saveError.value = checkoutMode
-          ? 'Could not save to your profile. Retry, or turn off Save this address to my profile to use it for this booking.'
-          : 'Could not save address. Please try again.';
+          ? "Could not save to your profile. Retry, or turn off Save this address to my profile to use it for this booking."
+                .tr
+          : "Could not save address. Please try again.".tr;
       if (!checkoutMode) {
         AppSnackbar.show(
-          'Error',
+          "Error".tr,
           saveError.value,
           margin: const EdgeInsets.all(16),
         );

@@ -1,3 +1,4 @@
+import 'package:get/get.dart' hide Response;
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:squadonsite/core/services/firebase_notification_service.dart';
@@ -5,6 +6,7 @@ import 'package:squadonsite/core/dio_client/dio_client.dart';
 import 'package:squadonsite/core/end_points/api_endpoints.dart';
 import 'package:squadonsite/core/pagination/pagination_info.dart';
 import 'package:squadonsite/model/auth_model.dart';
+import 'package:squadonsite/model/apple_auth_model.dart';
 import 'package:squadonsite/presentation/screens/home_screen/model/home_screen_model.dart';
 import 'package:squadonsite/presentation/screens/service_screen/model/service_screen_model.dart';
 import 'package:squadonsite/presentation/screens/booking_history_screen/model/booking_history_model.dart';
@@ -59,47 +61,112 @@ class ApiRepo {
     );
   }
 
-  Future<AuthResponse> googleLogin(String firebaseIdToken) async {
-    if (firebaseIdToken.trim().isEmpty) {
+  Future<AppleChallenge> appleChallenge() async {
+    final response = await dioClient.post(
+      ApiEndpoints.appleChallenge,
+      data: {},
+    );
+    final body = response.data;
+    if (body is! Map ||
+        body['success'] != true ||
+        body['nonce'] is! String ||
+        (body['nonce'] as String).trim().isEmpty ||
+        body['challengeToken'] is! String ||
+        (body['challengeToken'] as String).trim().isEmpty) {
+      throw FormatException(
+        "Unable to start Apple sign-in. Please try again.".tr,
+      );
+    }
+    return AppleChallenge(nonce: body['nonce'], token: body['challengeToken']);
+  }
+
+  Future<AppleLoginResult> appleLogin({
+    required String identityToken,
+    required String authorizationCode,
+    required String challengeToken,
+  }) async {
+    if (identityToken.trim().isEmpty ||
+        authorizationCode.trim().isEmpty ||
+        challengeToken.trim().isEmpty) {
+      throw ArgumentError(
+        'Apple identity, authorization code and challenge tokens are required.',
+      );
+    }
+    final response = await dioClient.post(
+      ApiEndpoints.appleLogin,
+      data: await _authPayload({
+        'identityToken': identityToken,
+        'authorizationCode': authorizationCode,
+        'challengeToken': challengeToken,
+      }),
+    );
+    final body = response.data;
+    if (body is! Map || body['success'] != true) {
+      throw FormatException("Unable to verify Apple sign-in.".tr);
+    }
+    if (body['requiresRegistration'] == true) {
+      final token = body['appleRegistrationToken'];
+      final data = body['data'];
+      final email = data is Map ? data['email'] : null;
+      if (token is! String ||
+          token.trim().isEmpty ||
+          email is! String ||
+          email.trim().isEmpty) {
+        throw FormatException("Apple registration details are incomplete.".tr);
+      }
+      return AppleLoginResult.registration(
+        AppleRegistration(email: email, token: token),
+      );
+    }
+    final session = _authResponse(response);
+    if (session.accessToken.trim().isEmpty ||
+        session.refreshToken.trim().isEmpty) {
+      throw FormatException("The server did not return valid app tokens.".tr);
+    }
+    return AppleLoginResult.session(session);
+  }
+
+  Future<AuthResponse> googleLogin(String googleAccessToken) async {
+    if (googleAccessToken.trim().isEmpty) {
       throw ArgumentError.value(
-        firebaseIdToken,
-        'firebaseIdToken',
+        googleAccessToken,
+        'googleAccessToken',
         'must not be empty',
       );
     }
     final response = _authResponse(
       await dioClient.post(
         ApiEndpoints.googleLogin,
-        data: await _authPayload({'firebaseIdToken': firebaseIdToken.trim()}),
+        data: await _authPayload({'accessToken': googleAccessToken.trim()}),
       ),
     );
     if (response.accessToken.trim().isEmpty ||
         response.refreshToken.trim().isEmpty) {
-      throw const FormatException(
-        'The server did not return valid app tokens. Please try again.',
+      throw FormatException(
+        "The server did not return valid app tokens. Please try again.".tr,
       );
     }
     return response;
   }
 
   Future<({String name, String email})> googleSignup(
-    String firebaseIdToken,
+    String googleAccessToken,
   ) async {
-    if (firebaseIdToken.trim().isEmpty) {
+    if (googleAccessToken.trim().isEmpty) {
       throw ArgumentError.value(
-        firebaseIdToken,
-        'firebaseIdToken',
+        googleAccessToken,
+        'googleAccessToken',
         'must not be empty',
       );
     }
     final response = await dioClient.post(
       ApiEndpoints.googleSignup,
-      data: {'firebaseIdToken': firebaseIdToken.trim()},
+      data: {'accessToken': googleAccessToken.trim()},
     );
     final body = response.data;
     if (body is! Map<String, dynamic> || body['success'] == false) {
-      throw const FormatException(
-        'Unable to verify Google signup. Please try again.',
+      throw FormatException(
+        "Unable to verify Google signup. Please try again.".tr,
       );
     }
     final data = body['data'] is Map<String, dynamic>
@@ -109,13 +176,12 @@ class ApiRepo {
     final name = data['name'];
     if (email is! String ||
         email.trim().isEmpty ||
-        name is! String ||
-        name.trim().isEmpty) {
-      throw const FormatException(
-        'The server did not return a verified name and email.',
+        (name != null && name is! String)) {
+      throw FormatException(
+        "The server did not return valid Google account details.".tr,
       );
     }
-    return (name: name.trim(), email: email.trim());
+    return (name: (name as String?)?.trim() ?? '', email: email.trim());
   }
 
   Future<AuthResponse> me() async {
@@ -126,7 +192,7 @@ class ApiRepo {
     final response = await dioClient.get(ApiEndpoints.me);
     final data = response.data;
     if (data is! Map<String, dynamic>) {
-      throw const FormatException('Invalid server response.');
+      throw FormatException("Invalid server response.".tr);
     }
 
     final result = HomeProfileResponse.fromJson(data);
@@ -141,7 +207,7 @@ class ApiRepo {
     final response = await dioClient.get(ApiEndpoints.me);
     final data = response.data;
     if (data is! Map<String, dynamic>) {
-      throw const FormatException('Invalid server response.');
+      throw FormatException("Invalid server response.".tr);
     }
     final profile = HomeProfileResponse.fromJson(data);
     return profile.data.user.addresses;
@@ -163,11 +229,11 @@ class ApiRepo {
   List<UserAddress> _addressMutationResult(Response response) {
     final json = response.data;
     if (json is! Map<String, dynamic> || json['success'] != true) {
-      throw const FormatException('Could not save address.');
+      throw FormatException("Could not save address.".tr);
     }
     final data = json['data'];
     if (data is! Map || data['user'] is! Map<String, dynamic>) {
-      throw const FormatException('Missing updated address list.');
+      throw FormatException("Missing updated address list.".tr);
     }
     return HomeProfileResponse.fromJson(json).data.user.addresses;
   }
@@ -262,7 +328,7 @@ class ApiRepo {
     );
     final data = response.data;
     if (data is! Map<String, dynamic>) {
-      throw const FormatException('Invalid response.');
+      throw FormatException("Invalid response.".tr);
     }
     return SubcategoryResponse.fromJson(data, page: page, limit: limit);
   }
@@ -278,7 +344,7 @@ class ApiRepo {
     );
     final data = response.data;
     if (data is! Map<String, dynamic>) {
-      throw const FormatException('Invalid response.');
+      throw FormatException("Invalid response.".tr);
     }
     return ServiceListResponse.fromJson(data, page: page, limit: limit);
   }
@@ -307,7 +373,7 @@ class ApiRepo {
     debugPrint('╚══════════════════════════════════════════════════════════╝');
 
     if (data is! Map<String, dynamic>) {
-      throw const FormatException('Invalid response.');
+      throw FormatException("Invalid response.".tr);
     }
     return CreateBookingResponse.fromJson(data);
   }
@@ -354,7 +420,7 @@ class ApiRepo {
     debugPrint('╚══════════════════════════════════════════════════════════╝');
 
     if (data is! Map<String, dynamic>) {
-      throw const FormatException('Invalid response.');
+      throw FormatException("Invalid response.".tr);
     }
     return VerifyBookingResponse.fromJson(data);
   }
@@ -414,7 +480,7 @@ class ApiRepo {
     );
     final data = response.data;
     if (data is! Map<String, dynamic>) {
-      throw const FormatException('Invalid response.');
+      throw FormatException("Invalid response.".tr);
     }
     return BookingHistoryResponse.fromJson(data, page: page, limit: limit);
   }
@@ -437,7 +503,7 @@ class ApiRepo {
     );
     final data = response.data;
     if (data is! Map<String, dynamic>) {
-      throw const FormatException('Invalid review response.');
+      throw FormatException("Invalid review response.".tr);
     }
     if (data['success'] != true) {
       final message = data['message'];
@@ -466,7 +532,7 @@ class ApiRepo {
     );
     final data = response.data;
     if (data is! Map<String, dynamic>) {
-      throw const FormatException('Invalid technician review response.');
+      throw FormatException("Invalid technician review response.".tr);
     }
     if (data['success'] != true) {
       final message = data['message'];
@@ -485,7 +551,7 @@ class ApiRepo {
     );
     final data = response.data;
     if (data is! Map<String, dynamic>) {
-      throw const FormatException('Invalid invoice response.');
+      throw FormatException("Invalid invoice response.".tr);
     }
     if (data['success'] != true) {
       final message = data['message'];
@@ -498,7 +564,7 @@ class ApiRepo {
     final payload = data['data'];
     final invoice = payload is Map<String, dynamic> ? payload['invoice'] : null;
     if (invoice is! Map<String, dynamic>) {
-      throw const FormatException('Invoice details are missing.');
+      throw FormatException("Invoice details are missing.".tr);
     }
     return BookingInvoice.fromJson(invoice);
   }
@@ -517,7 +583,7 @@ class ApiRepo {
     if (!const ['http', 'https'].contains(invoiceUri.scheme) ||
         invoiceUri.origin != baseUri.origin ||
         invoiceUri.path != expectedPath) {
-      throw const FormatException('Invalid invoice download URL.');
+      throw FormatException("Invalid invoice download URL.".tr);
     }
 
     final response = await dioClient.get(
@@ -526,7 +592,7 @@ class ApiRepo {
     );
     final bytes = response.data;
     if (bytes is! List<int>) {
-      throw const FormatException('Invalid invoice download response.');
+      throw FormatException("Invalid invoice download response.".tr);
     }
     return bytes;
   }
@@ -541,7 +607,7 @@ class ApiRepo {
     );
     final data = response.data;
     if (data is! Map<String, dynamic>) {
-      throw const FormatException('Invalid notifications response.');
+      throw FormatException("Invalid notifications response.".tr);
     }
     return NotificationResponse.fromJson(data, page: page, limit: limit);
   }
@@ -569,7 +635,7 @@ class ApiRepo {
     );
     final data = response.data;
     if (data is! Map<String, dynamic>) {
-      throw const FormatException('Invalid response.');
+      throw FormatException("Invalid response.".tr);
     }
     final d = data['data'] as Map<String, dynamic>? ?? {};
     final list = d['services'] as List<dynamic>? ?? [];
@@ -598,7 +664,7 @@ class ApiRepo {
     );
     final data = response.data;
     if (data is! Map<String, dynamic>) {
-      throw const FormatException('Invalid response.');
+      throw FormatException("Invalid response.".tr);
     }
     final d = data['data'] as Map<String, dynamic>? ?? {};
     final list = d['services'] as List<dynamic>? ?? [];
@@ -620,7 +686,7 @@ class ApiRepo {
   AuthResponse _authResponse(Response response) {
     final data = response.data;
     if (data is! Map<String, dynamic>) {
-      throw const FormatException('Invalid server response.');
+      throw FormatException("Invalid server response.".tr);
     }
 
     final result = AuthResponse.fromJson(data);

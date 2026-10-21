@@ -29,7 +29,7 @@ class PersonalInformationController extends GetxController {
   final isSaving = false.obs;
   final isUploadingImage = false.obs;
 
-  String countryCode = '+91';
+  String countryCode = '+1';
 
   @override
   void onInit() {
@@ -52,7 +52,7 @@ class PersonalInformationController extends GetxController {
       _applyUser(response.user);
       await session.update(response);
     } catch (_) {
-      _showApiError('Unable to load your profile. Please try again.');
+      _showApiError("Unable to load your profile. Please try again.".tr);
     } finally {
       isLoading.value = false;
     }
@@ -93,14 +93,16 @@ class PersonalInformationController extends GetxController {
       await loadProfile();
     } catch (error) {
       profileImage.value = null;
-      _showApiError(_apiErrorMessage(error, 'Unable to upload profile image.'));
+      _showApiError(
+        _apiErrorMessage(error, "Unable to upload profile image.".tr),
+      );
     } finally {
       isUploadingImage.value = false;
     }
   }
 
   void onCountryChanged(CountryCode code) {
-    countryCode = code.dialCode ?? '+91';
+    countryCode = code.dialCode ?? '+1';
   }
 
   Future<void> pickDate(BuildContext context) async {
@@ -129,11 +131,11 @@ class PersonalInformationController extends GetxController {
     if (isSaving.value || isUploadingImage.value) return;
     if (!(formKey.currentState?.validate() ?? false)) return;
     if (gender.value.isEmpty) {
-      _showApiError('Please select your gender.');
+      _showApiError("Please select your gender.".tr);
       return;
     }
     if (dob.value.isEmpty) {
-      _showApiError('Please select your date of birth.');
+      _showApiError("Please select your date of birth.".tr);
       return;
     }
 
@@ -158,9 +160,11 @@ class PersonalInformationController extends GetxController {
         );
       }
       await loadProfile();
-      AppSnackbar.show('Success', 'Profile updated successfully.');
+      AppSnackbar.show("Success".tr, "Profile updated successfully.".tr);
     } catch (error) {
-      _showApiError(_apiErrorMessage(error, 'Unable to update your profile.'));
+      _showApiError(
+        _apiErrorMessage(error, "Unable to update your profile.".tr),
+      );
     } finally {
       isSaving.value = false;
     }
@@ -186,7 +190,7 @@ class PersonalInformationController extends GetxController {
   }
 
   void _showApiError(String message) => AppSnackbar.show(
-    'Request failed',
+    "Request failed".tr,
     message,
     duration: const Duration(seconds: 4),
   );
@@ -260,7 +264,7 @@ class PersonalInformationController extends GetxController {
       'Nov',
       'Dec',
     ];
-    return '${date.day.toString().padLeft(2, '0')} ${months[date.month - 1]} ${date.year}';
+    return '${date.day.toString().padLeft(2, '0')} ${months[date.month - 1].tr} ${date.year}';
   }
 
   String _formatApiDate(DateTime date) =>

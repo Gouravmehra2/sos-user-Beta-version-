@@ -1,13 +1,11 @@
+import 'package:get/get.dart' hide Response;
 import 'package:flutter/material.dart';
 import 'package:squadonsite/presentation/screens/technician_home_screen/model/technician_home_model.dart';
 
 class TechnicianHomeStatCard extends StatelessWidget {
   final TechnicianHomeStat stat;
 
-  const TechnicianHomeStatCard({
-    super.key,
-    required this.stat,
-  });
+  const TechnicianHomeStatCard({super.key, required this.stat});
 
   @override
   Widget build(BuildContext context) {
@@ -34,23 +32,16 @@ class TechnicianHomeStatCard extends StatelessWidget {
               color: stat.color.withValues(alpha: 0.12),
               borderRadius: BorderRadius.circular(12),
             ),
-            child: Icon(
-              Icons.trending_up_rounded,
-              color: stat.color,
-              size: 18,
-            ),
+            child: Icon(Icons.trending_up_rounded, color: stat.color, size: 18),
           ),
           const SizedBox(height: 12),
           Text(
-            stat.title,
-            style: const TextStyle(
-              fontSize: 12,
-              color: Color(0xFF6B7280),
-            ),
+            (stat.title).tr,
+            style: const TextStyle(fontSize: 12, color: Color(0xFF6B7280)),
           ),
           const SizedBox(height: 6),
           Text(
-            stat.value,
+            (stat.value).tr,
             style: const TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.w700,
@@ -59,11 +50,8 @@ class TechnicianHomeStatCard extends StatelessWidget {
           ),
           const SizedBox(height: 6),
           Text(
-            stat.subtitle,
-            style: const TextStyle(
-              fontSize: 11,
-              color: Color(0xFF9CA3AF),
-            ),
+            (stat.subtitle).tr,
+            style: const TextStyle(fontSize: 11, color: Color(0xFF9CA3AF)),
           ),
         ],
       ),

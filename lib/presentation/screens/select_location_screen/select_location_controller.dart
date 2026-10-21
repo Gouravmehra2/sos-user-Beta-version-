@@ -321,19 +321,19 @@ class SelectLocationController extends GetxController {
       confirmed =
           await Get.dialog<bool>(
             AlertDialog(
-              title: Center(child: const Text('Delete address?')),
+              title: Center(child: Text("Delete address?".tr)),
               content: Text(
                 textAlign: TextAlign.center,
-                'Are you sure you want to delete this address?',
+                "Are you sure you want to delete this address?".tr,
               ),
               actions: [
                 TextButton(
                   onPressed: () => Get.key.currentState?.pop(false),
-                  child: const Text('Cancel'),
+                  child: Text("Cancel".tr),
                 ),
                 TextButton(
                   onPressed: () => Get.key.currentState?.pop(true),
-                  child: const Text('OK'),
+                  child: Text("OK".tr),
                 ),
               ],
             ),
@@ -362,8 +362,8 @@ class SelectLocationController extends GetxController {
       if (!isClosed) {
         screenState.value = LocationScreenState.success;
         AppSnackbar.show(
-          'Could not delete address',
-          'Please try again. Your address has not been removed.',
+          "Could not delete address".tr,
+          "Please try again. Your address has not been removed.".tr,
         );
       }
     } finally {

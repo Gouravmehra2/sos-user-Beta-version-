@@ -56,7 +56,7 @@ class BenefitsBottomSheet extends StatelessWidget {
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: Text(
-                            'Best deal',
+                            "Best deal".tr,
                             style: AppTextStyle.labelSmallMedium.copyWith(
                               color: Colors.white,
                             ),
@@ -64,7 +64,7 @@ class BenefitsBottomSheet extends StatelessWidget {
                         ),
                         const SizedBox(height: 18),
                         Text(
-                          'Pro SOS Plan',
+                          "Pro SOS Plan".tr,
                           style: AppTextStyle.headlineLargeBold.copyWith(
                             color: AppColor.blackShade1,
                             fontSize: 42,
@@ -72,7 +72,8 @@ class BenefitsBottomSheet extends StatelessWidget {
                         ),
                         const SizedBox(height: 10),
                         Text(
-                          'Covers 3 Devices - Laptops, Desktops,\nPrinters, Phones etc.',
+                          "Covers 3 Devices - Laptops, Desktops,\nPrinters, Phones etc."
+                              .tr,
                           style: AppTextStyle.bodyLargeRegular.copyWith(
                             color: AppColor.blackShade1,
                             fontSize: 18,
@@ -85,7 +86,7 @@ class BenefitsBottomSheet extends StatelessWidget {
                           runSpacing: 10,
                           children: [
                             Text(
-                              '\$1,725',
+                              ('\$1,725').tr,
                               style: AppTextStyle.headlineLargeBold.copyWith(
                                 color: AppColor.blackShade1,
                                 fontSize: 52,
@@ -95,14 +96,14 @@ class BenefitsBottomSheet extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'billed',
+                                  ('billed').tr,
                                   style: AppTextStyle.bodyLargeRegular.copyWith(
                                     color: AppColor.blackShade1,
                                     fontSize: 18,
                                   ),
                                 ),
                                 Text(
-                                  'annually',
+                                  ('annually').tr,
                                   style: AppTextStyle.bodyLargeRegular.copyWith(
                                     color: AppColor.blackShade1,
                                     fontSize: 18,
@@ -111,14 +112,14 @@ class BenefitsBottomSheet extends StatelessWidget {
                               ],
                             ),
                             Text(
-                              '\$172.5',
+                              ('\$172.5').tr,
                               style: AppTextStyle.headlineLargeBold.copyWith(
                                 color: AppColor.blackShade1,
                                 fontSize: 52,
                               ),
                             ),
                             Text(
-                              'per month',
+                              "per month".tr,
                               style: AppTextStyle.bodyLargeRegular.copyWith(
                                 color: AppColor.blackShade1,
                                 fontSize: 18,
@@ -128,7 +129,7 @@ class BenefitsBottomSheet extends StatelessWidget {
                         ),
                         const SizedBox(height: 26),
                         Text(
-                          'This includes:',
+                          "This includes:".tr,
                           style: AppTextStyle.headlineSmallSemiBold.copyWith(
                             color: AppColor.blackShade1,
                             fontSize: 30,
@@ -157,7 +158,7 @@ class BenefitsBottomSheet extends StatelessWidget {
                             ),
                           ),
                           child: Text(
-                            'Subscribe Now',
+                            "Subscribe Now".tr,
                             style: AppTextStyle.headlineSmallSemiBold.copyWith(
                               color: Colors.white,
                               fontSize: 28,
@@ -200,7 +201,7 @@ class _BenefitRow extends StatelessWidget {
           const SizedBox(width: 12),
           Expanded(
             child: Text(
-              text,
+              (text).tr,
               style: AppTextStyle.bodyLargeRegular.copyWith(
                 color: AppColor.blackShade1,
                 fontSize: 18,

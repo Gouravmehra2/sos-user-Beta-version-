@@ -24,6 +24,7 @@ class OtpArgs {
   final PasswordResetApi? passwordResetApi;
   final int resendAfter;
   final int expiresIn;
+  final Future<void> Function()? resendRegistration;
 
   const OtpArgs._({
     required this.mode,
@@ -35,13 +36,23 @@ class OtpArgs {
     this.passwordResetApi,
     this.resendAfter = 30,
     this.expiresIn = 0,
+    this.resendRegistration,
   });
 
   factory OtpArgs.phone({required String dialCode, required String phone}) =>
       OtpArgs._(mode: OtpVerifyMode.phone, dialCode: dialCode, phone: phone);
 
-  factory OtpArgs.register({required String phone, String devOtp = ''}) =>
-      OtpArgs._(mode: OtpVerifyMode.phone, phone: phone, devOtp: devOtp);
+  factory OtpArgs.register({
+    required String phone,
+    String devOtp = '',
+    Future<void> Function()? resendRegistration,
+  }) => OtpArgs._(
+    mode: OtpVerifyMode.phone,
+    phone: phone,
+    devOtp: devOtp,
+    resendRegistration: resendRegistration,
+    expiresIn: 300,
+  );
 
   factory OtpArgs.email({required String email}) =>
       OtpArgs._(mode: OtpVerifyMode.email, email: email);
@@ -70,6 +81,7 @@ class OtpController extends GetxController with WidgetsBindingObserver {
   late String devOtp;
   late String identifier;
   PasswordResetApi? passwordResetApi;
+  Future<void> Function()? _resendRegistration;
 
   bool get isEmailMode => mode == OtpVerifyMode.email;
   bool get isPasswordReset => mode == OtpVerifyMode.passwordReset;
@@ -189,8 +201,8 @@ class OtpController extends GetxController with WidgetsBindingObserver {
         VerifyRegisterRequest(phone: phone, code: otpValue.value),
       );
       if (response.accessToken.trim().isEmpty) {
-        throw const FormatException(
-          'The server did not return a login token. Please try again.',
+        throw FormatException(
+          "The server did not return a login token. Please try again.".tr,
         );
       }
       await Get.find<AuthSession>().update(response);
@@ -205,9 +217,25 @@ class OtpController extends GetxController with WidgetsBindingObserver {
   Future<void> handleResend() async {
     if (!canResend.value || isResending.value || isLoading.value) return;
     if (!isPasswordReset) {
-      pinController.clear();
-      otpValue.value = '';
-      _startTimer();
+      final resend = _resendRegistration;
+      if (resend == null) {
+        AppSnackbar.show(
+          titleText,
+          "Go back to signup to request a new registration code.".tr,
+        );
+        return;
+      }
+      isResending.value = true;
+      try {
+        await resend();
+        pinController.clear();
+        otpValue.value = '';
+        _startTimer(expiresIn: 300);
+      } catch (error) {
+        AppSnackbar.show(titleText, _errorMessage(error));
+      } finally {
+        isResending.value = false;
+      }
       return;
     }
 
@@ -266,6 +294,7 @@ class OtpController extends GetxController with WidgetsBindingObserver {
       devOtp = args.devOtp;
       identifier = args.identifier;
       passwordResetApi = args.passwordResetApi;
+      _resendRegistration = args.resendRegistration;
     } else {
       mode = OtpVerifyMode.phone;
       dialCode = '';
@@ -287,6 +316,7 @@ class OtpController extends GetxController with WidgetsBindingObserver {
 
   @override
   void onClose() {
+    _resendRegistration = null;
     WidgetsBinding.instance.removeObserver(this);
     _timer?.cancel();
     pinController.dispose();

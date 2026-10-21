@@ -97,11 +97,11 @@ class BookingHistoryController extends GetxController {
         }
         _page = requestedPage;
       } else {
-        errorMessage.value = 'Unable to load your bookings.';
+        errorMessage.value = "Unable to load your bookings.".tr;
       }
     } catch (_) {
       if (version != _requestVersion) return;
-      errorMessage.value = 'Unable to load your bookings. Please try again.';
+      errorMessage.value = "Unable to load your bookings. Please try again.".tr;
     } finally {
       if (version == _requestVersion) {
         isLoading.value = false;

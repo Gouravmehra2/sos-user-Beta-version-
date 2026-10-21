@@ -11,5 +11,6 @@ class LiveTrackingController extends GetxController {
     service = Get.arguments as ServiceModel;
   }
 
-  void checkStatus() => Get.toNamed(AppRoutes.bookingStatusScreen, arguments: service);
+  void checkStatus() =>
+      Get.toNamed(AppRoutes.bookingStatusScreen, arguments: service);
 }

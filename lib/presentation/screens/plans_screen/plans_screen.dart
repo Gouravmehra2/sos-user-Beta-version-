@@ -26,7 +26,7 @@ class _PlansScreenState extends State<PlansScreen> {
     child: Scaffold(
       backgroundColor: const Color(0xffF6F6F6),
       appBar: AppBar(
-        title: const Text('Plans'),
+        title: Text("Plans".tr),
         backgroundColor: Colors.black,
         foregroundColor: Colors.white,
         automaticallyImplyLeading: false,
@@ -58,9 +58,9 @@ class _PlansScreenState extends State<PlansScreen> {
                 onTap: (index) => controller.selectCategory(
                   index == 0 ? 'Residential' : 'Business',
                 ),
-                tabs: const [
-                  Tab(text: 'Residential'),
-                  Tab(text: 'Business'),
+                tabs: [
+                  Tab(text: ('Residential').tr),
+                  Tab(text: ('Business').tr),
                 ],
               ),
             ),
@@ -80,10 +80,10 @@ class _PlansScreenState extends State<PlansScreen> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     SegmentedButton<int>(
-                      segments: const [
-                        ButtonSegment(value: 1, label: Text('1 year')),
-                        ButtonSegment(value: 2, label: Text('2 years')),
-                        ButtonSegment(value: 3, label: Text('3 years')),
+                      segments: [
+                        ButtonSegment(value: 1, label: Text("1 year".tr)),
+                        ButtonSegment(value: 2, label: Text("2 years".tr)),
+                        ButtonSegment(value: 3, label: Text("3 years".tr)),
                       ],
                       selected: {controller.durationYears.value},
                       onSelectionChanged: (selection) =>
@@ -119,25 +119,26 @@ class _PlansScreenState extends State<PlansScreen> {
                     if (controller.loading.value)
                       const LinearProgressIndicator(),
                     if (controller.error.value.isNotEmpty) ...[
-                      Text(controller.error.value),
+                      Text((controller.error.value).tr),
                       TextButton(
                         onPressed: controller.load,
-                        child: const Text('Retry plans'),
+                        child: Text("Retry plans".tr),
                       ),
                     ],
                     if (!controller.loading.value &&
                         controller.error.value.isEmpty &&
                         controller.plans.isEmpty)
-                      const Text('No plans are currently available.'),
+                      Text("No plans are currently available.".tr),
                     if (controller.pending.value != null) ...[
-                      const Text(
-                        'A previous payment needs verification. Check it before starting another purchase.',
+                      Text(
+                        "A previous payment needs verification. Check it before starting another purchase."
+                            .tr,
                       ),
                       FilledButton(
                         onPressed: controller.busy.value
                             ? null
                             : controller.retryVerification,
-                        child: const Text('Check payment'),
+                        child: Text("Check payment".tr),
                       ),
                     ],
                     if (controller.busy.value)
@@ -151,7 +152,7 @@ class _PlansScreenState extends State<PlansScreen> {
                     TextButton(
                       onPressed: () =>
                           Get.toNamed(AppRoutes.termsConditionsScreen),
-                      child: const Text('Read Terms & Conditions'),
+                      child: Text("Read Terms & Conditions".tr),
                     ),
                   ],
                 ),
@@ -178,26 +179,27 @@ class _PlanCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           if (plan.featured)
-            const Text(
-              'FEATURED',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
+            Text("FEATURED".tr, style: TextStyle(fontWeight: FontWeight.bold)),
           Text(
-            plan.name,
+            (plan.name).tr,
             style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
           ),
-          if (plan.tagline.isNotEmpty) Text(plan.tagline),
+          if (plan.tagline.isNotEmpty) Text((plan.tagline).tr),
           const SizedBox(height: 12),
           Text(
-            plan.amount,
+            (plan.amount).tr,
             style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
           ),
-          Text('One-time payment · ${plan.months} months'),
+          Text(
+            "One-time payment · @p0 months".trParams({
+              "p0": (plan.months).toString(),
+            }),
+          ),
           const SizedBox(height: 12),
           for (final feature in plan.features)
             Padding(
               padding: const EdgeInsets.only(bottom: 8),
-              child: Text('✓ $feature'),
+              child: Text('✓ ${feature.tr}'),
             ),
           const SizedBox(height: 12),
           Obx(
@@ -215,8 +217,8 @@ class _PlanCard extends StatelessWidget {
                   controller.busy.value || controller.pending.value != null
                   ? null
                   : () => _confirm(context),
-              child: const Text(
-                'Subscribe to this plan',
+              child: Text(
+                "Subscribe to this plan".tr,
                 textAlign: TextAlign.center,
               ),
             ),
@@ -240,33 +242,36 @@ class _PlanCard extends StatelessWidget {
               useSafeArea: true,
               showDragHandle: true,
               builder: (context) => SingleChildScrollView(
-                padding: const EdgeInsets.only(left: 20,right: 20,bottom: 28),
+                padding: const EdgeInsets.only(left: 20, right: 20, bottom: 28),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     Text(
-                      plan.name,
+                      (plan.name).tr,
                       style: const TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     Text(
-                      '${plan.amount} · ${plan.months} months · one-time payment',
+                      "@p0 · @p1 months · one-time payment".trParams({
+                        "p0": (plan.amount).toString(),
+                        "p1": (plan.months).toString(),
+                      }),
                     ),
                     const SizedBox(height: 12),
-                    Text(plan.description),
+                    Text((plan.description).tr),
                     for (final feature in plan.features)
                       Padding(
                         padding: const EdgeInsets.only(top: 8),
-                        child: Text('✓ $feature'),
+                        child: Text('✓ ${feature.tr}'),
                       ),
                   ],
                 ),
               ),
             ),
-            child: const Text('View plan details'),
+            child: Text("View plan details".tr),
           ),
         ],
       ),
@@ -277,18 +282,24 @@ class _PlanCard extends StatelessWidget {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Subscribe to ${plan.name}'),
+        title: Text(
+          "Subscribe to @p0".trParams({"p0": (plan.name).toString()}),
+        ),
         content: Text(
-          '${plan.amount} charged once for ${plan.months} months. Enter your card details securely in Stripe to pay.',
+          "@p0 charged once for @p1 months. Enter your card details securely in Stripe to pay."
+              .trParams({
+                "p0": (plan.amount).toString(),
+                "p1": (plan.months).toString(),
+              }),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel'),
+            child: Text("Cancel".tr),
           ),
           FilledButton(
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('Continue to payment'),
+            child: Text("Continue to payment".tr),
           ),
         ],
       ),
@@ -306,8 +317,8 @@ class PlanPurchaseHistory extends StatelessWidget {
     () => Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        const Text(
-          'My plans',
+        Text(
+          "My plans".tr,
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
         if (controller.customerId() == null)
@@ -316,20 +327,21 @@ class PlanPurchaseHistory extends StatelessWidget {
               await Get.toNamed(AppRoutes.loginScreen);
               await controller.refreshHistory();
             },
-            child: const Text('Sign in'),
+            child: Text("Sign in".tr),
           ),
         if (controller.historyLoading.value) const LinearProgressIndicator(),
         if (controller.historyError.value.isNotEmpty)
-          Text(controller.historyError.value),
+          Text((controller.historyError.value).tr),
         TextButton(
           onPressed: controller.refreshHistory,
-          child: const Text('Refresh my plans'),
+          child: Text("Refresh my plans".tr),
         ),
         if (controller.purchases.isEmpty && !controller.historyLoading.value)
           Text(
-            controller.customerId() == null
-                ? 'Sign in to see your purchases.'
-                : 'You have no plan purchases yet.',
+            (controller.customerId() == null
+                    ? "Sign in to see your purchases.".tr
+                    : "You have no plan purchases yet.".tr)
+                .tr,
           ),
         for (final purchase in controller.purchases)
           Card(
@@ -339,23 +351,40 @@ class PlanPurchaseHistory extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    purchase.name,
+                    (purchase.name).tr,
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  Text(purchase.status.toUpperCase()),
+                  Text((purchase.status.toUpperCase()).tr),
                   Text(
-                    '${purchase.currency.toUpperCase()} ${purchase.price.toStringAsFixed(2)} · ${purchase.months} months',
+                    "@p0 @p1 · @p2 months".trParams({
+                      "p0": (purchase.currency.toUpperCase()).toString(),
+                      "p1": (purchase.price.toStringAsFixed(2)).toString(),
+                      "p2": (purchase.months).toString(),
+                    }),
                   ),
                   if (purchase.status == 'pending')
-                    const Text(
-                      'Payment not verified. This plan does not grant access.',
+                    Text(
+                      "Payment not verified. This plan does not grant access."
+                          .tr,
                     ),
                   if (purchase.paidAt != null)
-                    Text('Paid: ${_date(context, purchase.paidAt!)}'),
+                    Text(
+                      "Paid: @p0".trParams({
+                        "p0": (_date(context, purchase.paidAt!)).toString(),
+                      }),
+                    ),
                   if (purchase.startsAt != null)
-                    Text('Starts: ${_date(context, purchase.startsAt!)}'),
+                    Text(
+                      "Starts: @p0".trParams({
+                        "p0": (_date(context, purchase.startsAt!)).toString(),
+                      }),
+                    ),
                   if (purchase.expiresAt != null)
-                    Text('Expires: ${_date(context, purchase.expiresAt!)}'),
+                    Text(
+                      "Expires: @p0".trParams({
+                        "p0": (_date(context, purchase.expiresAt!)).toString(),
+                      }),
+                    ),
                 ],
               ),
             ),

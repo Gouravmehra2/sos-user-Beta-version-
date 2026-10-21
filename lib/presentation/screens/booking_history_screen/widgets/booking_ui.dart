@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart';
+import 'package:get/get.dart' hide Response;
 import 'package:flutter/material.dart';
 import 'package:squadonsite/constant/common_widgets/app_network_image.dart';
 import 'package:squadonsite/core/end_points/api_endpoints.dart';
@@ -16,30 +18,15 @@ String bookingAddress(BookingAddress address) {
     address.state,
     address.zipcode,
   ].where((part) => part.trim().isNotEmpty);
-  return parts.isEmpty ? 'Address not provided' : parts.join(', ');
+  return parts.isEmpty ? 'Address not provided'.tr : parts.join(', ');
 }
 
 String bookingDate(DateTime? date, {bool time = false}) {
-  if (date == null) return 'Date to be confirmed';
+  if (date == null) return 'Date to be confirmed'.tr;
   final local = date.toLocal();
-  const months = [
-    'Jan',
-    'Feb',
-    'Mar',
-    'Apr',
-    'May',
-    'Jun',
-    'Jul',
-    'Aug',
-    'Sep',
-    'Oct',
-    'Nov',
-    'Dec',
-  ];
-  final day = '${local.day} ${months[local.month - 1]} ${local.year}';
-  if (!time) return day;
-  final hour = local.hour % 12 == 0 ? 12 : local.hour % 12;
-  return '$day · $hour:${local.minute.toString().padLeft(2, '0')} ${local.hour < 12 ? 'AM' : 'PM'}';
+  final locale = Get.locale?.toLanguageTag() ?? 'en-US';
+  final day = DateFormat.yMMMd(locale).format(local);
+  return time ? '$day · ${DateFormat.jm(locale).format(local)}' : day;
 }
 
 String bookingTitle(BookingHistoryItem booking) {
@@ -47,7 +34,7 @@ String bookingTitle(BookingHistoryItem booking) {
       .map((item) => item.service.name)
       .where((name) => name.trim().isNotEmpty)
       .toList();
-  return names.isEmpty ? 'Service booking' : names.join(', ');
+  return names.isEmpty ? 'Service booking'.tr : names.join(', ');
 }
 
 class BookingStatus extends StatelessWidget {
@@ -70,7 +57,7 @@ class BookingStatus extends StatelessWidget {
         borderRadius: BorderRadius.circular(8),
       ),
       child: Text(
-        status.isEmpty ? 'Not available' : status,
+        (status.isEmpty ? "Not available".tr : status).tr,
         style: TextStyle(
           color: color,
           fontSize: 12,
@@ -146,7 +133,7 @@ class BookingPanel extends StatelessWidget {
               ],
               Expanded(
                 child: Text(
-                  title!,
+                  (title!).tr,
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
@@ -178,7 +165,7 @@ class BookingInfo extends StatelessWidget {
         const SizedBox(width: 9),
         Expanded(
           child: Text(
-            text,
+            (text).tr,
             style: const TextStyle(
               color: bookingMuted,
               fontSize: 13,
@@ -207,11 +194,14 @@ class BookingValue extends StatelessWidget {
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: const TextStyle(color: bookingMuted, fontSize: 12)),
+        Text(
+          (label).tr,
+          style: const TextStyle(color: bookingMuted, fontSize: 12),
+        ),
         const SizedBox(height: 4),
         if (selectable)
           SelectableText(
-            value,
+            (value).tr,
             style: const TextStyle(
               color: bookingInk,
               fontSize: 14,
@@ -220,7 +210,7 @@ class BookingValue extends StatelessWidget {
           )
         else
           Text(
-            value,
+            (value).tr,
             style: const TextStyle(
               color: bookingInk,
               fontSize: 14,

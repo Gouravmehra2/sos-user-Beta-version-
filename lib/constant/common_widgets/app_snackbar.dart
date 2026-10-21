@@ -17,8 +17,8 @@ class AppSnackbar {
     final foreground = isDark ? AppColor.blackColor : Colors.white;
 
     return Get.snackbar(
-      title,
-      message,
+      title.tr,
+      message.tr,
       duration: duration,
       snackPosition: SnackPosition.TOP,
       snackStyle: SnackStyle.FLOATING,

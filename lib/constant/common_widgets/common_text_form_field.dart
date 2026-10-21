@@ -1,3 +1,4 @@
+import 'package:get/get.dart' hide Response;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
@@ -39,7 +40,10 @@ class CommonValidators {
         final digits = v.trim().replaceAll(RegExp(r'\D'), '');
         return digits.length == length
             ? null
-            : message ?? 'Enter a valid $length-digit phone number';
+            : message ??
+                  'Enter a valid @count-digit phone number'.trParams({
+                    'count': '$length',
+                  });
       };
 
   /// Minimum character length.
@@ -48,7 +52,10 @@ class CommonValidators {
         if (v == null || v.isEmpty) return null;
         return v.length >= min
             ? null
-            : message ?? 'Minimum $min characters required';
+            : message ??
+                  'Minimum @count characters required'.trParams({
+                    'count': '$min',
+                  });
       };
 
   /// Maximum character length.
@@ -57,7 +64,10 @@ class CommonValidators {
         if (v == null || v.isEmpty) return null;
         return v.length <= max
             ? null
-            : message ?? 'Maximum $max characters allowed';
+            : message ??
+                  'Maximum @count characters allowed'.trParams({
+                    'count': '$max',
+                  });
       };
 
   static FormFieldValidator<String> strongPassword({
@@ -481,7 +491,7 @@ class _CommonTextFormFieldState extends State<CommonTextFormField> {
         // ── Optional label ───────────────────────────────────────────────────
         if (widget.label != null) ...[
           Text(
-            widget.label!,
+            (widget.label!).tr,
             style:
                 widget.labelStyle ??
                 AppTextStyle.titleSmallSemiBold.copyWith(
@@ -534,10 +544,10 @@ class _CommonTextFormFieldState extends State<CommonTextFormField> {
                     WidgetsBinding.instance.addPostFrameCallback((_) {
                       if (mounted) setState(() => _errorMessage = error);
                     });
-                    return error;
+                    return error?.tr;
                   },
                   decoration: InputDecoration(
-                    hintText: widget.hintText,
+                    hintText: widget.hintText?.tr,
                     hintStyle: resolvedHintStyle,
                     border: InputBorder.none,
                     errorBorder: InputBorder.none,
@@ -583,10 +593,10 @@ class _CommonTextFormFieldState extends State<CommonTextFormField> {
                       WidgetsBinding.instance.addPostFrameCallback((_) {
                         if (mounted) setState(() => _errorMessage = error);
                       });
-                      return error;
+                      return error?.tr;
                     },
                     decoration: InputDecoration(
-                      hintText: widget.hintText,
+                      hintText: widget.hintText?.tr,
                       hintStyle: resolvedHintStyle,
                       border: InputBorder.none,
                       errorBorder: InputBorder.none,
@@ -669,7 +679,7 @@ class _ErrorHelperText extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(top: 6, left: 14),
       child: Text(
-        text,
+        (text).tr,
         style: AppTextStyle.bodySmallRegular.copyWith(
           color: isError ? Colors.red.shade600 : AppColor.coolGrayText,
         ),

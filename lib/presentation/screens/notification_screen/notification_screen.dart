@@ -30,7 +30,7 @@ class NotificationScreen extends GetView<NotificationController> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  controller.errorMessage.value,
+                  (controller.errorMessage.value).tr,
                   textAlign: TextAlign.center,
                   style: AppTextStyle.bodyMediumRegular.copyWith(
                     color: AppColor.coolGrayText,
@@ -38,7 +38,7 @@ class NotificationScreen extends GetView<NotificationController> {
                 ),
                 const SizedBox(height: 16),
                 CommonButton(
-                  label: 'Try Again',
+                  label: "Try Again".tr,
                   onTap: controller.fetchNotifications,
                   backgroundColor: AppColor.blackColor,
                   foregroundColor: Colors.white,
@@ -101,7 +101,7 @@ class _EmptyNotificationView extends StatelessWidget {
             ),
             const SizedBox(height: 32),
             Text(
-              "You're all caught up",
+              "You're all caught up".tr,
               style: AppTextStyle.headlineLargeBold.copyWith(
                 color: AppColor.blackShade1,
               ),
@@ -109,7 +109,8 @@ class _EmptyNotificationView extends StatelessWidget {
             ),
             const SizedBox(height: 10),
             Text(
-              "We'll keep you posted on your\nservice requests and latest offers",
+              "We'll keep you posted on your\nservice requests and latest offers"
+                  .tr,
               style: AppTextStyle.bodyMediumRegular.copyWith(
                 color: AppColor.coolGrayText,
               ),
@@ -117,7 +118,7 @@ class _EmptyNotificationView extends StatelessWidget {
             ),
             const SizedBox(height: 40),
             CommonButton(
-              label: 'Explore Services',
+              label: "Explore Services".tr,
               onTap: () => Get.toNamed(AppRoutes.serviceScreen),
               backgroundColor: AppColor.blackColor,
               foregroundColor: Colors.white,
@@ -144,7 +145,7 @@ class _NotificationsListView extends StatelessWidget {
         elevation: 0,
         leading: const _BackButton(),
         title: Text(
-          'Notifications',
+          "Notifications".tr,
           style: AppTextStyle.titleLargeBold.copyWith(
             color: AppColor.blackShade1,
           ),
@@ -163,7 +164,7 @@ class _NotificationsListView extends StatelessWidget {
           itemBuilder: (context, index) {
             if (index == 0) {
               return _SectionHeader(
-                title: 'Recent',
+                title: "Recent".tr,
                 unreadCount: controller.unreadCount.value,
               );
             }
@@ -203,7 +204,7 @@ class _SectionHeader extends StatelessWidget {
       child: Row(
         children: [
           Text(
-            title,
+            (title).tr,
             style: AppTextStyle.titleSmallSemiBold.copyWith(
               color: AppColor.blackShade1,
               fontSize: 15,
@@ -218,7 +219,7 @@ class _SectionHeader extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Text(
-                '$unreadCount unread',
+                "@p0 unread".trParams({"p0": (unreadCount).toString()}),
                 style: AppTextStyle.bodySmallMedium.copyWith(
                   color: AppColor.blackShade1,
                 ),
@@ -276,7 +277,7 @@ class _NotificationCard extends StatelessWidget {
                     children: [
                       Expanded(
                         child: Text(
-                          notification.title,
+                          (notification.title).tr,
                           style: AppTextStyle.titleSmallSemiBold.copyWith(
                             color: AppColor.blackShade1,
                             fontSize: 16,
@@ -301,7 +302,7 @@ class _NotificationCard extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.only(left: 8),
                           child: Text(
-                            'Read',
+                            "Read".tr,
                             style: AppTextStyle.bodySmallMedium.copyWith(
                               color: AppColor.coolGrayText,
                             ),
@@ -312,7 +313,7 @@ class _NotificationCard extends StatelessWidget {
                   if (!notification.isRead) ...[
                     const SizedBox(height: 3),
                     Text(
-                      'Unread',
+                      "Unread".tr,
                       style: AppTextStyle.bodySmallMedium.copyWith(
                         color: AppColor.blackColor,
                       ),
@@ -321,7 +322,7 @@ class _NotificationCard extends StatelessWidget {
 
                   const SizedBox(height: 8),
                   Text(
-                    notification.message,
+                    (notification.message).tr,
                     style: AppTextStyle.bodySmallRegular.copyWith(
                       color: AppColor.primaryGrey,
                       height: 1.5,
@@ -357,11 +358,14 @@ class _NotificationCard extends StatelessWidget {
 String _formatTime(DateTime dateTime) {
   final local = dateTime.toLocal();
   final difference = DateTime.now().difference(local);
-  if (difference.inMinutes < 1) return 'Just now';
-  if (difference.inHours < 1) return '${difference.inMinutes}m ago';
-  if (difference.inDays < 1) return '${difference.inHours}h ago';
-  if (difference.inDays == 1) return 'Yesterday';
-  if (difference.inDays < 7) return '${difference.inDays} days ago';
+  if (difference.inMinutes < 1) return 'Just now'.tr;
+  if (difference.inHours < 1)
+    return '@count minutes ago'.trParams({'count': '${difference.inMinutes}'});
+  if (difference.inDays < 1)
+    return '@count hours ago'.trParams({'count': '${difference.inHours}'});
+  if (difference.inDays == 1) return 'Yesterday'.tr;
+  if (difference.inDays < 7)
+    return '@count days ago'.trParams({'count': '${difference.inDays}'});
   return '${local.day}/${local.month}/${local.year}';
 }
 
@@ -393,7 +397,7 @@ PreferredSizeWidget _notificationAppBar(NotificationController controller) =>
       elevation: 0,
       leading: const _BackButton(),
       title: Text(
-        'Notifications',
+        "Notifications".tr,
         style: AppTextStyle.titleLargeBold.copyWith(
           color: AppColor.blackShade1,
         ),
@@ -414,16 +418,17 @@ class _MarkAllReadAction extends StatelessWidget {
       return Padding(
         padding: const EdgeInsets.only(right: 12),
         child: TextButton(
-          onPressed: hasUnread && !isUpdating
-              ? controller.markAllAsRead
-              : null,
+          onPressed: hasUnread && !isUpdating ? controller.markAllAsRead : null,
           style: TextButton.styleFrom(
             foregroundColor: AppColor.blackColor,
             disabledForegroundColor: AppColor.coolGrayText,
             padding: const EdgeInsets.symmetric(horizontal: 10),
           ),
           child: Text(
-            isUpdating ? 'Updating...' : (hasUnread ? 'Mark all read' : 'All read'),
+            (isUpdating
+                    ? "Updating...".tr
+                    : (hasUnread ? "Mark all read".tr : "All read".tr))
+                .tr,
             style: AppTextStyle.bodySmallMedium,
           ),
         ),

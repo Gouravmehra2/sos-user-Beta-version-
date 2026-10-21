@@ -45,7 +45,7 @@
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>com.googleusercontent.apps.955827747819-n6k9cleneohsh4hi2jt2le9nkcr6k510</string>
+				<string>com.googleusercontent.apps.957547435039-98sugh1im2b34kjv5vn1ma9sgcffsm2o</string>
 			</array>
 		</dict>
 	</array>
@@ -54,7 +54,7 @@
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 
 	<key>GIDClientID</key>
-	<string>955827747819-n6k9cleneohsh4hi2jt2le9nkcr6k510.apps.googleusercontent.com</string>
+	<string>957547435039-98sugh1im2b34kjv5vn1ma9sgcffsm2o.apps.googleusercontent.com</string>
 
 	<key>GMSApiKey</key>
 	<string>YOUR_GOOGLE_MAPS_API_KEY</string>
@@ -65,11 +65,8 @@
 	<key>NSCameraUsageDescription</key>
 	<string>We need access to your camera to let you take a profile photo.</string>
 
-	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>We need your location to show your position on the map and help you select a delivery address.</string>
-
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>We need your location to show your position on the map and help you select a delivery address.</string>
+	<string>SquadOnSite uses your location while you use the app to show your position on the map and help you select the address for an on-site service booking.</string>
 
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>We need access to your photo library to let you update your profile picture.</string>
@@ -101,8 +98,6 @@
 
 	<key>UIBackgroundModes</key>
 	<array>
-		<string>location</string>
-		<string>fetch</string>
 		<string>remote-notification</string>
 	</array>
 

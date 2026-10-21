@@ -16,7 +16,7 @@ class AddMoneyScreen extends GetView<AddMoneyController> {
         backgroundColor: AppColor.blackColor,
         iconTheme: const IconThemeData(color: Colors.white),
         title: Text(
-          'Add Money',
+          "Add Money".tr,
           style: AppTextStyle.titleLargeBold.copyWith(color: Colors.white),
         ),
       ),
@@ -58,7 +58,7 @@ class _AmountSection extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'ENTER AMOUNT',
+            "ENTER AMOUNT".tr,
             style: AppTextStyle.labelSmallRegular.copyWith(
               color: AppColor.coolGrayText,
               letterSpacing: 1.2,
@@ -70,7 +70,7 @@ class _AmountSection extends StatelessWidget {
             textBaseline: TextBaseline.alphabetic,
             children: [
               Text(
-                '\$',
+                ('\$').tr,
                 style: AppTextStyle.headlineLargeBold.copyWith(
                   color: AppColor.blackColor,
                   fontSize: 28,
@@ -133,7 +133,7 @@ class _AmountSection extends StatelessWidget {
                       ),
                     ),
                     child: Text(
-                      '\$$amount',
+                      ('\$$amount').tr,
                       style: AppTextStyle.bodyMediumMedium.copyWith(
                         color: isSelected ? Colors.white : AppColor.blackColor,
                         fontWeight: FontWeight.w600,
@@ -169,7 +169,7 @@ class _ProceedButton extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              'Proceed to Pay',
+              "Proceed to Pay".tr,
               style: AppTextStyle.buttonLarge.copyWith(color: Colors.white),
             ),
             const SizedBox(width: 6),
@@ -201,7 +201,7 @@ class _PaymentMethodSection extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
             child: Text(
-              'Select Payment Method',
+              "Select Payment Method".tr,
               style: AppTextStyle.titleMediumSemiBold.copyWith(
                 color: AppColor.blackShade1,
               ),
@@ -260,13 +260,13 @@ class _PaymentMethodTile extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    method.name,
+                    (method.name).tr,
                     style: AppTextStyle.titleSmallSemiBold.copyWith(
                       color: AppColor.blackShade1,
                     ),
                   ),
                   Text(
-                    method.subtitle,
+                    (method.subtitle).tr,
                     style: AppTextStyle.bodySmallRegular.copyWith(
                       color: AppColor.coolGrayText,
                     ),
@@ -339,7 +339,7 @@ class _AddNewPaymentMethod extends StatelessWidget {
           ),
           const SizedBox(width: 12),
           Text(
-            'Add New Payment Method',
+            "Add New Payment Method".tr,
             style: AppTextStyle.titleSmallSemiBold.copyWith(
               color: AppColor.blackShade1,
             ),
@@ -360,7 +360,8 @@ class _DisclaimerText extends StatelessWidget {
         const SizedBox(width: 8),
         Expanded(
           child: Text(
-            'Money added to your 1App wallet can be used for instant bookings and payments across all network services. Standard T&Cs apply.',
+            "Money added to your SOS wallet can be used for instant bookings and payments across all network services. Standard T&Cs apply."
+                .tr,
             style: AppTextStyle.bodySmallRegular.copyWith(
               color: AppColor.coolGrayText,
             ),

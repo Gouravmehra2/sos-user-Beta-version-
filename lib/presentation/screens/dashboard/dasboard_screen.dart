@@ -21,7 +21,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   Widget _tab(int index) => _tabs.putIfAbsent(
     index,
-        () => switch (index) {
+    () => switch (index) {
       0 => const HomeScreen(),
       1 => ServiceScreen(),
       2 => const PlansScreen(),

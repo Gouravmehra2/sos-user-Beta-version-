@@ -35,8 +35,7 @@ class _SummerHeatBannerState extends State<SummerHeatBanner> {
             autoPlayAnimationDuration: const Duration(milliseconds: 600),
             autoPlayCurve: Curves.easeInOut,
             enlargeCenterPage: false,
-            onPageChanged: (index, _) =>
-                setState(() => _currentIndex = index),
+            onPageChanged: (index, _) => setState(() => _currentIndex = index),
           ),
           itemBuilder: (context, index, _) {
             final banner = banners[index];
@@ -85,10 +84,7 @@ class _BannerSlide extends StatelessWidget {
       onTap: onTap,
       child: ClipRRect(
         borderRadius: BorderRadius.circular(20),
-        child: Image.asset(
-          banner.imagePath,
-          fit: BoxFit.cover,
-        ),
+        child: Image.asset(banner.imagePath, fit: BoxFit.cover),
       ),
     );
   }

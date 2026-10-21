@@ -69,12 +69,12 @@ class ChangePasswordController extends GetxController {
       }
 
       Get.back<void>();
-      AppSnackbar.show('Success', 'change_password_success'.tr);
+      AppSnackbar.show("Success".tr, 'change_password_success'.tr);
     } catch (error) {
       final message = error is ApiException
           ? error.message
           : 'change_password_failed'.tr;
-      AppSnackbar.show('Request failed', message);
+      AppSnackbar.show("Request failed".tr, message);
     } finally {
       isSubmitting.value = false;
     }

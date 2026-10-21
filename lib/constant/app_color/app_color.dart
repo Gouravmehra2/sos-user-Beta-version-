@@ -31,9 +31,11 @@ class AppColor {
   static const Color shadowGrey = Color(0xFFEEEBEE);
 
   // Accent colors — replaced with greyscale equivalents
-  static const Color blueColor = Color(0xFF3C3C3C);      // was blue, now dark grey
-  static const Color brownColor = Color(0xFF555555);     // was amber, now mid grey
-  static const Color purpleColor = Color(0xFF555555);    // was purple, now mid grey
+  static const Color blueColor = Color(0xFF3C3C3C); // was blue, now dark grey
+  static const Color brownColor = Color(0xFF555555); // was amber, now mid grey
+  static const Color purpleColor = Color(
+    0xFF555555,
+  ); // was purple, now mid grey
 
   // Button colors
   static const Color blackColor = Color(0xff111111);
@@ -50,13 +52,7 @@ class AppColor {
       Color(0xffF5F5F5),
       Color(0xffFFFFFF),
     ],
-    stops: [
-      0.0,
-      0.4,
-      0.6,
-      0.8,
-      1.0,
-    ],
+    stops: [0.0, 0.4, 0.6, 0.8, 1.0],
   );
 
   // Home screen background gradient — white/light grey
@@ -77,16 +73,20 @@ class AppColor {
   static const LinearGradient subscriptionCardGradient = LinearGradient(
     begin: Alignment.topCenter,
     end: Alignment.bottomCenter,
-    colors: [
-      Color(0xff2C2C2C),
-      Color(0xff1A1A1A),
-      Color(0xff0A0A0A),
-    ],
+    colors: [Color(0xff2C2C2C), Color(0xff1A1A1A), Color(0xff0A0A0A)],
   );
 
   static const Color borderColor = Color(0xff777777);
-  static const Color darkBrown = Color(0xff111111);      // was dark brown, now near-black
-  static const Color greenColor = Color(0xff34C759);     // kept — status/success indicator
-  static const Color green2Color = Color(0xff229D4F);    // kept — status/success indicator
-  static const Color lightGreen1Color = Color(0xffDBF4E4); // kept — success background tint
+  static const Color darkBrown = Color(
+    0xff111111,
+  ); // was dark brown, now near-black
+  static const Color greenColor = Color(
+    0xff34C759,
+  ); // kept — status/success indicator
+  static const Color green2Color = Color(
+    0xff229D4F,
+  ); // kept — status/success indicator
+  static const Color lightGreen1Color = Color(
+    0xffDBF4E4,
+  ); // kept — success background tint
 }

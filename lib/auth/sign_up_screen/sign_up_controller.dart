@@ -1,3 +1,7 @@
+import 'package:squadonsite/core/services/apple_auth_flow.dart';
+import 'package:squadonsite/model/apple_auth_model.dart';
+import 'package:squadonsite/model/google_signup_details.dart';
+import 'package:flutter/foundation.dart';
 import 'package:squadonsite/core/services/google_auth_flow.dart';
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +13,6 @@ import 'package:squadonsite/auth/sign_up_screen/model/sign_up_screen_model.dart'
 import 'package:squadonsite/constant/common_widgets/common_text_form_field.dart';
 import 'package:squadonsite/constant/routes/app_routes.dart';
 import 'package:squadonsite/core/services/api_repo.dart';
-import 'package:squadonsite/core/services/social_auth_service.dart';
 
 // ── Mode ──────────────────────────────────────────────────────────────────────
 
@@ -111,6 +114,22 @@ const Map<String, ({int min, int max})> _countryDigitLengths = {
 // ── Controller ────────────────────────────────────────────────────────────────
 
 class SignUpController extends GetxController {
+  AppleRegistration? _appleRegistration;
+  String? _googleEmail;
+
+  void _applyAppleRegistration(AppleRegistration registration) {
+    _googleEmail = null;
+    _appleRegistration = registration;
+    if (registration.name.isNotEmpty) nameController.text = registration.name;
+    emailController.text = registration.email;
+  }
+
+  void _restoreProviderEmail() {
+    final email = _appleRegistration?.email ?? _googleEmail;
+    if (email != null && emailController.text != email) {
+      emailController.text = email;
+    }
+  }
   // ── Mode ──────────────────────────────────────────────────────────────────
 
   late SignUpMode mode;
@@ -146,9 +165,9 @@ class SignUpController extends GetxController {
   final RxString phoneError = ''.obs;
 
   final Rx<CountryCode> selectedCountry = CountryCode(
-    code: 'IN',
-    dialCode: '+91',
-    name: 'India',
+    code: 'US',
+    dialCode: '+1',
+    name: 'United States',
   ).obs;
 
   ({int min, int max}) get _digitLengths {
@@ -169,9 +188,12 @@ class SignUpController extends GetxController {
     final lengths = _digitLengths;
     if (digits.length < lengths.min || digits.length > lengths.max) {
       final rangeText = lengths.min == lengths.max
-          ? '${lengths.min}-digit'
-          : '${lengths.min}–${lengths.max}-digit';
-      return 'Enter a valid $rangeText number for ${selectedCountry.value.name}';
+          ? '${lengths.min}'
+          : '${lengths.min}–${lengths.max}';
+      return 'Enter a valid @count-digit number for @country'.trParams({
+        'count': rangeText,
+        'country': (selectedCountry.value.name ?? '').tr,
+      });
     }
     return null;
   }
@@ -231,22 +253,44 @@ class SignUpController extends GetxController {
     if (isLoading.value || isAppleLoading.value || isGoogleLoading.value) {
       return;
     }
+    if (_appleRegistration?.isExpired == true) {
+      AppSnackbar.show(
+        "Apple sign-in".tr,
+        "Apple registration expired. Please sign in with Apple again.".tr,
+      );
+      return;
+    }
 
+    FocusManager.instance.primaryFocus?.unfocus();
     isLoading.value = true;
     final phone =
         '${selectedCountry.value.dialCode ?? ''}${phoneController.text.trim()}';
     try {
-      final response = await Get.find<ApiRepo>().startRegister(
-        RegisterRequest(
-          name: nameController.text.trim(),
-          email: emailController.text.trim(),
-          phone: phone,
-          password: passwordController.text,
-        ),
+      final registration = _appleRegistration;
+      final request = RegisterRequest(
+        name: nameController.text.trim(),
+        email:
+            registration?.email ?? _googleEmail ?? emailController.text.trim(),
+        appleRegistrationToken: registration?.token,
+        phone: phone,
+        password: passwordController.text,
       );
+      final response = await Get.find<ApiRepo>().startRegister(request);
       Get.toNamed(
         AppRoutes.otpScreen,
-        arguments: OtpArgs.register(phone: phone, devOtp: response.devOtp),
+        arguments: OtpArgs.register(
+          phone: phone,
+          devOtp: kDebugMode ? response.devOtp : '',
+          resendRegistration: () async {
+            if (registration?.isExpired == true) {
+              throw StateError(
+                "Apple registration expired. Go back and sign in with Apple again."
+                    .tr,
+              );
+            }
+            await Get.find<ApiRepo>().startRegister(request);
+          },
+        ),
       );
     } catch (error) {
       AppSnackbar.show('signup_failed'.tr, _errorMessage(error));
@@ -260,8 +304,6 @@ class SignUpController extends GetxController {
 
   // ── Social ────────────────────────────────────────────────────────────────
 
-  final _socialAuth = Get.find<SocialAuthService>();
-
   final RxBool isAppleLoading = false.obs;
   final RxBool isGoogleLoading = false.obs;
 
@@ -272,15 +314,7 @@ class SignUpController extends GetxController {
 
     isAppleLoading.value = true;
     try {
-      final result = await _socialAuth.signInWithApple();
-      result.fold(
-        onSuccess: (user) {
-          // TODO: send user.idToken to your backend, then navigate
-          debugPrint('[SignUp] Apple user: ${user.uid}');
-        },
-        onFailure: (msg) => AppSnackbar.show('signup_failed'.tr, msg),
-        onCancelled: () {},
-      );
+      await AppleAuthFlow.run(onSignup: _applyAppleRegistration);
     } finally {
       isAppleLoading.value = false;
     }
@@ -295,7 +329,9 @@ class SignUpController extends GetxController {
     try {
       await GoogleAuthFlow.run(
         onSignup: (name, email) {
-          nameController.text = name;
+          _appleRegistration = null;
+          _googleEmail = email;
+          if (name.isNotEmpty) nameController.text = name;
           emailController.text = email;
         },
       );
@@ -315,10 +351,19 @@ class SignUpController extends GetxController {
     super.onInit();
     final args = Get.arguments;
     mode = (args is SignUpArgs) ? args.mode : SignUpMode.phone;
+    emailController.addListener(_restoreProviderEmail);
+    if (args is AppleRegistration) _applyAppleRegistration(args);
+    if (args is GoogleSignupDetails) {
+      _googleEmail = args.email;
+      if (args.name.isNotEmpty) nameController.text = args.name;
+      emailController.text = args.email;
+    }
   }
 
   @override
   void onClose() {
+    emailController.removeListener(_restoreProviderEmail);
+    _appleRegistration = null;
     // phoneController.dispose();
     // emailController.dispose();
     // nameController.dispose();

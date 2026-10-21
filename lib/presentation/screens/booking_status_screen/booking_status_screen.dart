@@ -19,9 +19,15 @@ class BookingStatusScreen extends GetView<BookingStatusController> {
       appBar: AppBar(
         backgroundColor: AppColor.blackColor,
         iconTheme: const IconThemeData(color: Colors.white),
-        title: Text('Booking Status', style: AppTextStyle.titleLargeBold.copyWith(color: Colors.white)),
+        title: Text(
+          "Booking Status".tr,
+          style: AppTextStyle.titleLargeBold.copyWith(color: Colors.white),
+        ),
         actions: [
-          IconButton(icon: const Icon(Icons.headset_mic_outlined, color: Colors.white), onPressed: () => Get.toNamed(AppRoutes.supportScreen)),
+          IconButton(
+            icon: const Icon(Icons.headset_mic_outlined, color: Colors.white),
+            onPressed: () => Get.toNamed(AppRoutes.supportScreen),
+          ),
         ],
       ),
       body: Obx(() {
@@ -46,14 +52,19 @@ class BookingStatusScreen extends GetView<BookingStatusController> {
               padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
               child: step == BookingStep.completed
                   ? CommonButton(
-                      label: 'Completed',
-                      onTap: () => Get.toNamed(AppRoutes.serviceReviewScreen, arguments: controller.service),
+                      label: "Completed".tr,
+                      onTap: () => Get.toNamed(
+                        AppRoutes.serviceReviewScreen,
+                        arguments: controller.service,
+                      ),
                       backgroundColor: AppColor.blackColor,
                       foregroundColor: Colors.white,
                     )
                   : CommonButton(
-                      label: 'Back to Home',
-                      onTap: () => Get.until((r) => r.settings.name == AppRoutes.dashboardScreen),
+                      label: "Back to Home".tr,
+                      onTap: () => Get.until(
+                        (r) => r.settings.name == AppRoutes.dashboardScreen,
+                      ),
                       backgroundColor: AppColor.blackColor,
                       foregroundColor: Colors.white,
                     ),
@@ -78,42 +89,75 @@ class _ServiceCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: AppColor.lightGreyColor),
       ),
-      child: Row(children: [
-        ClipRRect(
-          borderRadius: BorderRadius.circular(8),
-          child: Image.network(
-            controller.service.featuredImage.isNotEmpty
-                ? '${ApiEndpoints.baseUrl}/${controller.service.featuredImage}'
-                : '',
-            width: 80,
-            height: 70,
-            fit: BoxFit.cover,
-            errorBuilder: (_, __, ___) => Container(
+      child: Row(
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(8),
+            child: Image.network(
+              controller.service.featuredImage.isNotEmpty
+                  ? '${ApiEndpoints.baseUrl}/${controller.service.featuredImage}'
+                  : '',
               width: 80,
               height: 70,
-              color: Colors.grey.shade200,
-              child: const Icon(Icons.image, color: Colors.grey),
+              fit: BoxFit.cover,
+              errorBuilder: (_, __, ___) => Container(
+                width: 80,
+                height: 70,
+                color: Colors.grey.shade200,
+                child: const Icon(Icons.image, color: Colors.grey),
+              ),
             ),
           ),
-        ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text(controller.service.name, style: AppTextStyle.titleSmallSemiBold.copyWith(color: AppColor.blackShade1)),
-            const SizedBox(height: 4),
-            Row(children: [
-              const Icon(Icons.star, size: 12, color: AppColor.darkGray),
-              const SizedBox(width: 2),
-              Text('${controller.service.ratingsAverage} (${controller.service.ratingsQuantity} Reviews)', style: AppTextStyle.bodySmallRegular.copyWith(color: AppColor.coolGrayText)),
-            ]),
-            const SizedBox(height: 4),
-            Row(children: [
-              Text('\$10 ', style: AppTextStyle.bodySmallRegular.copyWith(color: AppColor.coolGrayText, decoration: TextDecoration.lineThrough)),
-              Text('\$7', style: AppTextStyle.titleSmallSemiBold.copyWith(color: AppColor.blackColor)),
-            ]),
-          ]),
-        ),
-      ]),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  (controller.service.name).tr,
+                  style: AppTextStyle.titleSmallSemiBold.copyWith(
+                    color: AppColor.blackShade1,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Row(
+                  children: [
+                    const Icon(Icons.star, size: 12, color: AppColor.darkGray),
+                    const SizedBox(width: 2),
+                    Text(
+                      "@p0 (@p1 Reviews)".trParams({
+                        "p0": (controller.service.ratingsAverage).toString(),
+                        "p1": (controller.service.ratingsQuantity).toString(),
+                      }),
+                      style: AppTextStyle.bodySmallRegular.copyWith(
+                        color: AppColor.coolGrayText,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 4),
+                Row(
+                  children: [
+                    Text(
+                      ('\$10 ').tr,
+                      style: AppTextStyle.bodySmallRegular.copyWith(
+                        color: AppColor.coolGrayText,
+                        decoration: TextDecoration.lineThrough,
+                      ),
+                    ),
+                    Text(
+                      ('\$7').tr,
+                      style: AppTextStyle.titleSmallSemiBold.copyWith(
+                        color: AppColor.blackColor,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -149,8 +193,8 @@ class _StatusTimeline extends StatelessWidget {
             // Step 1: Booking Confirmed
             _TimelineItem(
               isDone: true,
-              title: 'Booking Confirmed',
-              subtitle: '5 June, 2026, 16:16',
+              title: "Booking Confirmed".tr,
+              subtitle: "5 June, 2026, 16:16".tr,
             ),
             _DashedLine(isDone: step2Done),
 
@@ -158,8 +202,10 @@ class _StatusTimeline extends StatelessWidget {
             _TimelineItem(
               isDone: step2Done,
               isCurrent: step == BookingStep.findingTechnician,
-              title: step2Done ? 'Technician Assigned' : 'Technician Assigned',
-              subtitle: step2Done ? 'Technician: Michael Johnson' : '',
+              title: step2Done
+                  ? "Technician Assigned".tr
+                  : "Technician Assigned".tr,
+              subtitle: step2Done ? "Technician: Michael Johnson".tr : '',
               currentLabel: 'Finding Technician',
               currentSubtitle: 'We are finding the best technician for you',
             ),
@@ -170,7 +216,9 @@ class _StatusTimeline extends StatelessWidget {
               isDone: step3Done,
               isCurrent: step == BookingStep.technicinaAssigned,
               icon: Icons.handyman_outlined,
-              title: step3Done ? 'Technician Arrived' : 'Technician on the way',
+              title: step3Done
+                  ? "Technician Arrived".tr
+                  : "Technician on the way".tr,
               subtitle: '',
               currentLabel: 'Technician Michael Johnson is on the way',
               showTrackButton: step == BookingStep.technicinaAssigned,
@@ -184,7 +232,7 @@ class _StatusTimeline extends StatelessWidget {
               isDone: step4Done,
               isCurrent: step == BookingStep.serviceInProgress,
               icon: Icons.handyman_outlined,
-              title: step4Done ? 'Completed' : 'Service not yet started',
+              title: step4Done ? "Completed".tr : "Service not yet started".tr,
               subtitle: '',
               currentLabel: 'Service is in progress',
               currentSubtitle: 'We are hoping everything is going smooth.',
@@ -206,7 +254,9 @@ class _DashedLine extends StatelessWidget {
       padding: const EdgeInsets.only(left: 11, top: 2, bottom: 2),
       child: CustomPaint(
         size: const Size(2, 28),
-        painter: _DashedLinePainter(color: isDone ? Colors.green : AppColor.lightGreyColor),
+        painter: _DashedLinePainter(
+          color: isDone ? Colors.green : AppColor.lightGreyColor,
+        ),
       ),
     );
   }
@@ -226,7 +276,11 @@ class _DashedLinePainter extends CustomPainter {
     const dashSpace = 3.0;
     double startY = 0;
     while (startY < size.height) {
-      canvas.drawLine(Offset(0, startY), Offset(0, math.min(startY + dashHeight, size.height)), paint);
+      canvas.drawLine(
+        Offset(0, startY),
+        Offset(0, math.min(startY + dashHeight, size.height)),
+        paint,
+      );
       startY += dashHeight + dashSpace;
     }
   }
@@ -270,73 +324,104 @@ class _TimelineItem extends StatelessWidget {
           ? BoxDecoration(
               color: AppColor.blackColor.withValues(alpha: 0.08),
               borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: Color(0xffF5F5F5))
+              border: Border.all(color: Color(0xffF5F5F5)),
             )
           : null,
-      child: Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
-        // Icon/indicator
-        if (isDone)
-          const Icon(Icons.check_circle, color: Colors.green, size: 26)
-        else if (isCurrent)
-          _DashedCircle()
-        else
-          Container(
-            width: 26,
-            height: 26,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(color: AppColor.lightGreyColor, width: 1.5),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          // Icon/indicator
+          if (isDone)
+            const Icon(Icons.check_circle, color: Colors.green, size: 26)
+          else if (isCurrent)
+            _DashedCircle()
+          else
+            Container(
+              width: 26,
+              height: 26,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(color: AppColor.lightGreyColor, width: 1.5),
+              ),
+              child: Icon(icon, size: 14, color: AppColor.coolGrayText),
             ),
-            child: Icon(icon, size: 14, color: AppColor.coolGrayText),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        (isHighlighted ? currentLabel! : title).tr,
+                        style: AppTextStyle.titleSmallSemiBold.copyWith(
+                          color: isHighlighted
+                              ? AppColor.blackColor
+                              : isDone
+                              ? AppColor.blackShade1
+                              : AppColor.coolGrayText,
+                        ),
+                      ),
+                      if ((isHighlighted && currentSubtitle != null) ||
+                          subtitle.isNotEmpty) ...[
+                        const SizedBox(height: 2),
+                        Text(
+                          (isHighlighted && currentSubtitle != null
+                                  ? currentSubtitle!
+                                  : subtitle)
+                              .tr,
+                          style: AppTextStyle.bodySmallRegular.copyWith(
+                            color: AppColor.coolGrayText,
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+                if (showTrackButton)
+                  GestureDetector(
+                    onTap: onTrack,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 6,
+                      ),
+                      decoration: BoxDecoration(
+                        color: AppColor.blackColor,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Text(
+                        "Track Now".tr,
+                        style: AppTextStyle.labelSmallMedium.copyWith(
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                if (otpBadge != null)
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 5,
+                    ),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: AppColor.blackColor),
+                    ),
+                    child: Text(
+                      (otpBadge!).tr,
+                      style: AppTextStyle.labelSmallMedium.copyWith(
+                        color: AppColor.blackColor,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
           ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: Row(children: [
-            Expanded(
-              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text(
-                  isHighlighted ? currentLabel! : title,
-                  style: AppTextStyle.titleSmallSemiBold.copyWith(
-                    color: isHighlighted
-                        ? AppColor.blackColor
-                        : isDone
-                            ? AppColor.blackShade1
-                            : AppColor.coolGrayText,
-                  ),
-                ),
-                if ((isHighlighted && currentSubtitle != null) || subtitle.isNotEmpty) ...[
-                  const SizedBox(height: 2),
-                  Text(
-                    isHighlighted && currentSubtitle != null ? currentSubtitle! : subtitle,
-                    style: AppTextStyle.bodySmallRegular.copyWith(color: AppColor.coolGrayText),
-                  ),
-                ],
-              ]),
-            ),
-            if (showTrackButton)
-              GestureDetector(
-                onTap: onTrack,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                  decoration: BoxDecoration(
-                    color: AppColor.blackColor,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Text('Track Now', style: AppTextStyle.labelSmallMedium.copyWith(color: Colors.white)),
-                ),
-              ),
-            if (otpBadge != null)
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: AppColor.blackColor),
-                ),
-                child: Text(otpBadge!, style: AppTextStyle.labelSmallMedium.copyWith(color: AppColor.blackColor, fontWeight: FontWeight.w600)),
-              ),
-          ]),
-        ),
-      ]),
+        ],
+      ),
     );
   }
 }
@@ -403,10 +488,14 @@ class _BottomInfoCard extends StatelessWidget {
         value = 'Service\nCompleted!';
         description = 'Thank you for choosing us!\nRate our technicians!';
         illustrationIcon = Icons.engineering;
-      } else if (step == BookingStep.serviceInProgress || step == BookingStep.technicianOnWay) {
-        title = step == BookingStep.serviceInProgress ? 'Servicing...' : 'Technician on the way';
+      } else if (step == BookingStep.serviceInProgress ||
+          step == BookingStep.technicianOnWay) {
+        title = step == BookingStep.serviceInProgress
+            ? 'Servicing...'
+            : 'Technician on the way';
         value = 'OTP: 1202';
-        description = 'Technician is arrived,\nShare the otp and get the service star.';
+        description =
+            'Technician is arrived,\nShare the otp and get the service star.';
         illustrationIcon = Icons.engineering;
       } else {
         title = 'Estimated Time';
@@ -420,19 +509,39 @@ class _BottomInfoCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: Color(0xffF8F8F8),
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color:Color(0xff111111).withValues(alpha: 0.30)),
+          border: Border.all(color: Color(0xff111111).withValues(alpha: 0.30)),
         ),
-        child: Row(children: [
-          Expanded(
-            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text(title, style: AppTextStyle.bodySmallMedium.copyWith(color: AppColor.coolGrayText)),
-              Text(value, style: AppTextStyle.headlineSmallSemiBold.copyWith(color: AppColor.blackShade1)),
-              const SizedBox(height: 4),
-              Text(description, style: AppTextStyle.bodySmallRegular.copyWith(color: AppColor.coolGrayText)),
-            ]),
-          ),
-          Icon(illustrationIcon, size: 80, color: AppColor.blackColor),
-        ]),
+        child: Row(
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    (title).tr,
+                    style: AppTextStyle.bodySmallMedium.copyWith(
+                      color: AppColor.coolGrayText,
+                    ),
+                  ),
+                  Text(
+                    (value).tr,
+                    style: AppTextStyle.headlineSmallSemiBold.copyWith(
+                      color: AppColor.blackShade1,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    (description).tr,
+                    style: AppTextStyle.bodySmallRegular.copyWith(
+                      color: AppColor.coolGrayText,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Icon(illustrationIcon, size: 80, color: AppColor.blackColor),
+          ],
+        ),
       );
     });
   }

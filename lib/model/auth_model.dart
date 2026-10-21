@@ -1,4 +1,5 @@
 class RegisterRequest {
+  final String? appleRegistrationToken;
   final String name;
   final String email;
   final String phone;
@@ -9,6 +10,7 @@ class RegisterRequest {
     required this.email,
     required this.phone,
     required this.password,
+    this.appleRegistrationToken,
   });
 
   Map<String, dynamic> toJson() => {
@@ -16,6 +18,8 @@ class RegisterRequest {
     'email': email,
     'phone': phone,
     'password': password,
+    if (appleRegistrationToken != null)
+      'appleRegistrationToken': appleRegistrationToken,
   };
 }
 

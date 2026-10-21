@@ -39,7 +39,7 @@ class _ServiceDetailBottomSheetState extends State<ServiceDetailBottomSheet> {
     super.initState();
     if (widget.service.hasVariants && widget.service.variants.isNotEmpty) {
       final index = widget.service.variants.indexWhere(
-            (variant) => variant.isActive,
+        (variant) => variant.isActive,
       );
       _selectedVariantIndex = index < 0 ? null : index;
     }
@@ -56,7 +56,9 @@ class _ServiceDetailBottomSheetState extends State<ServiceDetailBottomSheet> {
   String _displayPrice() {
     final s = widget.service;
     final addonPriceInCents = s.addons
-        .where((addon) => addon.isActive && _selectedAddonIds.contains(addon.id))
+        .where(
+          (addon) => addon.isActive && _selectedAddonIds.contains(addon.id),
+        )
         .fold<int>(
           0,
           (total, addon) =>
@@ -168,7 +170,7 @@ class _ServiceDetailBottomSheetState extends State<ServiceDetailBottomSheet> {
                     _sectionTitle('About This Service'),
                     const SizedBox(height: 10),
                     Text(
-                      s.longDescription,
+                      (s.longDescription).tr,
                       style: AppTextStyle.bodyMediumRegular.copyWith(
                         color: AppColor.coolGrayText,
                         height: 1.7,
@@ -238,10 +240,12 @@ class _ServiceDetailBottomSheetState extends State<ServiceDetailBottomSheet> {
 
   // ── Header ────────────────────────────────────────────────────────────────
 
-  Widget _buildHeader(BuildContext context,
-      double sw,
-      String? imageUrl,
-      ServiceItem s,) {
+  Widget _buildHeader(
+    BuildContext context,
+    double sw,
+    String? imageUrl,
+    ServiceItem s,
+  ) {
     return Container(
       padding: EdgeInsets.fromLTRB(sw * 0.045, 8, sw * 0.045, 16),
       child: Column(
@@ -255,13 +259,13 @@ class _ServiceDetailBottomSheetState extends State<ServiceDetailBottomSheet> {
                 borderRadius: BorderRadius.circular(14),
                 child: imageUrl != null
                     ? Image.network(
-                  imageUrl,
-                  width: sw * 0.30,
-                  height: sw * 0.26,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stack) =>
-                      _imagePlaceholder(sw),
-                )
+                        imageUrl,
+                        width: sw * 0.30,
+                        height: sw * 0.26,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stack) =>
+                            _imagePlaceholder(sw),
+                      )
                     : _imagePlaceholder(sw),
               ),
               SizedBox(width: sw * 0.04),
@@ -271,7 +275,7 @@ class _ServiceDetailBottomSheetState extends State<ServiceDetailBottomSheet> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      s.name,
+                      (s.name).tr,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: AppTextStyle.titleLargeBold.copyWith(
@@ -292,14 +296,16 @@ class _ServiceDetailBottomSheetState extends State<ServiceDetailBottomSheet> {
                         ),
                         const SizedBox(width: 3),
                         Text(
-                          s.ratingsAverage.toStringAsFixed(1),
+                          (s.ratingsAverage.toStringAsFixed(1)).tr,
                           style: AppTextStyle.bodySmallMedium.copyWith(
                             color: AppColor.blackShade1,
                           ),
                         ),
                         const SizedBox(width: 4),
                         Text(
-                          '(${s.ratingsQuantity} reviews)',
+                          "(@p0 reviews)".trParams({
+                            "p0": (s.ratingsQuantity).toString(),
+                          }),
                           style: AppTextStyle.bodySmallRegular.copyWith(
                             color: AppColor.coolGrayText,
                           ),
@@ -313,17 +319,17 @@ class _ServiceDetailBottomSheetState extends State<ServiceDetailBottomSheet> {
                       runSpacing: 4,
                       children: [
                         Text(
-                          _displayPrice(),
+                          (_displayPrice()).tr,
                           style: AppTextStyle.headlineMediumSemiBold.copyWith(
                             color: AppColor.blackColor,
                           ),
                         ),
                         if (_displayDuration() > 0)
                           Text(
-                            '/${_formatDuration(_displayDuration())}',
+                            ('/${_formatDuration(_displayDuration())}').tr,
                             style: AppTextStyle.headlineMediumSemiBold.copyWith(
-                                color: AppColor.coolGrayText,
-                                fontSize: 15
+                              color: AppColor.coolGrayText,
+                              fontSize: 15,
                             ),
                           ),
                       ],
@@ -379,15 +385,15 @@ class _ServiceDetailBottomSheetState extends State<ServiceDetailBottomSheet> {
                   ),
                   child: selected
                       ? Center(
-                    child: Container(
-                      width: 8,
-                      height: 8,
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.white,
-                      ),
-                    ),
-                  )
+                          child: Container(
+                            width: 8,
+                            height: 8,
+                            decoration: const BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.white,
+                            ),
+                          ),
+                        )
                       : null,
                 ),
                 const SizedBox(width: 12),
@@ -397,30 +403,31 @@ class _ServiceDetailBottomSheetState extends State<ServiceDetailBottomSheet> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        v.name,
+                        (v.name).tr,
                         style: AppTextStyle.titleSmallSemiBold.copyWith(
                           color: selected ? Colors.white : AppColor.blackShade1,
                         ),
                       ),
                       const SizedBox(height: 2),
-                      if(v.duration > 0)Row(
-                        children: [
-                          const Icon(
-                            Icons.access_time_outlined,
-                            size: 11,
-                            color: AppColor.coolGrayText,
-                          ),
-                          const SizedBox(width: 3),
-                          Text(
-                            _formatDuration(v.duration),
-                            style: AppTextStyle.labelSmallRegular.copyWith(
-                              color: selected
-                                  ? Colors.white60
-                                  : AppColor.coolGrayText,
+                      if (v.duration > 0)
+                        Row(
+                          children: [
+                            const Icon(
+                              Icons.access_time_outlined,
+                              size: 11,
+                              color: AppColor.coolGrayText,
                             ),
-                          ),
-                        ],
-                      ),
+                            const SizedBox(width: 3),
+                            Text(
+                              (_formatDuration(v.duration)).tr,
+                              style: AppTextStyle.labelSmallRegular.copyWith(
+                                color: selected
+                                    ? Colors.white60
+                                    : AppColor.coolGrayText,
+                              ),
+                            ),
+                          ],
+                        ),
                     ],
                   ),
                 ),
@@ -429,7 +436,7 @@ class _ServiceDetailBottomSheetState extends State<ServiceDetailBottomSheet> {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
-                      '\$${v.offerPrice}',
+                      ('\$${v.offerPrice}').tr,
                       style: AppTextStyle.titleSmallSemiBold.copyWith(
                         color: selected ? Colors.white : AppColor.blackColor,
                         fontSize: 15,
@@ -438,7 +445,7 @@ class _ServiceDetailBottomSheetState extends State<ServiceDetailBottomSheet> {
                     if (hasDiscount) ...[
                       const SizedBox(height: 2),
                       Text(
-                        '\$${v.actualPrice}',
+                        ('\$${v.actualPrice}').tr,
                         style: AppTextStyle.labelSmallRegular.copyWith(
                           color: selected
                               ? Colors.white60
@@ -461,7 +468,9 @@ class _ServiceDetailBottomSheetState extends State<ServiceDetailBottomSheet> {
                           borderRadius: BorderRadius.circular(4),
                         ),
                         child: Text(
-                          '${v.discountPercentage.toInt()}% off',
+                          "@p0% off".trParams({
+                            "p0": (v.discountPercentage.toInt()).toString(),
+                          }),
                           style: AppTextStyle.labelSmallMedium.copyWith(
                             color: selected
                                 ? Colors.white
@@ -485,8 +494,7 @@ class _ServiceDetailBottomSheetState extends State<ServiceDetailBottomSheet> {
     return Column(
       children: items
           .map(
-            (item) =>
-            Padding(
+            (item) => Padding(
               padding: const EdgeInsets.only(bottom: 8),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -508,7 +516,7 @@ class _ServiceDetailBottomSheetState extends State<ServiceDetailBottomSheet> {
                   const SizedBox(width: 10),
                   Expanded(
                     child: Text(
-                      item.title,
+                      (item.title).tr,
                       style: AppTextStyle.bodyMediumRegular.copyWith(
                         color: AppColor.blackShade1,
                         height: 1.5,
@@ -518,7 +526,7 @@ class _ServiceDetailBottomSheetState extends State<ServiceDetailBottomSheet> {
                 ],
               ),
             ),
-      )
+          )
           .toList(),
     );
   }
@@ -529,8 +537,7 @@ class _ServiceDetailBottomSheetState extends State<ServiceDetailBottomSheet> {
     return Column(
       children: items
           .map(
-            (item) =>
-            Padding(
+            (item) => Padding(
               padding: const EdgeInsets.only(bottom: 8),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -552,7 +559,7 @@ class _ServiceDetailBottomSheetState extends State<ServiceDetailBottomSheet> {
                   const SizedBox(width: 10),
                   Expanded(
                     child: Text(
-                      item.title,
+                      (item.title).tr,
                       style: AppTextStyle.bodyMediumRegular.copyWith(
                         color: AppColor.coolGrayText,
                         height: 1.5,
@@ -562,7 +569,7 @@ class _ServiceDetailBottomSheetState extends State<ServiceDetailBottomSheet> {
                 ],
               ),
             ),
-      )
+          )
           .toList(),
     );
   }
@@ -590,7 +597,7 @@ class _ServiceDetailBottomSheetState extends State<ServiceDetailBottomSheet> {
                     ),
                     child: Center(
                       child: Text(
-                        '${step.stepNumber}',
+                        ('${step.stepNumber}').tr,
                         style: AppTextStyle.labelMediumSemiBold.copyWith(
                           color: Colors.white,
                         ),
@@ -616,14 +623,14 @@ class _ServiceDetailBottomSheetState extends State<ServiceDetailBottomSheet> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        step.title,
+                        (step.title).tr,
                         style: AppTextStyle.titleSmallSemiBold.copyWith(
                           color: AppColor.blackShade1,
                         ),
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        step.description,
+                        (step.description).tr,
                         style: AppTextStyle.bodyMediumRegular.copyWith(
                           color: AppColor.coolGrayText,
                           height: 1.6,
@@ -646,8 +653,7 @@ class _ServiceDetailBottomSheetState extends State<ServiceDetailBottomSheet> {
     return Column(
       children: reqs
           .map(
-            (r) =>
-            Padding(
+            (r) => Padding(
               padding: const EdgeInsets.only(bottom: 8),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -669,7 +675,7 @@ class _ServiceDetailBottomSheetState extends State<ServiceDetailBottomSheet> {
                   const SizedBox(width: 10),
                   Expanded(
                     child: Text(
-                      r.title,
+                      (r.title).tr,
                       style: AppTextStyle.bodyMediumRegular.copyWith(
                         color: AppColor.blackShade1,
                         height: 1.5,
@@ -679,23 +685,20 @@ class _ServiceDetailBottomSheetState extends State<ServiceDetailBottomSheet> {
                 ],
               ),
             ),
-      )
+          )
           .toList(),
     );
   }
 
   // ── Add-ons ───────────────────────────────────────────────────────────────
 
-  Widget _buildAddons(List<AddonItem> addons) =>
-      AddonSelector(
-        addons: addons,
-        selectedIds: _selectedAddonIds,
-        onToggle: (addon) =>
-            setState(() {
-              if (!_selectedAddonIds.add(addon.id)) _selectedAddonIds.remove(
-                  addon.id);
-            }),
-      );
+  Widget _buildAddons(List<AddonItem> addons) => AddonSelector(
+    addons: addons,
+    selectedIds: _selectedAddonIds,
+    onToggle: (addon) => setState(() {
+      if (!_selectedAddonIds.add(addon.id)) _selectedAddonIds.remove(addon.id);
+    }),
+  );
 
   // ── Tools ─────────────────────────────────────────────────────────────────
 
@@ -732,7 +735,7 @@ class _ServiceDetailBottomSheetState extends State<ServiceDetailBottomSheet> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      tool.name,
+                      (tool.name).tr,
                       style: AppTextStyle.titleSmallSemiBold.copyWith(
                         color: AppColor.blackShade1,
                       ),
@@ -740,7 +743,7 @@ class _ServiceDetailBottomSheetState extends State<ServiceDetailBottomSheet> {
                     if (tool.description.isNotEmpty) ...[
                       const SizedBox(height: 3),
                       Text(
-                        tool.description,
+                        (tool.description).tr,
                         style: AppTextStyle.bodySmallRegular.copyWith(
                           color: AppColor.coolGrayText,
                           height: 1.5,
@@ -799,14 +802,14 @@ class _ServiceDetailBottomSheetState extends State<ServiceDetailBottomSheet> {
                 ),
               ),
               title: Text(
-                faq.question,
+                (faq.question).tr,
                 style: AppTextStyle.bodyMediumMedium.copyWith(
                   color: AppColor.blackShade1,
                 ),
               ),
               children: [
                 Text(
-                  faq.answer,
+                  (faq.answer).tr,
                   style: AppTextStyle.bodyMediumRegular.copyWith(
                     color: AppColor.coolGrayText,
                     height: 1.6,
@@ -854,22 +857,21 @@ class _ServiceDetailBottomSheetState extends State<ServiceDetailBottomSheet> {
                     runSpacing: 4,
                     children: [
                       Text(
-                        price,
+                        (price).tr,
                         style: AppTextStyle.headlineSmallSemiBold.copyWith(
                           color: AppColor.blackColor,
                         ),
                       ),
                       if (duration > 0)
                         Text(
-                          '/${_formatDuration(duration)}',
+                          ('/${_formatDuration(duration)}').tr,
                           style: AppTextStyle.headlineSmallSemiBold.copyWith(
-                              color: AppColor.coolGrayText,
-                              fontSize: 13
+                            color: AppColor.coolGrayText,
+                            fontSize: 13,
                           ),
                         ),
                     ],
                   ),
-
                 ],
               ),
             ),
@@ -877,7 +879,7 @@ class _ServiceDetailBottomSheetState extends State<ServiceDetailBottomSheet> {
           Expanded(
             flex: price.isNotEmpty ? 2 : 3,
             child: CommonButton(
-              label: 'Book Now',
+              label: "home_offer_book_now".tr,
               onTap: () {
                 Get.back();
                 Get.toNamed(
@@ -909,7 +911,7 @@ class _ServiceDetailBottomSheetState extends State<ServiceDetailBottomSheet> {
 
   Widget _sectionTitle(String title) {
     return Text(
-      title,
+      (title).tr,
       style: AppTextStyle.titleMediumSemiBold.copyWith(
         color: AppColor.blackShade1,
       ),

@@ -36,7 +36,7 @@ class ProfileScreen extends GetView<ProfileController> {
               _buildHeader(),
               const SizedBox(height: 40),
               Obx(
-                    () => buildProfileInfo(
+                () => buildProfileInfo(
                   name: controller.userName.value.isEmpty
                       ? 'nav_profile'.tr
                       : controller.userName.value,
@@ -133,11 +133,11 @@ class ProfileScreen extends GetView<ProfileController> {
                       fit: BoxFit.cover,
                     ),
                     loadingBuilder: (context, child, progress) =>
-                    progress == null
+                        progress == null
                         ? child
                         : const Center(
-                      child: CircularProgressIndicator(strokeWidth: 2),
-                    ),
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          ),
                   ),
                 );
               }
@@ -215,7 +215,7 @@ class _SettingsCard extends GetView<ProfileController> {
             icon: Icons.notifications_none_outlined,
             label: 'profile_settings_notifications'.tr,
             trailing: Obx(
-                  () => Switch(
+              () => Switch(
                 value: controller.notificationsEnabled.value,
                 onChanged: (v) => controller.notificationsEnabled.value = v,
                 activeThumbColor: AppColor.blackColor,
@@ -231,7 +231,7 @@ class _SettingsCard extends GetView<ProfileController> {
             label: 'profile_settings_language'.tr,
             flexibleTrailing: true,
             trailing: Obx(
-                  () => Container(
+              () => Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -248,7 +248,7 @@ class _SettingsCard extends GetView<ProfileController> {
                         Align(
                           alignment: AlignmentDirectional.centerStart,
                           child: Text(
-                            label,
+                            (label).tr,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -260,16 +260,19 @@ class _SettingsCard extends GetView<ProfileController> {
                     style: AppTextStyle.bodyMediumRegular.copyWith(
                       color: AppColor.blackShade1,
                     ),
-                    items: const [
+                    items: [
                       DropdownMenuItem(
                         value: 'english',
-                        child: Text('English'),
+                        child: Text(('English').tr),
                       ),
                       DropdownMenuItem(
                         value: 'spanish',
-                        child: Text('Español'),
+                        child: Text(('Español').tr),
                       ),
-                      DropdownMenuItem(value: 'arabic', child: Text('العربية')),
+                      DropdownMenuItem(
+                        value: 'arabic',
+                        child: Text(('العربية').tr),
+                      ),
                     ],
                     onChanged: (language) {
                       if (language != null) controller.changeLanguage(language);
@@ -407,7 +410,7 @@ class _SettingsTile extends StatelessWidget {
                 const SizedBox(width: 12),
                 Expanded(
                   child: Text(
-                    label,
+                    (label).tr,
                     maxLines: flexibleTrailing ? 1 : null,
                     overflow: flexibleTrailing ? TextOverflow.ellipsis : null,
                     style: AppTextStyle.titleSmallSemiBold.copyWith(
@@ -445,7 +448,7 @@ class _ReferEarnSection extends GetView<ProfileController> {
         Image.asset(AppAssets.referenceAndEarnImage),
         const SizedBox(height: 16),
         Obx(
-              () => Container(
+          () => Container(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
             decoration: BoxDecoration(
               color: Color(0xffF1F1F1),
@@ -459,7 +462,8 @@ class _ReferEarnSection extends GetView<ProfileController> {
               children: [
                 Flexible(
                   child: Text(
-                    '${'profile_referral_code'.tr}: ${controller.referralCode.value}',
+                    ('${'profile_referral_code'.tr}: ${controller.referralCode.value}')
+                        .tr,
                     style: AppTextStyle.titleSmallSemiBold.copyWith(
                       color: AppColor.blackShade1,
                     ),
@@ -471,7 +475,7 @@ class _ReferEarnSection extends GetView<ProfileController> {
                       Clipboard.setData(
                         ClipboardData(text: controller.referralCode.value),
                       ).then(
-                            (_) => AppSnackbar.show(
+                        (_) => AppSnackbar.show(
                           'profile_copied'.tr,
                           'profile_referral_copied'.tr,
                           duration: const Duration(seconds: 2),
@@ -487,7 +491,7 @@ class _ReferEarnSection extends GetView<ProfileController> {
             ),
           ),
         ),
-      ]
+      ],
     );
   }
 }

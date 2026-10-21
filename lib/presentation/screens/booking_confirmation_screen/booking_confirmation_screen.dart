@@ -29,7 +29,7 @@ class BookingConfirmationScreen extends StatelessWidget {
         backgroundColor: AppColor.blackColor,
         iconTheme: const IconThemeData(color: Colors.white),
         title: Text(
-          'Booking Confirmation',
+          "Booking Confirmation".tr,
           style: AppTextStyle.titleLargeBold.copyWith(color: Colors.white),
         ),
       ),
@@ -57,14 +57,15 @@ class BookingConfirmationScreen extends StatelessWidget {
             ),
             const SizedBox(height: 28),
             Text(
-              'Booking Confirmed!',
+              "Booking Confirmed!".tr,
               style: AppTextStyle.headlineLargeBold.copyWith(
                 color: AppColor.blackShade1,
               ),
             ),
             const SizedBox(height: 12),
             Text(
-              'Your booking has been confirmed and payment of \$${total.toStringAsFixed(0)} has been processed successfully.',
+              "Your booking has been confirmed and payment of \$@p0 has been processed successfully."
+                  .trParams({"p0": (total.toStringAsFixed(0)).toString()}),
               textAlign: TextAlign.center,
               style: AppTextStyle.bodyMediumRegular.copyWith(
                 color: AppColor.coolGrayText,
@@ -81,7 +82,7 @@ class BookingConfirmationScreen extends StatelessWidget {
                 border: Border.all(color: Color(0xff111111)),
               ),
               child: Text(
-                'Booking Service ID: SOS-1202',
+                "Booking Service ID: SOS-1202".tr,
                 textAlign: TextAlign.center,
                 style: AppTextStyle.titleSmallSemiBold.copyWith(
                   color: AppColor.blackShade1,
@@ -90,7 +91,7 @@ class BookingConfirmationScreen extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             Text(
-              'You will receive an update once a technician is assigned.',
+              "You will receive an update once a technician is assigned.".tr,
               textAlign: TextAlign.center,
               style: AppTextStyle.bodySmallRegular.copyWith(
                 color: AppColor.coolGrayText,
@@ -98,7 +99,7 @@ class BookingConfirmationScreen extends StatelessWidget {
             ),
             const Spacer(),
             CommonButton(
-              label: 'Back to Home',
+              label: "Back to Home".tr,
               onTap: () => Get.until(
                 (r) => r.settings.name == AppRoutes.dashboardScreen,
               ),
@@ -109,7 +110,7 @@ class BookingConfirmationScreen extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             CommonButton(
-              label: 'Track Booking →',
+              label: "Track Booking →".tr,
               onTap: () => Get.toNamed(
                 AppRoutes.bookingStatusScreen,
                 arguments: service,

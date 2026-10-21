@@ -214,15 +214,19 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
       borderRadius: widget.borderRadius,
       height: widget.height,
       borderWidth: widget.borderWidth,
-      textStyle: widget.textStyle ??
+      textStyle:
+          widget.textStyle ??
           AppTextStyle.titleSmallMedium.copyWith(color: AppColor.blackShade1),
-      hintStyle: widget.hintStyle ??
+      hintStyle:
+          widget.hintStyle ??
           AppTextStyle.titleSmallMedium.copyWith(color: AppColor.coolGrayText),
       readOnly: widget.readOnly,
       enabled: widget.enabled,
       // Prefix: custom widget takes priority over icon
       prefixWidget: widget.prefixWidget,
-      prefixIcon: widget.prefixWidget == null ? (widget.prefixIcon ?? Icons.search) : null,
+      prefixIcon: widget.prefixWidget == null
+          ? (widget.prefixIcon ?? Icons.search)
+          : null,
       // Suffix: clear button
       suffixIcon: (widget.showClearButton && _hasText && !widget.readOnly)
           ? _ClearButton(

@@ -60,7 +60,7 @@ class ProfileController extends GetxController {
       _applyUser(response.user);
       await session.update(response);
     } catch (_) {
-      _showRequestError('Unable to load your profile. Please try again.');
+      _showRequestError("Unable to load your profile. Please try again.".tr);
     } finally {
       isLoadingProfile.value = false;
     }
@@ -91,10 +91,11 @@ class ProfileController extends GetxController {
 
   Future<void> onDeleteAccount() async {
     final confirmed = await _showConfirmationDialog(
-      title: 'Delete account?',
+      title: "Delete account?".tr,
       message:
-          'Are you sure you want to delete this account? This action is irreversible.',
-      confirmLabel: 'Delete account',
+          "Are you sure you want to delete this account? This action is irreversible."
+              .tr,
+      confirmLabel: "profile_delete_account".tr,
     );
     if (!confirmed) return;
 
@@ -102,15 +103,15 @@ class ProfileController extends GetxController {
       await Get.find<DioClient>().delete(ApiEndpoints.me);
       await _clearLocalDataAndOpenOnboarding();
     } catch (_) {
-      _showRequestError('Unable to delete your account. Please try again.');
+      _showRequestError("Unable to delete your account. Please try again.".tr);
     }
   }
 
   Future<void> onLogout() async {
     final confirmed = await _showConfirmationDialog(
-      title: 'Logout?',
-      message: 'Are you sure you want to logout from this device?',
-      confirmLabel: 'Logout',
+      title: "Logout?".tr,
+      message: "Are you sure you want to logout from this device?".tr,
+      confirmLabel: "Logout".tr,
     );
     if (!confirmed) return;
 
@@ -125,7 +126,7 @@ class ProfileController extends GetxController {
       );
       await _clearLocalDataAndOpenOnboarding();
     } catch (_) {
-      _showRequestError('Unable to logout. Please try again.');
+      _showRequestError("Unable to logout. Please try again.".tr);
     }
   }
 
@@ -136,16 +137,16 @@ class ProfileController extends GetxController {
   }) async {
     final result = await Get.dialog<bool>(
       AlertDialog(
-        title: Text(title),
-        content: Text(message),
+        title: Text((title).tr),
+        content: Text((message).tr),
         actions: [
           TextButton(
             onPressed: () => Get.back(result: false),
-            child: const Text('Cancel'),
+            child: Text("Cancel".tr),
           ),
           FilledButton(
             onPressed: () => Get.back(result: true),
-            child: Text(confirmLabel),
+            child: Text((confirmLabel).tr),
           ),
         ],
       ),
@@ -165,7 +166,7 @@ class ProfileController extends GetxController {
 
   void _showRequestError(String message) {
     AppSnackbar.show(
-      'Request failed',
+      "Request failed".tr,
       message,
       duration: const Duration(seconds: 3),
     );

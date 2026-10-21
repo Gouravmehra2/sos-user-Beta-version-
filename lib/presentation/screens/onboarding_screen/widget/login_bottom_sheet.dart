@@ -44,7 +44,11 @@ class LoginBottomSheet extends StatelessWidget {
                 ),
 
                 // ── Logo ──────────────────────────────────────────────────────
-                Image.asset(AppAssets.appLogoIcon,height: 24,fit: BoxFit.cover,),
+                Image.asset(
+                  AppAssets.appLogoIcon,
+                  height: 24,
+                  fit: BoxFit.cover,
+                ),
 
                 SizedBox(height: gap),
 
@@ -117,17 +121,17 @@ class LoginBottomSheet extends StatelessWidget {
                   spacing: 20,
                   children: [
                     Expanded(
-                        child: Obx(
-                          () => SocialLoginButton(
-                            onTap: controller.handleAppleLogin,
-                            icon: Image.asset(AppAssets.appleImage, height: 20),
-                            backgroundColor: AppColor.shadowGrey,
-                            border: Border.all(color: Colors.transparent),
-                            isLoading: controller.isAppleLoading.value,
-                            enabled: !controller.isGoogleLoading.value,
-                          ),
+                      child: Obx(
+                        () => SocialLoginButton(
+                          onTap: controller.handleAppleLogin,
+                          icon: Image.asset(AppAssets.appleImage, height: 20),
+                          backgroundColor: AppColor.shadowGrey,
+                          border: Border.all(color: Colors.transparent),
+                          isLoading: controller.isAppleLoading.value,
+                          enabled: !controller.isGoogleLoading.value,
                         ),
                       ),
+                    ),
                     Expanded(
                       child: Obx(
                         () => SocialLoginButton(

@@ -49,7 +49,7 @@ class _OtpPanel extends StatelessWidget {
 
                 // ── Title — adapts to phone / email mode ───────────────────
                 Text(
-                  controller.titleText,
+                  (controller.titleText).tr,
                   style: const TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
@@ -60,7 +60,7 @@ class _OtpPanel extends StatelessWidget {
 
                 // ── Subtitle ───────────────────────────────────────────────
                 Text(
-                  controller.subtitleText,
+                  (controller.subtitleText).tr,
                   textAlign: TextAlign.center,
                   style: const TextStyle(
                     fontSize: 13,
@@ -97,11 +97,12 @@ class _OtpPanel extends StatelessWidget {
                   const SizedBox(height: 12),
                   Obx(
                     () => Text(
-                      controller.isCodeExpired
-                          ? 'reset_otp_expired'.tr
-                          : 'reset_otp_expires_in'.trArgs([
-                              controller.expiryCountdownText,
-                            ]),
+                      (controller.isCodeExpired
+                              ? 'reset_otp_expired'.tr
+                              : 'reset_otp_expires_in'.trArgs([
+                                  controller.expiryCountdownText,
+                                ]))
+                          .tr,
                       style: TextStyle(
                         fontSize: 13,
                         color: controller.isCodeExpired
@@ -156,11 +157,12 @@ class _OtpPanel extends StatelessWidget {
                                 ),
                               )
                             : Text(
-                                canResend
-                                    ? 'otp_resend'.tr
-                                    : 'otp_resend_countdown'.trArgs([
-                                        countdown,
-                                      ]),
+                                (canResend
+                                        ? 'otp_resend'.tr
+                                        : 'otp_resend_countdown'.trArgs([
+                                            countdown,
+                                          ]))
+                                    .tr,
                                 style: const TextStyle(
                                   fontSize: 13,
                                   fontWeight: FontWeight.w600,
@@ -177,7 +179,7 @@ class _OtpPanel extends StatelessWidget {
                 GestureDetector(
                   onTap: controller.handleChangeDestination,
                   child: Text(
-                    controller.changeLinkText,
+                    (controller.changeLinkText).tr,
                     style: const TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w600,

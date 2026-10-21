@@ -1,0 +1,3 @@
+"NSCameraUsageDescription" = "SquadOnSite utiliza la cámara para que puedas hacer una foto de perfil.";
+"NSLocationWhenInUseUsageDescription" = "SquadOnSite utiliza tu ubicación mientras usas la app para mostrar tu posición en el mapa y ayudarte a elegir la dirección de un servicio a domicilio.";
+"NSPhotoLibraryUsageDescription" = "SquadOnSite accede a las fotos que seleccionas para actualizar tu foto de perfil.";

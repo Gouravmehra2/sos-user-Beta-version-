@@ -1,3 +1,4 @@
+import 'package:squadonsite/core/services/apple_auth_flow.dart';
 import 'package:squadonsite/core/services/google_auth_flow.dart';
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +9,6 @@ import 'package:squadonsite/constant/routes/app_routes.dart';
 import 'package:squadonsite/auth/login_screen/model/login_screen_model.dart';
 import 'package:squadonsite/core/services/api_repo.dart';
 import 'package:squadonsite/core/services/auth_api_service.dart';
-import 'package:squadonsite/core/services/social_auth_service.dart';
 
 // ── Per-country digit lengths (national subscriber number, digits only) ──────
 // Values represent the expected digit count for a valid mobile number.
@@ -95,9 +95,9 @@ class LoginController extends GetxController {
   final RxString phoneError = ''.obs;
 
   final Rx<CountryCode> selectedCountry = CountryCode(
-    code: 'IN',
-    dialCode: '+91',
-    name: 'India',
+    code: 'US',
+    dialCode: '+1',
+    name: 'United States',
   ).obs;
 
   // Form key for validation
@@ -132,9 +132,12 @@ class LoginController extends GetxController {
 
     if (digits.length < lengths.min || digits.length > lengths.max) {
       final rangeText = lengths.min == lengths.max
-          ? '${lengths.min}-digit'
-          : '${lengths.min}–${lengths.max}-digit';
-      return 'Enter a valid $rangeText number for ${selectedCountry.value.name}';
+          ? '${lengths.min}'
+          : '${lengths.min}–${lengths.max}';
+      return 'Enter a valid @count-digit number for @country'.trParams({
+        'count': rangeText,
+        'country': (selectedCountry.value.name ?? '').tr,
+      });
     }
     return null;
   }
@@ -194,8 +197,8 @@ class LoginController extends GetxController {
 
       final response = await Get.find<ApiRepo>().login(request);
       if (response.accessToken.trim().isEmpty) {
-        throw const FormatException(
-          'The server did not return a login token. Please try again.',
+        throw FormatException(
+          "The server did not return a login token. Please try again.".tr,
         );
       }
       await Get.find<AuthSession>().update(response);
@@ -212,8 +215,6 @@ class LoginController extends GetxController {
 
   // ── Navigation / Social ────────────────────────────────────────────────────
 
-  final _socialAuth = Get.find<SocialAuthService>();
-
   final RxBool isAppleLoading = false.obs;
   final RxBool isGoogleLoading = false.obs;
 
@@ -224,15 +225,7 @@ class LoginController extends GetxController {
 
     isAppleLoading.value = true;
     try {
-      final result = await _socialAuth.signInWithApple();
-      result.fold(
-        onSuccess: (user) {
-          // TODO: send user.idToken to your backend, then navigate
-          debugPrint('[Login] Apple user: ${user.uid}');
-        },
-        onFailure: (msg) => AppSnackbar.show('sign_in_failed'.tr, msg),
-        onCancelled: () {},
-      );
+      await AppleAuthFlow.run();
     } finally {
       isAppleLoading.value = false;
     }

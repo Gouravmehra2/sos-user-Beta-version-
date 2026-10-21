@@ -52,7 +52,8 @@ class _PopularServicesCarouselState extends State<PopularServicesCarousel> {
         for (final service in services) {
           final painter = TextPainter(
             text: TextSpan(
-              text: service.name.isEmpty ? 'Home service' : service.name,
+              text:
+                  (service.name.isEmpty ? "Home service".tr : service.name).tr,
               style: const TextStyle(
                 fontSize: 18,
                 height: 1.3,
@@ -71,7 +72,7 @@ class _PopularServicesCarouselState extends State<PopularServicesCarousel> {
         for (final label in ['Book now', 'View details']) {
           final painter = TextPainter(
             text: TextSpan(
-              text: label,
+              text: (label).tr,
               style: Theme.of(
                 context,
               ).textTheme.labelLarge?.copyWith(fontSize: 14, height: 1.2),
@@ -189,8 +190,8 @@ class _ServiceCardState extends State<_ServiceCard> {
     } catch (_) {
       if (!mounted) return;
       AppSnackbar.show(
-        'Unable to load service',
-        'Unable to load this service. Please try again.',
+        "Unable to load service".tr,
+        "Unable to load this service. Please try again.".tr,
         mainButton: TextButton(
           style: TextButton.styleFrom(
             foregroundColor: Get.theme.brightness == Brightness.dark
@@ -200,7 +201,7 @@ class _ServiceCardState extends State<_ServiceCard> {
           onPressed: () {
             if (mounted) _open(book: book);
           },
-          child: const Text('Retry'),
+          child: Text("Retry".tr),
         ),
       );
     } finally {
@@ -273,7 +274,7 @@ class _ServiceCardState extends State<_ServiceCard> {
                           ),
                           const SizedBox(width: 4),
                           Text(
-                            service.rating.toStringAsFixed(1),
+                            (service.rating.toStringAsFixed(1)).tr,
                             style: const TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w700,
@@ -293,7 +294,8 @@ class _ServiceCardState extends State<_ServiceCard> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    service.name.isEmpty ? 'Home service' : service.name,
+                    (service.name.isEmpty ? "Home service".tr : service.name)
+                        .tr,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
@@ -323,7 +325,7 @@ class _ServiceCardState extends State<_ServiceCard> {
                         ),
                       ),
                       child: Text(
-                        _opening == 'book' ? 'Loading…' : 'Book now',
+                        (_opening == 'book' ? "Loading…".tr : "Book now".tr).tr,
                         style: const TextStyle(
                           fontSize: 14,
                           height: 1.2,
@@ -347,7 +349,10 @@ class _ServiceCardState extends State<_ServiceCard> {
                         ),
                       ),
                       child: Text(
-                        _opening == 'details' ? 'Loading…' : 'View details',
+                        (_opening == 'details'
+                                ? "Loading…".tr
+                                : "View details".tr)
+                            .tr,
                         style: const TextStyle(
                           fontSize: 14,
                           height: 1.2,

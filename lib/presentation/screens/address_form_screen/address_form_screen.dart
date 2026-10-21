@@ -40,7 +40,9 @@ class AddressFormScreen extends GetView<AddressFormController> {
     hintStyle: const TextStyle(color: Color(0xFF707074), fontSize: 15),
     validator: required
         ? CommonValidators.required(
-            message: 'Please enter ${hint.replaceAll(' *', '').toLowerCase()}',
+            message: "Please enter @p0".trParams({
+              "p0": (hint.replaceAll(' *', '').toLowerCase()).toString(),
+            }),
           )
         : null,
   );
@@ -58,8 +60,8 @@ class AddressFormScreen extends GetView<AddressFormController> {
             color: Colors.black,
             onPressed: controller.isSaving.value ? null : () => Get.back(),
           ),
-          title: const Text(
-            'Location Details',
+          title: Text(
+            "Location Details".tr,
             style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.w700,
@@ -142,7 +144,7 @@ class AddressFormScreen extends GetView<AddressFormController> {
                                                 ),
                                                 const SizedBox(width: 5),
                                                 Text(
-                                                  label.displayName,
+                                                  (label.displayName).tr,
                                                   style: TextStyle(
                                                     fontSize: 14,
                                                     fontWeight: FontWeight.w600,
@@ -184,7 +186,8 @@ class AddressFormScreen extends GetView<AddressFormController> {
                                   bottom: 8,
                                 ),
                                 child: Text(
-                                  'Building and floor details are saved separately and won’t move the map pin.',
+                                  "Building and floor details are saved separately and won’t move the map pin."
+                                      .tr,
                                   style: TextStyle(
                                     color: Color(0xFF707074),
                                     fontSize: 12,
@@ -207,9 +210,11 @@ class AddressFormScreen extends GetView<AddressFormController> {
                                         minHeight: 52,
                                       ),
                                       child: Text(
-                                        controller.area.value.isEmpty
-                                            ? 'Search on the map or enter the address below'
-                                            : controller.area.value,
+                                        (controller.area.value.isEmpty
+                                                ? "Search on the map or enter the address below"
+                                                      .tr
+                                                : controller.area.value)
+                                            .tr,
                                         style: const TextStyle(
                                           color: Color(0xFF99999D),
                                           fontSize: 15,
@@ -251,8 +256,8 @@ class AddressFormScreen extends GetView<AddressFormController> {
                             if (controller.checkoutMode)
                               CheckboxListTile(
                                 contentPadding: EdgeInsets.zero,
-                                title: const Text(
-                                  'Save this address to my profile',
+                                title: Text(
+                                  "Save this address to my profile".tr,
                                 ),
                                 value: controller.saveToProfile.value,
                                 onChanged: (value) =>
@@ -264,9 +269,10 @@ class AddressFormScreen extends GetView<AddressFormController> {
                               SwitchListTile(
                                 contentPadding: EdgeInsets.zero,
                                 title: Text(
-                                  controller.isOriginallyDefault
-                                      ? 'Default address'
-                                      : 'Set as default address',
+                                  (controller.isOriginallyDefault
+                                          ? "Default address".tr
+                                          : "Set as default address".tr)
+                                      .tr,
                                 ),
                                 value: controller.isDefault.value,
                                 onChanged: controller.isOriginallyDefault
@@ -276,7 +282,7 @@ class AddressFormScreen extends GetView<AddressFormController> {
                               ),
                             if (controller.saveError.value.isNotEmpty)
                               Text(
-                                controller.saveError.value,
+                                (controller.saveError.value).tr,
                                 style: const TextStyle(color: Colors.red),
                               ),
                           ],
@@ -287,10 +293,10 @@ class AddressFormScreen extends GetView<AddressFormController> {
                   const SizedBox(height: 24),
                   CommonButton(
                     label: controller.checkoutMode
-                        ? 'Use this address'
+                        ? "Use this address".tr
                         : controller.isEditMode
-                        ? 'Update Address'
-                        : 'Save Address',
+                        ? "Update Address".tr
+                        : "Save Address".tr,
                     onTap: controller.isSaving.value
                         ? null
                         : controller.saveAddress,
@@ -317,7 +323,7 @@ class _MapChange extends StatelessWidget {
   Widget build(BuildContext context) {
     return Semantics(
       button: true,
-      label: 'Change map location',
+      label: "Change map location".tr,
       child: InkWell(
         onTap: controller.changeLocation,
         borderRadius: BorderRadius.circular(14),
@@ -333,12 +339,12 @@ class _MapChange extends StatelessWidget {
                   color: AddressFormScreen.background,
                   child: SizedBox.expand(),
                 ),
-                const Column(
+                Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Icon(Icons.location_on, size: 35, color: Colors.black),
                     Text(
-                      'Change',
+                      "Change".tr,
                       style: TextStyle(
                         color: Colors.black,
                         fontWeight: FontWeight.w700,

@@ -54,10 +54,8 @@ class PaginationInfo {
         candidate['totalPages'] ?? candidate['pages'] ?? candidate['lastPage'],
       );
       if (totalPages != null) {
-        final currentPage = _number(
-              candidate['currentPage'] ?? candidate['page'],
-            ) ??
-            page;
+        final currentPage =
+            _number(candidate['currentPage'] ?? candidate['page']) ?? page;
         return PaginationInfo(
           page: page,
           limit: limit,

@@ -36,7 +36,7 @@ class ServiceReviewScreen extends GetView<ServiceReviewController> {
             ),
             const SizedBox(height: 24),
             Text(
-              'Service Completed!',
+              "Service Completed!".tr,
               style: AppTextStyle.headlineLargeBold.copyWith(
                 color: AppColor.blackShade1,
                 fontSize: 26,
@@ -44,7 +44,8 @@ class ServiceReviewScreen extends GetView<ServiceReviewController> {
             ),
             const SizedBox(height: 12),
             Text(
-              'Thank you for choosing 1APP Services. We SquadOnSite technicians are always up for you.',
+              "Thank you for choosing SOS Services. We SquadOnSite technicians are always up for you."
+                  .tr,
               textAlign: TextAlign.center,
               style: AppTextStyle.bodyMediumRegular.copyWith(
                 color: AppColor.coolGrayText,
@@ -53,7 +54,7 @@ class ServiceReviewScreen extends GetView<ServiceReviewController> {
             ),
             const Divider(height: 40),
             Text(
-              'Rate Your Experience',
+              "Rate Your Experience".tr,
               style: AppTextStyle.titleLargeBold.copyWith(
                 color: AppColor.blackShade1,
                 fontSize: 20,
@@ -61,7 +62,7 @@ class ServiceReviewScreen extends GetView<ServiceReviewController> {
             ),
             const SizedBox(height: 12),
             Text(
-              'How was your experience with Michael Johnson?',
+              "How was your experience with Michael Johnson?".tr,
               textAlign: TextAlign.center,
               style: AppTextStyle.titleSmallSemiBold.copyWith(
                 color: AppColor.blackShade1,
@@ -92,7 +93,7 @@ class ServiceReviewScreen extends GetView<ServiceReviewController> {
             const SizedBox(height: 8),
             Obx(
               () => Text(
-                controller.ratingLabel,
+                (controller.ratingLabel).tr,
                 style: AppTextStyle.bodyMediumRegular.copyWith(
                   color: AppColor.coolGrayText,
                 ),
@@ -105,13 +106,13 @@ class ServiceReviewScreen extends GetView<ServiceReviewController> {
                 text: TextSpan(
                   children: [
                     TextSpan(
-                      text: 'Write a Review ',
+                      text: "Write a Review ".tr,
                       style: AppTextStyle.titleSmallSemiBold.copyWith(
                         color: AppColor.blackShade1,
                       ),
                     ),
                     TextSpan(
-                      text: '(Optional)',
+                      text: "(Optional)".tr,
                       style: AppTextStyle.bodySmallRegular.copyWith(
                         color: AppColor.coolGrayText,
                       ),
@@ -133,7 +134,7 @@ class ServiceReviewScreen extends GetView<ServiceReviewController> {
                 decoration: InputDecoration(
                   border: InputBorder.none,
                   contentPadding: const EdgeInsets.all(14),
-                  hintText: 'Write your review here...',
+                  hintText: "Write your review here...".tr,
                   hintStyle: AppTextStyle.bodySmallRegular.copyWith(
                     color: AppColor.coolGrayText,
                   ),
@@ -145,7 +146,7 @@ class ServiceReviewScreen extends GetView<ServiceReviewController> {
             ),
             const SizedBox(height: 24),
             CommonButton(
-              label: 'Submit a Review',
+              label: "Submit a Review".tr,
               onTap: controller.submitReview,
               backgroundColor: AppColor.blackColor,
               foregroundColor: Colors.white,

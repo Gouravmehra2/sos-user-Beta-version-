@@ -124,10 +124,10 @@ class _EmailLoginPanel extends StatelessWidget {
                         thickness: 1,
                       ),
                     ),
-                    const Padding(
+                    Padding(
                       padding: EdgeInsets.symmetric(horizontal: 12),
                       child: Text(
-                        'or',
+                        ('or').tr,
                         style: TextStyle(
                           fontSize: 13,
                           color: AppColor.coolGrayText,

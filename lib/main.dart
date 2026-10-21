@@ -15,6 +15,7 @@ import 'package:squadonsite/core/services/firebase_notification_service.dart';
 import 'package:squadonsite/core/services/language_service.dart';
 import 'package:squadonsite/core/services/social_auth_service.dart';
 import 'package:squadonsite/translations/app_translations.dart';
+import 'package:country_code_picker/country_code_picker.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -156,7 +157,10 @@ class MyApp extends StatelessWidget {
         // ── Localisation ──────────────────────────────────────────────────────
         translations: AppTranslations(),
         supportedLocales: LanguageService.supportedLocales,
-        localizationsDelegates: GlobalMaterialLocalizations.delegates,
+        localizationsDelegates: const [
+          ...GlobalMaterialLocalizations.delegates,
+          CountryLocalizations.delegate,
+        ],
         locale: Get.find<LanguageService>().locale,
         fallbackLocale: const Locale('en', 'US'),
       ),

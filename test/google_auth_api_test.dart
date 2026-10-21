@@ -38,14 +38,14 @@ class _Client implements DioClient {
 
 void main() {
   test(
-    'Google login sends Firebase identity and current FCM, returns app tokens',
+    'Google login sends Google OAuth access token and current FCM, returns app tokens',
     () async {
       final client = _Client();
       final repo = ApiRepo(client, getFcmToken: () async => 'push-token');
-      final result = await repo.googleLogin('firebase-identity');
+      final result = await repo.googleLogin('google-oauth-access');
       expect(client.path, ApiEndpoints.googleLogin);
       expect(client.payload, {
-        'firebaseIdToken': 'firebase-identity',
+        'accessToken': 'google-oauth-access',
         'fcmToken': 'push-token',
       });
       expect(result.accessToken, 'app-access');
@@ -60,12 +60,12 @@ void main() {
       getFcmToken: () async => throw StateError('push unavailable'),
     );
     expect((await repo.googleLogin('identity')).success, isTrue);
-    expect(client.payload['firebaseIdToken'], 'identity');
+    expect(client.payload['accessToken'], 'identity');
     expect(client.payload, isNot(contains('fcmToken')));
   });
 
   test(
-    'Google auth rejects a blank Firebase token before making a request',
+    'Google auth rejects a blank Google access token before making a request',
     () async {
       final client = _Client();
       final repo = ApiRepo(client);
@@ -99,24 +99,21 @@ void main() {
     );
   }
 
-  test(
-    'Google signup uses backend verified identity and sends only Firebase token',
-    () async {
-      final client = _Client()
-        ..body = {
-          'success': true,
-          'data': {'name': 'Verified Name', 'email': 'verified@example.com'},
-        };
-      final repo = ApiRepo(client, getFcmToken: () async => 'push');
-      final identity = await repo.googleSignup('identity');
-      expect(client.path, ApiEndpoints.googleSignup);
-      expect(client.payload, {'firebaseIdToken': 'identity'});
-      expect(identity, (name: 'Verified Name', email: 'verified@example.com'));
-    },
-  );
+  test('Google signup sends only the Google OAuth access token', () async {
+    final client = _Client()
+      ..body = {
+        'success': true,
+        'data': {'name': 'Verified Name', 'email': 'verified@example.com'},
+      };
+    final repo = ApiRepo(client, getFcmToken: () async => 'push');
+    final identity = await repo.googleSignup('identity');
+    expect(client.path, ApiEndpoints.googleSignup);
+    expect(client.payload, {'accessToken': 'identity'});
+    expect(identity, (name: 'Verified Name', email: 'verified@example.com'));
+  });
 
   test(
-    'Google signup accepts verified identity fields without a success flag',
+    'Google signup accepts Google account fields without a success flag',
     () async {
       final client = _Client()
         ..body = {'name': 'Verified Name', 'email': 'verified@example.com'};
@@ -125,7 +122,7 @@ void main() {
     },
   );
 
-  test('Google signup rejects missing verified email', () async {
+  test('Google signup rejects missing Google email', () async {
     final client = _Client()
       ..body = {
         'success': true,
@@ -137,14 +134,31 @@ void main() {
     );
   });
 
+  for (final name in [null, '', '  ']) {
+    test(
+      'Google signup allows missing name ($name) for form completion',
+      () async {
+        final client = _Client()
+          ..body = {
+            'success': true,
+            'data': {
+              'email': 'customer@gmail.com',
+              'name': ?name,
+            },
+          };
+        final details = await ApiRepo(
+          client,
+        ).googleSignup('oauth-access-token');
+        expect(details, (name: '', email: 'customer@gmail.com'));
+        expect(client.payload, {'accessToken': 'oauth-access-token'});
+      },
+    );
+  }
+
   for (final body in [
     {
       'success': false,
       'data': {'name': 'Name', 'email': 'verified@example.com'},
-    },
-    {
-      'success': true,
-      'data': {'name': '  ', 'email': 'verified@example.com'},
     },
   ]) {
     test(

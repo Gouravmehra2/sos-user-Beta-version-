@@ -91,7 +91,7 @@ class MapController extends GetxController {
       update();
     } catch (e) {
       AppSnackbar.show(
-        'Location Error',
+        "Location Error".tr,
         e.toString(),
         margin: const EdgeInsets.all(16),
       );
@@ -106,8 +106,8 @@ class MapController extends GetxController {
     final pos = selectedPosition.value;
     if (pos == null) {
       AppSnackbar.show(
-        'No Location',
-        'Please select a location on the map.',
+        "No Location".tr,
+        "Please select a location on the map.".tr,
         margin: const EdgeInsets.all(16),
       );
       return;
@@ -128,7 +128,7 @@ class MapController extends GetxController {
       Marker(
         markerId: const MarkerId('selected'),
         position: pos,
-        infoWindow: const InfoWindow(title: 'Selected Location'),
+        infoWindow: InfoWindow(title: "map_selected_location_label".tr),
       ),
     };
   }

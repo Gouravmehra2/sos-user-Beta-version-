@@ -19,7 +19,7 @@ class PersonalInformationScreen extends StatelessWidget {
         backgroundColor: AppColor.blackColor,
         iconTheme: const IconThemeData(color: Colors.white),
         title: Text(
-          'Edit Profile',
+          "Edit Profile".tr,
           style: AppTextStyle.titleLargeBold.copyWith(color: Colors.white),
         ),
       ),
@@ -41,8 +41,8 @@ class PersonalInformationScreen extends StatelessWidget {
                     _SectionCard(
                       children: [
                         CommonTextFormField(
-                          label: 'Full Name',
-                          hintText: 'Full Name',
+                          label: "Full Name".tr,
+                          hintText: "Full Name".tr,
                           prefixIcon: Icons.person_outline,
                           controller: controller.nameController,
                           borderRadius: 10,
@@ -50,8 +50,8 @@ class PersonalInformationScreen extends StatelessWidget {
                         ),
                         const SizedBox(height: 16),
                         CommonTextFormField(
-                          label: 'Phone Number',
-                          hintText: 'Phone Number',
+                          label: "login_hint_phone".tr,
+                          hintText: "login_hint_phone".tr,
                           prefixIcon: Icons.phone_outlined,
                           controller: controller.phoneController,
                           readOnly: true,
@@ -61,15 +61,15 @@ class PersonalInformationScreen extends StatelessWidget {
                         ),
                         const SizedBox(height: 16),
                         CommonTextFormField.email(
-                          label: 'Email Address',
-                          hintText: 'Email Address',
+                          label: "Email Address".tr,
+                          hintText: "Email Address".tr,
                           controller: controller.emailController,
                           backgroundColor: AppColor.lightGreyColor,
                           borderRadius: 10,
                           validator: controller.validateEmail,
                         ),
                         const SizedBox(height: 16),
-                        const _FieldLabel(label: 'Gender'),
+                        _FieldLabel(label: "Gender".tr),
                         const SizedBox(height: 6),
                         Obx(
                           () => _DropdownField(
@@ -83,12 +83,12 @@ class PersonalInformationScreen extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 16),
-                        const _FieldLabel(label: 'Date of Birth'),
+                        _FieldLabel(label: "Date of Birth".tr),
                         const SizedBox(height: 6),
                         Obx(
                           () => CommonTextFormField(
                             hintText: controller.dob.value.isEmpty
-                                ? 'Select date of birth'
+                                ? "Select date of birth".tr
                                 : controller.dob.value,
                             prefixIcon: Icons.calendar_today_outlined,
                             readOnly: true,
@@ -115,7 +115,7 @@ class PersonalInformationScreen extends StatelessWidget {
                         ),
                         const SizedBox(width: 8),
                         Text(
-                          'Additional Contact',
+                          "Additional Contact".tr,
                           style: AppTextStyle.headlineSmallSemiBold.copyWith(
                             color: AppColor.blackShade1,
                           ),
@@ -126,7 +126,7 @@ class PersonalInformationScreen extends StatelessWidget {
                     _SectionCard(
                       children: [
                         Text(
-                          'Alternative Phone',
+                          "Alternative Phone".tr,
                           style: AppTextStyle.bodyMediumRegular.copyWith(
                             color: AppColor.coolGrayText,
                           ),
@@ -136,14 +136,14 @@ class PersonalInformationScreen extends StatelessWidget {
                           children: [
                             CommonCountryCodePicker(
                               onChanged: controller.onCountryChanged,
-                              initialSelection: 'IN',
+                              initialSelection: 'US',
                               height: 52,
                               borderRadius: 12,
                             ),
                             const SizedBox(width: 8),
                             Expanded(
                               child: CommonTextFormField(
-                                hintText: '10-digit phone number',
+                                hintText: "10-digit phone number".tr,
                                 keyboardType: TextInputType.phone,
                                 controller: controller.altPhoneController,
                                 borderRadius: 12,
@@ -159,8 +159,8 @@ class PersonalInformationScreen extends StatelessWidget {
                     const SizedBox(height: 32),
                     CommonButton(
                       label: controller.isSaving.value
-                          ? 'Saving...'
-                          : 'Save Profile',
+                          ? "Saving...".tr
+                          : "Save Profile".tr,
                       onTap: controller.saveProfile,
                       backgroundColor: AppColor.blackColor,
                     ),
@@ -231,9 +231,10 @@ class _ProfileAvatar extends StatelessWidget {
           InkWell(
             onTap: controller.pickProfileImage,
             child: Text(
-              controller.isUploadingImage.value
-                  ? 'Uploading...'
-                  : 'Change Picture',
+              (controller.isUploadingImage.value
+                      ? "Uploading...".tr
+                      : "Change Picture".tr)
+                  .tr,
               style: AppTextStyle.titleSmallSemiBold.copyWith(
                 color: AppColor.blackColor,
               ),
@@ -287,7 +288,7 @@ class _FieldLabel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Text(
-    label,
+    (label).tr,
     style: AppTextStyle.titleSmallSemiBold.copyWith(
       color: AppColor.blackShade1,
     ),
@@ -328,7 +329,7 @@ class _DropdownField extends StatelessWidget {
               child: DropdownButton<String>(
                 value: value,
                 hint: Text(
-                  'Select gender',
+                  "Select gender".tr,
                   style: AppTextStyle.titleSmallMedium.copyWith(
                     color: AppColor.coolGrayText,
                   ),
@@ -344,7 +345,7 @@ class _DropdownField extends StatelessWidget {
                 items: items
                     .map(
                       (item) =>
-                          DropdownMenuItem(value: item, child: Text(item)),
+                          DropdownMenuItem(value: item, child: Text((item).tr)),
                     )
                     .toList(),
                 onChanged: onChanged,

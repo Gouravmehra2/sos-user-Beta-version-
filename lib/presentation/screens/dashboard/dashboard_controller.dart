@@ -14,12 +14,12 @@ class DashboardController extends GetxController {
 
   final List<BottomNavItemModel> bottomList = [
     BottomNavItemModel(
-      label: "Home",
+      label: "nav_home",
       filledIcon: AppAssets.filledHomeIcon,
       outlineIcon: AppAssets.outlinedHomeIcon,
     ),
     BottomNavItemModel(
-      label: "Services",
+      label: "nav_services",
       filledIcon: AppAssets.filledServiceIcon,
       outlineIcon: AppAssets.outlinedServiceIcon,
     ),
@@ -29,12 +29,12 @@ class DashboardController extends GetxController {
       pulseWhenInactive: true,
     ),
     BottomNavItemModel(
-      label: "Bookings",
+      label: "nav_bookings",
       filledIcon: AppAssets.filledCalendarIcon,
       outlineIcon: AppAssets.outlinedCalendarIcon,
     ),
     BottomNavItemModel(
-      label: "Profile",
+      label: "nav_profile",
       filledIcon: AppAssets.filledPersonIcon,
       outlineIcon: AppAssets.outlinedPersonIcon,
     ),

@@ -1,3 +1,4 @@
+import 'package:get/get.dart' hide Response;
 import 'package:flutter/material.dart';
 import 'package:squadonsite/constant/app_color/app_color.dart';
 import 'package:squadonsite/constant/app_text_style/app_text_style.dart';
@@ -366,7 +367,7 @@ class _LabelRow extends StatelessWidget {
           SizedBox(width: leadingSpacing),
         ],
         Flexible(
-          child: Text(label, style: style, textAlign: TextAlign.center),
+          child: Text((label).tr, style: style, textAlign: TextAlign.center),
         ),
         if (trailingIcon != null) ...[
           SizedBox(width: trailingSpacing),

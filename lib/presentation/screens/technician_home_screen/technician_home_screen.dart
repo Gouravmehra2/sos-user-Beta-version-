@@ -31,13 +31,13 @@ class TechnicianHomeScreen extends StatelessWidget {
                 const SizedBox(width: 12),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
+                  children: [
                     Text(
-                      'Good morning,',
+                      "Good morning,".tr,
                       style: TextStyle(fontSize: 12, color: Color(0xFF6B7280)),
                     ),
                     Text(
-                      'Murli',
+                      ('Murli').tr,
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w700,
@@ -81,9 +81,9 @@ class TechnicianHomeScreen extends StatelessWidget {
                       children: [
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: const [
+                          children: [
                             Text(
-                              'Availability',
+                              "Availability".tr,
                               style: TextStyle(
                                 color: Colors.white70,
                                 fontSize: 12,
@@ -91,7 +91,7 @@ class TechnicianHomeScreen extends StatelessWidget {
                             ),
                             SizedBox(height: 6),
                             Text(
-                              'Ready for jobs',
+                              "Ready for jobs".tr,
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 22,
@@ -130,8 +130,8 @@ class TechnicianHomeScreen extends StatelessWidget {
                     },
                   ),
                   const SizedBox(height: 20),
-                  const Text(
-                    'Quick actions',
+                  Text(
+                    "Quick actions".tr,
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w700,
@@ -182,7 +182,7 @@ class TechnicianHomeScreen extends StatelessWidget {
                                 ),
                                 const SizedBox(height: 8),
                                 Text(
-                                  action.title,
+                                  (action.title).tr,
                                   style: const TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.w600,
@@ -199,9 +199,9 @@ class TechnicianHomeScreen extends StatelessWidget {
                   const SizedBox(height: 20),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: const [
+                    children: [
                       Text(
-                        'Today jobs',
+                        "Today jobs".tr,
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w700,
@@ -209,7 +209,7 @@ class TechnicianHomeScreen extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        'View all',
+                        "View all".tr,
                         style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w600,
@@ -263,7 +263,7 @@ class TechnicianHomeScreen extends StatelessWidget {
                                     children: [
                                       Expanded(
                                         child: Text(
-                                          job.serviceName,
+                                          (job.serviceName).tr,
                                           style: const TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.w700,
@@ -272,7 +272,7 @@ class TechnicianHomeScreen extends StatelessWidget {
                                         ),
                                       ),
                                       Text(
-                                        job.amount,
+                                        (job.amount).tr,
                                         style: const TextStyle(
                                           fontSize: 14,
                                           fontWeight: FontWeight.w700,
@@ -283,7 +283,7 @@ class TechnicianHomeScreen extends StatelessWidget {
                                   ),
                                   const SizedBox(height: 4),
                                   Text(
-                                    job.customerName,
+                                    (job.customerName).tr,
                                     style: const TextStyle(
                                       fontSize: 13,
                                       color: Color(0xFF6B7280),
@@ -299,7 +299,7 @@ class TechnicianHomeScreen extends StatelessWidget {
                                       ),
                                       const SizedBox(width: 4),
                                       Text(
-                                        job.time,
+                                        (job.time).tr,
                                         style: const TextStyle(
                                           fontSize: 12,
                                           color: Color(0xFF6B7280),
@@ -314,7 +314,7 @@ class TechnicianHomeScreen extends StatelessWidget {
                                       const SizedBox(width: 4),
                                       Expanded(
                                         child: Text(
-                                          job.location,
+                                          (job.location).tr,
                                           style: const TextStyle(
                                             fontSize: 12,
                                             color: Color(0xFF6B7280),

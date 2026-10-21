@@ -18,7 +18,7 @@ class EmailSupportScreen extends GetView<EmailSupportController> {
         backgroundColor: AppColor.blackColor,
         iconTheme: const IconThemeData(color: Colors.white),
         title: Text(
-          'Email Support',
+          "Email Support".tr,
           style: AppTextStyle.titleLargeBold.copyWith(color: Colors.white),
         ),
       ),
@@ -42,7 +42,7 @@ class EmailSupportScreen extends GetView<EmailSupportController> {
             ),
             const SizedBox(height: 16),
             Text(
-              'How can we help?',
+              "How can we help?".tr,
               style: AppTextStyle.headlineLargeBold.copyWith(
                 color: AppColor.blackShade1,
                 fontSize: 24,
@@ -50,7 +50,8 @@ class EmailSupportScreen extends GetView<EmailSupportController> {
             ),
             const SizedBox(height: 8),
             Text(
-              'Our dedicated support team typically responds within 24 hours to ensure your 1App experience is seamless.',
+              "Our dedicated support team typically responds within 24 hours to ensure your SOS experience is seamless."
+                  .tr,
               textAlign: TextAlign.center,
               style: AppTextStyle.bodyMediumRegular.copyWith(
                 color: AppColor.coolGrayText,
@@ -76,13 +77,13 @@ class EmailSupportScreen extends GetView<EmailSupportController> {
                     const SizedBox(height: 6),
                     CommonTextFormField(
                       controller: controller.subjectController,
-                      hintText: 'e.g. Booking inquiry or Technical issue',
+                      hintText: "e.g. Booking inquiry or Technical issue".tr,
                       borderRadius: 10,
                       borderColor: AppColor.blackColor.withValues(alpha: 0.4),
                       focusedBorderColor: AppColor.blackColor,
                       backgroundColor: const Color(0xFFFAF7F4),
                       validator: CommonValidators.required(
-                        message: 'Subject is required',
+                        message: "Subject is required".tr,
                       ),
                     ),
                     const SizedBox(height: 14),
@@ -90,7 +91,7 @@ class EmailSupportScreen extends GetView<EmailSupportController> {
                     const SizedBox(height: 6),
                     CommonTextFormField(
                       controller: controller.orderIdController,
-                      hintText: 'e.g. #ORD-77291',
+                      hintText: "e.g. #ORD-77291".tr,
                       borderRadius: 10,
                       borderColor: AppColor.blackColor.withValues(alpha: 0.4),
                       focusedBorderColor: AppColor.blackColor,
@@ -102,7 +103,8 @@ class EmailSupportScreen extends GetView<EmailSupportController> {
                     CommonTextFormField(
                       controller: controller.descriptionController,
                       hintText:
-                          'Please provide as much detail as possible so our experts can assist you effectively...',
+                          "Please provide as much detail as possible so our experts can assist you effectively..."
+                              .tr,
                       maxLines: 5,
                       minLines: 5,
                       borderRadius: 10,
@@ -110,7 +112,7 @@ class EmailSupportScreen extends GetView<EmailSupportController> {
                       focusedBorderColor: AppColor.blackColor,
                       backgroundColor: const Color(0xFFFAF7F4),
                       validator: CommonValidators.required(
-                        message: 'Description is required',
+                        message: "Description is required".tr,
                       ),
                     ),
                     const SizedBox(height: 14),
@@ -139,7 +141,7 @@ class EmailSupportScreen extends GetView<EmailSupportController> {
                             ),
                             const SizedBox(width: 8),
                             Text(
-                              'Attach screenshots or relevant files',
+                              "Attach screenshots or relevant files".tr,
                               style: AppTextStyle.bodySmallMedium.copyWith(
                                 color: AppColor.coolGrayText,
                               ),
@@ -151,7 +153,7 @@ class EmailSupportScreen extends GetView<EmailSupportController> {
                     const SizedBox(height: 16),
 
                     CommonButton(
-                      label: 'Send Message',
+                      label: "Send Message".tr,
                       onTap: controller.onSendMessage,
                       backgroundColor: AppColor.blackColor,
                       foregroundColor: Colors.white,
@@ -170,15 +172,15 @@ class EmailSupportScreen extends GetView<EmailSupportController> {
             // Bottom options
             _BottomOptionTile(
               icon: Icons.menu_book_outlined,
-              title: 'Knowledge Base',
-              subtitle: 'Browse our FAQ and guides for instant answers.',
+              title: "Knowledge Base".tr,
+              subtitle: "Browse our FAQ and guides for instant answers.".tr,
               onTap: controller.onKnowledgeBase,
             ),
             const SizedBox(height: 12),
             _BottomOptionTile(
               icon: Icons.chat_bubble_outline_rounded,
-              title: 'Live Chat',
-              subtitle: 'Available Mon-Fri from 9am to 6pm PST.',
+              title: "Live Chat".tr,
+              subtitle: "Available Mon-Fri from 9am to 6pm PST.".tr,
               onTap: controller.onLiveChat,
             ),
           ],
@@ -195,7 +197,7 @@ class _FieldLabel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(
-      label,
+      (label).tr,
       style: AppTextStyle.bodyMediumMedium.copyWith(
         color: AppColor.blackColor,
         fontWeight: FontWeight.w600,
@@ -245,14 +247,14 @@ class _BottomOptionTile extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    title,
+                    (title).tr,
                     style: AppTextStyle.titleSmallSemiBold.copyWith(
                       color: AppColor.blackShade1,
                     ),
                   ),
                   const SizedBox(height: 2),
                   Text(
-                    subtitle,
+                    (subtitle).tr,
                     style: AppTextStyle.bodySmallRegular.copyWith(
                       color: AppColor.coolGrayText,
                       height: 1.4,

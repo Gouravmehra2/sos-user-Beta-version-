@@ -21,7 +21,7 @@ class TermsConditionsScreen extends GetView<TermsConditionsController> {
   @override
   Widget build(BuildContext context) => PolicyDocumentView(
     controller: controller,
-    title: 'Terms & Conditions',
+    title: "profile_settings_terms".tr,
     icon: Icons.gavel_outlined,
   );
 }

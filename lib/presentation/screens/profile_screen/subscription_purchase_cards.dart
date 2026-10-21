@@ -34,13 +34,13 @@ class SubscriptionPurchaseCards extends StatelessWidget {
           const SizedBox(height: 12),
         ],
         if (error.isNotEmpty) ...[
-          const Text(
-            'Unable to refresh your purchases. Please try again.',
+          Text(
+            "Unable to refresh your purchases. Please try again.".tr,
             style: TextStyle(color: Colors.black54),
           ),
           TextButton(
             onPressed: controller.refreshHistory,
-            child: const Text('Retry'),
+            child: Text("Retry".tr),
           ),
         ],
         if (purchases.isEmpty)
@@ -55,11 +55,12 @@ class SubscriptionPurchaseCards extends StatelessWidget {
                 ),
                 const SizedBox(height: 12),
                 Text(
-                  loading
-                      ? 'Loading your plans…'
-                      : error.isNotEmpty
-                      ? 'Purchases unavailable'
-                      : 'Your next plan starts here',
+                  (loading
+                          ? "Loading your plans…".tr
+                          : error.isNotEmpty
+                          ? "Purchases unavailable".tr
+                          : "Your next plan starts here".tr)
+                      .tr,
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 24,
@@ -68,11 +69,13 @@ class SubscriptionPurchaseCards extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  loading
-                      ? 'Fetching your purchase details.'
-                      : error.isNotEmpty
-                      ? 'Your purchase details could not be loaded.'
-                      : 'Your purchased plans and coverage details will appear here.',
+                  (loading
+                          ? "Fetching your purchase details.".tr
+                          : error.isNotEmpty
+                          ? "Your purchase details could not be loaded.".tr
+                          : "Your purchased plans and coverage details will appear here."
+                                .tr)
+                      .tr,
                   style: const TextStyle(color: Colors.white70, height: 1.5),
                 ),
                 if (!loading && error.isEmpty) ...[
@@ -86,7 +89,7 @@ class SubscriptionPurchaseCards extends StatelessWidget {
                       var dashboardController = Get.put(DashboardController());
                       dashboardController.changeIndex(index: 2);
                     },
-                    child: const Text('Explore plans'),
+                    child: Text("Explore plans".tr),
                   ),
                 ],
               ],
@@ -131,7 +134,7 @@ class _PurchaseCard extends StatelessWidget {
               border: Border.all(color: Colors.white24),
             ),
             child: Text(
-              purchase.status.replaceAll('_', ' ').toUpperCase(),
+              (purchase.status.replaceAll('_', ' ').toUpperCase()).tr,
               style: const TextStyle(
                 color: Colors.white,
                 fontSize: 11,
@@ -142,7 +145,7 @@ class _PurchaseCard extends StatelessWidget {
           ),
           const SizedBox(height: 10),
           Text(
-            purchase.name,
+            (purchase.name).tr,
             style: const TextStyle(
               color: Colors.white,
               fontSize: 24,
@@ -152,12 +155,12 @@ class _PurchaseCard extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            purchase.paidAt != null ? 'Amount paid' : 'Plan price',
+            (purchase.paidAt != null ? "Amount paid".tr : "Plan price".tr).tr,
             style: const TextStyle(color: Colors.white60, fontSize: 12),
           ),
           const SizedBox(height: 4),
           Text(
-            amount,
+            (amount).tr,
             style: const TextStyle(
               color: Colors.white,
               fontSize: 24,
@@ -183,8 +186,8 @@ class _PurchaseCard extends StatelessWidget {
           // ],
           if (pending) ...[
             const SizedBox(height: 12),
-            const Text(
-              'Payment awaiting verification. Coverage is not active yet.',
+            Text(
+              "Payment awaiting verification. Coverage is not active yet.".tr,
               style: TextStyle(color: Colors.white70, height: 1.5),
             ),
           ],
@@ -207,10 +210,13 @@ class _PurchaseCard extends StatelessWidget {
     crossAxisAlignment: CrossAxisAlignment.start,
     mainAxisSize: MainAxisSize.min,
     children: [
-      Text(label, style: const TextStyle(color: Colors.white60, fontSize: 12)),
+      Text(
+        (label).tr,
+        style: const TextStyle(color: Colors.white60, fontSize: 12),
+      ),
       const SizedBox(height: 3),
       Text(
-        value,
+        (value).tr,
         style: const TextStyle(
           color: Colors.white,
           fontWeight: FontWeight.w500,

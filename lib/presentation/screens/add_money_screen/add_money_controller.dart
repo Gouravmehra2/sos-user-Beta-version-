@@ -23,17 +23,17 @@ class AddMoneyController extends GetxController {
   final paymentMethods = [
     PaymentMethod(
       name: 'UPI / GPay',
-      subtitle: 'Instant Settlement',
+      subtitle: "Instant Settlement".tr,
       icon: Icons.account_balance_wallet_outlined,
     ),
     PaymentMethod(
       name: 'Visa Card •••• 4492',
-      subtitle: 'Expires 12/26',
+      subtitle: "Expires 12/26".tr,
       icon: Icons.credit_card,
     ),
     PaymentMethod(
       name: 'Mastercard •••• 8810',
-      subtitle: 'Expires 05/25',
+      subtitle: "Expires 05/25".tr,
       icon: Icons.credit_card,
     ),
   ];
@@ -46,10 +46,13 @@ class AddMoneyController extends GetxController {
   void proceedToPay() {
     final amount = int.tryParse(amountController.text);
     if (amount == null || amount <= 0) {
-      AppSnackbar.show('Error', 'Please enter a valid amount');
+      AppSnackbar.show("Error".tr, "Please enter a valid amount".tr);
       return;
     }
-    AppSnackbar.show('Success', 'Processing payment of \$$amount');
+    AppSnackbar.show(
+      "Success".tr,
+      "Processing payment of \$@p0".trParams({"p0": (amount).toString()}),
+    );
   }
 
   @override

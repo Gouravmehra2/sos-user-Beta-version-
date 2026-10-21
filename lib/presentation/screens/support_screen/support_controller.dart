@@ -27,21 +27,21 @@ class SupportController extends GetxController {
     options = [
       SupportOption(
         icon: Icons.chat_bubble_outline_rounded,
-        title: 'Chat with Us',
-        subtitle: 'Instantly chat with our support team',
+        title: "Chat with Us".tr,
+        subtitle: "Instantly chat with our support team".tr,
         onTap: () => Get.toNamed(AppRoutes.chatSupportScreen),
       ),
       SupportOption(
         icon: Icons.phone_outlined,
-        title: 'Call Support',
-        subtitle: 'Talk to our support team',
+        title: "Call Support".tr,
+        subtitle: "Talk to our support team".tr,
         badge: 'Average wait ~ 2 mins',
         onTap: () => Get.toNamed(AppRoutes.callSupportScreen),
       ),
       SupportOption(
         icon: Icons.mail_outline_rounded,
-        title: 'Email Support',
-        subtitle: "Send us an email and we'll reply",
+        title: "Email Support".tr,
+        subtitle: "Send us an email and we'll reply".tr,
         badge: 'Reply in 24 hours',
         onTap: () => Get.toNamed(AppRoutes.emailSupportScreen),
       ),

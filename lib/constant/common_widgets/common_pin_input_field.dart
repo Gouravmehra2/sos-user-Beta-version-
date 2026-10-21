@@ -1,3 +1,4 @@
+import 'package:get/get.dart' hide Response;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:squadonsite/constant/app_color/app_color.dart';
@@ -328,7 +329,7 @@ class _CommonPinInputFieldState extends State<CommonPinInputField> {
               Padding(
                 padding: const EdgeInsets.only(top: 8),
                 child: Text(
-                  field.errorText!,
+                  (field.errorText!).tr,
                   style: AppTextStyle.bodySmallRegular.copyWith(
                     color: Colors.red.shade600,
                   ),
@@ -405,7 +406,9 @@ class _PinCell extends StatelessWidget {
             inputFormatters: [FilteringTextInputFormatter.digitsOnly],
             onChanged: onChanged,
             decoration: InputDecoration(
-              border: OutlineInputBorder(borderRadius: BorderRadius.circular(30)),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(30),
+              ),
               counterText: '',
               isDense: true,
               // contentPadding: EdgeInsets.zero,

@@ -61,7 +61,7 @@ class _ForgotPasswordPanel extends StatelessWidget {
 
                 // ── Subtitle — adapts to phone / email mode ────────────────
                 Text(
-                  controller.subtitleText,
+                  (controller.subtitleText).tr,
                   textAlign: TextAlign.center,
                   style: const TextStyle(
                     fontSize: 13,
@@ -95,7 +95,7 @@ class _ForgotPasswordPanel extends StatelessWidget {
                         CommonCountryCodePicker(
                           onChanged: controller.onCountryChanged,
                           initialSelection:
-                              controller.selectedCountry.value.code ?? 'IN',
+                              controller.selectedCountry.value.code ?? 'US',
                           backgroundColor: Colors.white,
                           borderColor: AppColor.lightGreyColor,
                         ),

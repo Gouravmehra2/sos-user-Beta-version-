@@ -20,7 +20,7 @@ class HomeServicesScreen extends GetView<HomeServicesController> {
           backgroundColor: AppColor.blackColor,
           iconTheme: const IconThemeData(color: Colors.white),
           title: Text(
-            controller.appBarTitle,
+            (controller.appBarTitle).tr,
             style: AppTextStyle.titleLargeBold.copyWith(color: Colors.white),
           ),
           actions: [
@@ -43,9 +43,10 @@ class HomeServicesScreen extends GetView<HomeServicesController> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Text(
-                  controller.selectedTabIndex.value == 0
-                      ? 'Explore by Services'
-                      : 'Explore by Category',
+                  (controller.selectedTabIndex.value == 0
+                          ? "Explore by Services".tr
+                          : "Explore by Category".tr)
+                      .tr,
                   style: AppTextStyle.headlineSmallSemiBold.copyWith(
                     color: AppColor.blackShade1,
                     fontSize: 22,
@@ -62,7 +63,7 @@ class HomeServicesScreen extends GetView<HomeServicesController> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Text(
-                    'Popular Services',
+                    "home_section_popular_services".tr,
                     style: AppTextStyle.headlineSmallSemiBold.copyWith(
                       color: AppColor.blackShade1,
                       fontSize: 22,
@@ -111,7 +112,7 @@ class _TabBar extends StatelessWidget {
                 ),
               ),
               child: Text(
-                controller.tabs[i],
+                (controller.tabs[i]).tr,
                 style: AppTextStyle.bodyMediumMedium.copyWith(
                   color: selected ? Colors.white : AppColor.blackShade1,
                   fontWeight: FontWeight.w600,
@@ -157,7 +158,7 @@ class _HeroBannerCard extends StatelessWidget {
                     _buildHighlightTitle(banner.title, highlight)
                   else
                     Text(
-                      banner.title,
+                      (banner.title).tr,
                       style: AppTextStyle.titleLargeBold.copyWith(
                         color: AppColor.blackShade1,
                         fontSize: 18,
@@ -166,7 +167,7 @@ class _HeroBannerCard extends StatelessWidget {
                     ),
                   const SizedBox(height: 6),
                   Text(
-                    banner.subtitle,
+                    (banner.subtitle).tr,
                     style: AppTextStyle.bodySmallRegular.copyWith(
                       color: AppColor.coolGrayText,
                       height: 1.4,
@@ -186,7 +187,7 @@ class _HeroBannerCard extends StatelessWidget {
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Text(
-                          'Book Now',
+                          "home_offer_book_now".tr,
                           style: AppTextStyle.buttonSmall.copyWith(
                             color: Colors.white,
                           ),
@@ -226,12 +227,12 @@ class _HeroBannerCard extends StatelessWidget {
           height: 1.3,
         ),
         children: [
-          TextSpan(text: parts[0]),
+          TextSpan(text: (parts[0]).tr),
           TextSpan(
-            text: highlight,
+            text: (highlight).tr,
             style: TextStyle(color: AppColor.blackColor),
           ),
-          if (parts.length > 1) TextSpan(text: parts[1]),
+          if (parts.length > 1) TextSpan(text: (parts[1]).tr),
         ],
       ),
     );
@@ -286,7 +287,7 @@ class _CategoryGrid extends StatelessWidget {
                       Icon(cat.icon, color: AppColor.blackColor, size: 32),
                       const SizedBox(height: 6),
                       Text(
-                        cat.label,
+                        (cat.label).tr,
                         textAlign: TextAlign.center,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
@@ -319,7 +320,7 @@ class _CategoryGrid extends StatelessWidget {
                     ),
                     const SizedBox(width: 4),
                     Text(
-                      'View Less',
+                      "View Less".tr,
                       style: AppTextStyle.bodySmallMedium.copyWith(
                         color: AppColor.blackColor,
                       ),
@@ -375,7 +376,7 @@ class _PromoBanner extends StatelessWidget {
                       ),
                       const SizedBox(width: 4),
                       Text(
-                        'LIMITED TIME OFFER',
+                        "LIMITED TIME OFFER".tr,
                         style: AppTextStyle.labelSmallMedium.copyWith(
                           color: AppColor.blackColor,
                           fontSize: 10,
@@ -395,9 +396,9 @@ class _PromoBanner extends StatelessWidget {
                       height: 1.2,
                     ),
                     children: [
-                      const TextSpan(text: 'Home Revamp\n'),
+                      TextSpan(text: "Home Revamp\n".tr),
                       TextSpan(
-                        text: 'Special',
+                        text: "Special".tr,
                         style: TextStyle(color: AppColor.blackColor),
                       ),
                     ],
@@ -405,7 +406,8 @@ class _PromoBanner extends StatelessWidget {
                 ),
                 const SizedBox(height: 6),
                 Text(
-                  'Give your home a fresh new look\nwith our expert painting services.',
+                  "Give your home a fresh new look\nwith our expert painting services."
+                      .tr,
                   style: AppTextStyle.bodySmallRegular.copyWith(
                     color: AppColor.coolGrayText,
                     height: 1.4,
@@ -419,7 +421,7 @@ class _PromoBanner extends StatelessWidget {
                       text: TextSpan(
                         children: [
                           TextSpan(
-                            text: '20',
+                            text: ('20').tr,
                             style: AppTextStyle.headlineLargeBold.copyWith(
                               color: AppColor.blackShade1,
                               fontSize: 28,
@@ -427,7 +429,7 @@ class _PromoBanner extends StatelessWidget {
                             ),
                           ),
                           TextSpan(
-                            text: '%\nOFF',
+                            text: "%\nOFF".tr,
                             style: AppTextStyle.labelSmallMedium.copyWith(
                               color: AppColor.blackShade1,
                               fontSize: 11,
@@ -452,7 +454,7 @@ class _PromoBanner extends StatelessWidget {
                           color: AppColor.blackColor,
                         ),
                         Text(
-                          'ON PAINTING\nSERVICES',
+                          "ON PAINTING\nSERVICES".tr,
                           style: AppTextStyle.labelSmallMedium.copyWith(
                             color: AppColor.blackShade1,
                             fontSize: 10,
@@ -482,14 +484,14 @@ class _PromoBanner extends StatelessWidget {
                             color: AppColor.blackColor,
                           ),
                           Text(
-                            'VALID TILL',
+                            "VALID TILL".tr,
                             style: AppTextStyle.labelSmallRegular.copyWith(
                               fontSize: 8,
                               color: AppColor.coolGrayText,
                             ),
                           ),
                           Text(
-                            'TONIGHT\nONLY!',
+                            "TONIGHT\nONLY!".tr,
                             textAlign: TextAlign.center,
                             style: AppTextStyle.labelSmallMedium.copyWith(
                               fontSize: 10,
@@ -518,7 +520,7 @@ class _PromoBanner extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
-                          'Book Now',
+                          "home_offer_book_now".tr,
                           style: AppTextStyle.buttonSmall.copyWith(
                             color: Colors.white,
                           ),
@@ -551,7 +553,7 @@ class _PromoBanner extends StatelessWidget {
                 ),
                 const SizedBox(width: 4),
                 Text(
-                  'Offer ends at 11:59 PM',
+                  "Offer ends at 11:59 PM".tr,
                   style: AppTextStyle.bodySmallRegular.copyWith(
                     color: AppColor.coolGrayText,
                     fontSize: 12,
@@ -624,7 +626,7 @@ class _PopularServiceTile extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    service.name,
+                    (service.name).tr,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: AppTextStyle.titleSmallSemiBold.copyWith(
@@ -635,14 +637,14 @@ class _PopularServiceTile extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    'Starting From',
+                    "Starting From".tr,
                     style: AppTextStyle.bodySmallRegular.copyWith(
                       color: AppColor.coolGrayText,
                       fontSize: 11,
                     ),
                   ),
                   Text(
-                    '\$${service.offerPrice}',
+                    ('\$${service.offerPrice}').tr,
                     style: AppTextStyle.titleSmallSemiBold.copyWith(
                       color: AppColor.blackColor,
                       fontSize: 16,
@@ -659,7 +661,10 @@ class _PopularServiceTile extends StatelessWidget {
                       ),
                       const SizedBox(width: 2),
                       Text(
-                        '${service.ratingsAverage} (${service.ratingsQuantity} Reviews)',
+                        "@p0 (@p1 Reviews)".trParams({
+                          "p0": (service.ratingsAverage).toString(),
+                          "p1": (service.ratingsQuantity).toString(),
+                        }),
                         style: AppTextStyle.bodySmallRegular.copyWith(
                           color: AppColor.coolGrayText,
                           fontSize: 11,
@@ -678,7 +683,7 @@ class _PopularServiceTile extends StatelessWidget {
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Text(
-                        'BOOK NOW',
+                        "BOOK NOW".tr,
                         textAlign: TextAlign.center,
                         style: AppTextStyle.buttonSmall.copyWith(
                           color: Colors.white,

@@ -22,7 +22,7 @@ const _invoiceJson = <String, dynamic>{
       'paymentStatus': 'Paid',
       'currency': 'USD',
       'company': {
-        'name': 'OneApp',
+        'name': 'SOS',
         'website': 'www.1app.com',
         'email': 'support@1app.com',
         'phone': '+1 (253) 3667 557',

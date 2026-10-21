@@ -164,7 +164,7 @@ class FirebaseNotificationService {
             body['success'] != true ||
             body['data'] is! Map ||
             body['data']['booking'] is! Map) {
-          throw const FormatException('Invalid booking response');
+          throw FormatException("Invalid booking response".tr);
         }
         final booking = BookingHistoryItem.fromJson(
           Map<String, dynamic>.from(body['data']['booking']),
@@ -272,10 +272,10 @@ class FirebaseNotificationService {
           AndroidFlutterLocalNotificationsPlugin
         >()
         ?.createNotificationChannel(
-          const AndroidNotificationChannel(
+          AndroidNotificationChannel(
             'squadonsite_fcm_channel',
-            'SquadOnSite Notifications',
-            description: 'Notifications from the SquadOnSite app',
+            "SquadOnSite Notifications".tr,
+            description: "Notifications from the SquadOnSite app".tr,
             importance: Importance.max,
           ),
         );

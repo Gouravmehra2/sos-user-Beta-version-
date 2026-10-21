@@ -1,3 +1,4 @@
+import 'package:get/get.dart' hide Response;
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:squadonsite/constant/app_text_style/app_text_style.dart';
@@ -164,7 +165,7 @@ class _AnimatedBottomNavItemState extends State<AnimatedBottomNavItem>
                             children: [
                               const SizedBox(width: 8),
                               Text(
-                                widget.item.label,
+                                (widget.item.label).tr,
                                 style: AppTextStyle.buttonMedium.copyWith(
                                   color: Colors.black,
                                   fontWeight: FontWeight.bold,

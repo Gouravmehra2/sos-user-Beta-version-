@@ -172,7 +172,7 @@ class _SearchField extends StatelessWidget {
           ),
           decoration: InputDecoration(
             isDense: true,
-            hintText: 'Search address on map…',
+            hintText: "Search address on map…".tr,
             hintStyle: AppTextStyle.bodyMediumRegular.copyWith(
               color: AppColor.coolGrayText,
             ),
@@ -254,7 +254,7 @@ class _AutocompleteDropdown extends StatelessWidget {
                                     ),
                                   ),
                                 Text(
-                                  controller.searchMessage.value,
+                                  (controller.searchMessage.value).tr,
                                   style: AppTextStyle.bodySmallRegular.copyWith(
                                     color: AppColor.coolGrayText,
                                   ),
@@ -262,11 +262,11 @@ class _AutocompleteDropdown extends StatelessWidget {
                                 if (controller.searchError.value)
                                   TextButton(
                                     onPressed: controller.retrySearch,
-                                    child: const Text('Retry'),
+                                    child: Text("Retry".tr),
                                   ),
                                 TextButton(
                                   onPressed: controller.enterAddressManually,
-                                  child: const Text('Enter address manually'),
+                                  child: Text("Enter address manually".tr),
                                 ),
                               ],
                             ),
@@ -282,14 +282,14 @@ class _AutocompleteDropdown extends StatelessWidget {
                               return ListTile(
                                 leading: const Icon(Icons.location_on_outlined),
                                 title: Text(
-                                  prediction.mainText,
+                                  (prediction.mainText).tr,
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                 ),
                                 subtitle: prediction.secondaryText.isEmpty
                                     ? null
                                     : Text(
-                                        prediction.secondaryText,
+                                        (prediction.secondaryText).tr,
                                         maxLines: 2,
                                         overflow: TextOverflow.ellipsis,
                                       ),
@@ -302,10 +302,10 @@ class _AutocompleteDropdown extends StatelessWidget {
                             },
                           ),
                   ),
-                  const Padding(
+                  Padding(
                     padding: EdgeInsets.fromLTRB(12, 10, 12, 8),
                     child: Text(
-                      'Google Maps',
+                      ('Google Maps').tr,
                       textAlign: TextAlign.right,
                       maxLines: 1,
                       style: TextStyle(
@@ -342,7 +342,7 @@ class _CurrentLocationFab extends StatelessWidget {
       child: Obx(
         () => FloatingActionButton.extended(
           heroTag: 'map-current-location',
-          label: const Text('Use current location'),
+          label: Text("Use current location".tr),
           icon: controller.isLocating.value
               ? const SizedBox(
                   width: 18,
@@ -379,13 +379,13 @@ class _MapZoomControls extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             IconButton(
-              tooltip: 'Zoom in',
+              tooltip: "Zoom in".tr,
               onPressed: controller.zoomIn,
               icon: const Icon(Icons.add_rounded),
             ),
             const Divider(height: 1),
             IconButton(
-              tooltip: 'Zoom out',
+              tooltip: "Zoom out".tr,
               onPressed: controller.zoomOut,
               icon: const Icon(Icons.remove_rounded),
             ),
@@ -448,9 +448,11 @@ class _BottomCard extends StatelessWidget {
 
             if (result.display.isEmpty) {
               return Text(
-                controller.geocodeError.value.isEmpty
-                    ? 'Zoom in and move the map so the pin marks your exact entrance.'
-                    : controller.geocodeError.value,
+                (controller.geocodeError.value.isEmpty
+                        ? "Zoom in and move the map so the pin marks your exact entrance."
+                              .tr
+                        : controller.geocodeError.value)
+                    .tr,
                 style: AppTextStyle.bodyMediumRegular.copyWith(
                   color: AppColor.coolGrayText,
                 ),
@@ -469,7 +471,7 @@ class _BottomCard extends StatelessWidget {
                     ),
                     const SizedBox(width: 6),
                     Text(
-                      'Selected Location',
+                      "map_selected_location_label".tr,
                       style: AppTextStyle.labelMediumSemiBold.copyWith(
                         color: AppColor.coolGrayText,
                         letterSpacing: 0.8,
@@ -479,7 +481,7 @@ class _BottomCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 6),
                 Text(
-                  result.display,
+                  (result.display).tr,
                   style: AppTextStyle.titleSmallSemiBold.copyWith(
                     color: AppColor.blackShade1,
                     height: 1.4,
@@ -490,11 +492,11 @@ class _BottomCard extends StatelessWidget {
                 if (result.city.isNotEmpty || result.zipcode.isNotEmpty) ...[
                   const SizedBox(height: 4),
                   Text(
-                    [
+                    ([
                       result.city,
                       result.state,
                       result.zipcode,
-                    ].where((s) => s.isNotEmpty).join(', '),
+                    ].where((s) => s.isNotEmpty).join(', ')).tr,
                     style: AppTextStyle.bodySmallRegular.copyWith(
                       color: AppColor.coolGrayText,
                     ),
@@ -510,7 +512,7 @@ class _BottomCard extends StatelessWidget {
                 : Column(
                     children: [
                       Text(
-                        controller.geocodeError.value,
+                        (controller.geocodeError.value).tr,
                         style: AppTextStyle.bodySmallRegular.copyWith(
                           color: Colors.red,
                         ),
@@ -519,12 +521,12 @@ class _BottomCard extends StatelessWidget {
                         children: [
                           TextButton(
                             onPressed: controller.retryGeocode,
-                            child: const Text('Retry'),
+                            child: Text("Retry".tr),
                           ),
                           if (controller.geocodeResult.value.display.isNotEmpty)
                             TextButton(
                               onPressed: controller.restorePreviousLocation,
-                              child: const Text('Use previous location'),
+                              child: Text("Use previous location".tr),
                             ),
                         ],
                       ),
@@ -533,14 +535,14 @@ class _BottomCard extends StatelessWidget {
           ),
           TextButton(
             onPressed: controller.enterAddressManually,
-            child: const Text('Enter address manually'),
+            child: Text("Enter address manually".tr),
           ),
           const SizedBox(height: 8),
 
           // ── Confirm button ─────────────────────────────────────────────
           Obx(
             () => CommonButton(
-              label: 'Confirm Location',
+              label: "select_location_confirm_btn".tr,
               onTap: controller.canConfirm
                   ? controller.onConfirmLocation
                   : null,

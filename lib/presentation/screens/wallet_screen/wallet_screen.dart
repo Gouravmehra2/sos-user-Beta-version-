@@ -16,7 +16,7 @@ class WalletScreen extends GetView<WalletController> {
         backgroundColor: AppColor.blackColor,
         iconTheme: const IconThemeData(color: Colors.white),
         title: Text(
-          'Wallet Payment',
+          "Wallet Payment".tr,
           style: AppTextStyle.titleLargeBold.copyWith(color: Colors.white),
         ),
       ),
@@ -61,7 +61,7 @@ class _BalanceCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'CURRENT BALANCE',
+                "CURRENT BALANCE".tr,
                 style: AppTextStyle.labelSmallRegular.copyWith(
                   color: Colors.white54,
                   letterSpacing: 1.2,
@@ -76,14 +76,14 @@ class _BalanceCard extends StatelessWidget {
                   text: TextSpan(
                     children: [
                       TextSpan(
-                        text: '\$${parts[0]}',
+                        text: ('\$${parts[0]}').tr,
                         style: AppTextStyle.displayLargeBold.copyWith(
                           color: Colors.white,
                           fontSize: 40,
                         ),
                       ),
                       TextSpan(
-                        text: '.${parts[1]}',
+                        text: ('.${parts[1]}').tr,
                         style: AppTextStyle.headlineSmallSemiBold.copyWith(
                           color: Colors.white70,
                         ),
@@ -110,7 +110,7 @@ class _BalanceCard extends StatelessWidget {
                       const Icon(Icons.add, color: Colors.white, size: 18),
                       const SizedBox(width: 6),
                       Text(
-                        'Add Money',
+                        "Add Money".tr,
                         style: AppTextStyle.titleSmallSemiBold.copyWith(
                           color: Colors.white,
                         ),
@@ -139,13 +139,13 @@ class _TransactionsSection extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              'Wallet Transactions',
+              "Wallet Transactions".tr,
               style: AppTextStyle.titleMediumSemiBold.copyWith(
                 color: AppColor.blackColor,
               ),
             ),
             Text(
-              'View All',
+              "home_view_all".tr,
               style: AppTextStyle.titleSmallSemiBold.copyWith(
                 color: AppColor.blackColor,
               ),
@@ -191,14 +191,14 @@ class _TransactionTile extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  tx['title'],
+                  (tx['title']).tr,
                   style: AppTextStyle.titleSmallSemiBold.copyWith(
                     color: AppColor.blackShade1,
                   ),
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  tx['sub'],
+                  (tx['sub']).tr,
                   style: AppTextStyle.bodySmallRegular.copyWith(
                     color: AppColor.coolGrayText,
                   ),
@@ -207,7 +207,7 @@ class _TransactionTile extends StatelessWidget {
             ),
           ),
           Text(
-            tx['amount'],
+            (tx['amount']).tr,
             style: AppTextStyle.titleSmallSemiBold.copyWith(
               color: isCredit ? AppColor.green2Color : Colors.red,
             ),
@@ -226,16 +226,16 @@ class _FeatureCards extends StatelessWidget {
         Expanded(
           child: _FeatureCard(
             icon: Icons.verified_user_outlined,
-            title: '100% Secure',
-            subtitle: 'Your money is safe with us',
+            title: "100% Secure".tr,
+            subtitle: "Your money is safe with us".tr,
           ),
         ),
         const SizedBox(width: 12),
         Expanded(
           child: _FeatureCard(
             icon: Icons.history,
-            title: 'Instant Refunds',
-            subtitle: 'Refunds are credited instantly',
+            title: "Instant Refunds".tr,
+            subtitle: "Refunds are credited instantly".tr,
           ),
         ),
       ],
@@ -275,14 +275,14 @@ class _FeatureCard extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           Text(
-            title,
+            (title).tr,
             style: AppTextStyle.titleSmallSemiBold.copyWith(
               color: AppColor.blackShade1,
             ),
           ),
           const SizedBox(height: 4),
           Text(
-            subtitle,
+            (subtitle).tr,
             style: AppTextStyle.bodySmallRegular.copyWith(
               color: AppColor.coolGrayText,
             ),

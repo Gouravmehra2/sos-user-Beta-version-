@@ -17,7 +17,7 @@ class ChatSupportScreen extends GetView<ChatSupportController> {
         backgroundColor: AppColor.blackColor,
         iconTheme: const IconThemeData(color: Colors.white),
         title: Text(
-          'Chat Support',
+          "Chat Support".tr,
           style: AppTextStyle.titleLargeBold.copyWith(color: Colors.white),
         ),
       ),
@@ -45,7 +45,7 @@ class ChatSupportScreen extends GetView<ChatSupportController> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Support Agent',
+                      "Support Agent".tr,
                       style: AppTextStyle.titleSmallSemiBold.copyWith(
                         color: AppColor.blackShade1,
                       ),
@@ -63,9 +63,9 @@ class ChatSupportScreen extends GetView<ChatSupportController> {
                 controller: controller.scrollController,
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 itemCount:
-                  controller.messages.length +
-                  2 +
-                  (controller.isLoadingMore.value ? 1 : 0),
+                    controller.messages.length +
+                    2 +
+                    (controller.isLoadingMore.value ? 1 : 0),
                 itemBuilder: (context, index) {
                   if (index == 0) {
                     return Center(
@@ -80,7 +80,7 @@ class ChatSupportScreen extends GetView<ChatSupportController> {
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: Text(
-                          'Today, 10:24 AM',
+                          "Today, 10:24 AM".tr,
                           style: AppTextStyle.bodySmallRegular.copyWith(
                             color: AppColor.coolGrayText,
                           ),
@@ -103,7 +103,7 @@ class ChatSupportScreen extends GetView<ChatSupportController> {
                   }
                   if (index ==
                       controller.messages.length +
-                      (controller.isLoadingMore.value ? 2 : 1)) {
+                          (controller.isLoadingMore.value ? 2 : 1)) {
                     return Obx(
                       () => controller.isAgentTyping.value
                           ? _TypingBubble()
@@ -174,7 +174,7 @@ class ChatSupportScreen extends GetView<ChatSupportController> {
                   child: TextField(
                     controller: controller.messageController,
                     decoration: InputDecoration(
-                      hintText: 'Type a message...',
+                      hintText: "Type a message...".tr,
                       hintStyle: AppTextStyle.bodyMediumRegular.copyWith(
                         color: AppColor.coolGrayText,
                       ),
@@ -241,7 +241,7 @@ class _MessageBubble extends StatelessWidget {
               radius: 14,
               backgroundColor: AppColor.blackColor,
               child: Text(
-                '1A',
+                ('1A').tr,
                 style: AppTextStyle.labelSmallMedium.copyWith(
                   color: Colors.white,
                   fontSize: 9,
@@ -274,7 +274,7 @@ class _MessageBubble extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        message.text,
+                        (message.text).tr,
                         style: AppTextStyle.bodyMediumRegular.copyWith(
                           color: isUser ? Colors.white : AppColor.blackShade1,
                           height: 1.5,
@@ -297,7 +297,7 @@ class _MessageBubble extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  message.time,
+                  (message.time).tr,
                   style: AppTextStyle.bodySmallRegular.copyWith(
                     color: AppColor.coolGrayText,
                     fontSize: 11,
@@ -437,7 +437,7 @@ class _FullScreenImageViewerState extends State<_FullScreenImageViewer> {
               top: 8,
               right: 8,
               child: IconButton(
-                tooltip: 'Close image',
+                tooltip: "Close image".tr,
                 onPressed: () => Navigator.of(context).pop(),
                 icon: const Icon(Icons.close, color: Colors.white),
               ),
@@ -471,14 +471,17 @@ class _MediaErrorView extends StatelessWidget {
           Icon(Icons.broken_image_outlined, color: foregroundColor),
           const SizedBox(height: 6),
           Text(
-            onRetry == null ? '$label unavailable' : 'Could not load $label',
+            (onRetry == null
+                    ? "@p0 unavailable".trParams({"p0": (label).toString()})
+                    : "Could not load @p0".trParams({"p0": (label).toString()}))
+                .tr,
             textAlign: TextAlign.center,
             style: TextStyle(color: foregroundColor, fontSize: 12),
           ),
           if (onRetry != null)
             TextButton(
               onPressed: onRetry,
-              child: Text('Retry', style: TextStyle(color: foregroundColor)),
+              child: Text("Retry".tr, style: TextStyle(color: foregroundColor)),
             ),
         ],
       ),
@@ -496,7 +499,7 @@ class _VideoPreview extends StatelessWidget {
     if (uri == null ||
         !['http', 'https'].contains(uri.scheme) ||
         uri.host.isEmpty) {
-      return const _MediaErrorView(label: 'Video', onRetry: null);
+      return _MediaErrorView(label: "Video".tr, onRetry: null);
     }
     return InkWell(
       onTap: () => showDialog<void>(
@@ -621,8 +624,8 @@ class _FullScreenVideoViewerState extends State<_FullScreenVideoViewer>
                                     children: [
                                       IconButton(
                                         tooltip: value.isPlaying
-                                            ? 'Pause'
-                                            : 'Play',
+                                            ? "Pause".tr
+                                            : "Play".tr,
                                         onPressed: () {
                                           value.isPlaying
                                               ? controller.pause()
@@ -636,7 +639,8 @@ class _FullScreenVideoViewerState extends State<_FullScreenVideoViewer>
                                         ),
                                       ),
                                       Text(
-                                        '${_formatDuration(value.position)} / ${_formatDuration(value.duration)}',
+                                        ('${_formatDuration(value.position)} / ${_formatDuration(value.duration)}')
+                                            .tr,
                                         style: const TextStyle(
                                           color: Colors.white,
                                           fontSize: 12,
@@ -657,7 +661,7 @@ class _FullScreenVideoViewerState extends State<_FullScreenVideoViewer>
                           : _MediaErrorView(
                               foregroundColor: Colors.white,
                               onRetry: _isValidUrl ? _retry : null,
-                              label: 'Video',
+                              label: "Video".tr,
                             ),
                     ),
             ),
@@ -665,7 +669,7 @@ class _FullScreenVideoViewerState extends State<_FullScreenVideoViewer>
               top: 8,
               right: 8,
               child: IconButton(
-                tooltip: 'Close video',
+                tooltip: "Close video".tr,
                 onPressed: () => Navigator.of(context).pop(),
                 icon: const Icon(Icons.close, color: Colors.white),
               ),
@@ -708,7 +712,7 @@ class _TypingBubble extends StatelessWidget {
             radius: 14,
             backgroundColor: AppColor.blackColor,
             child: Text(
-              '1A',
+              ('1A').tr,
               style: AppTextStyle.labelSmallMedium.copyWith(
                 color: Colors.white,
                 fontSize: 9,

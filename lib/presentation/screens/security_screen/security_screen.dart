@@ -16,7 +16,7 @@ class SecurityScreen extends GetView<SecurityController> {
         backgroundColor: AppColor.blackColor,
         iconTheme: const IconThemeData(color: Colors.white),
         title: Text(
-          'Security',
+          "profile_settings_security".tr,
           style: AppTextStyle.titleLargeBold.copyWith(color: Colors.white),
         ),
       ),
@@ -30,7 +30,7 @@ class SecurityScreen extends GetView<SecurityController> {
             children: [
               _SecurityTile(
                 icon: Icons.lock_outline,
-                title: 'Change Password',
+                title: "Change Password".tr,
                 trailing: const Icon(
                   Icons.chevron_right,
                   color: AppColor.coolGrayText,
@@ -41,7 +41,7 @@ class SecurityScreen extends GetView<SecurityController> {
               _SecurityDivider(),
               _SecurityTile(
                 icon: Icons.dialpad,
-                title: 'Security PIN',
+                title: "Security PIN".tr,
                 trailing: const Icon(
                   Icons.chevron_right,
                   color: AppColor.coolGrayText,
@@ -60,19 +60,23 @@ class SecurityScreen extends GetView<SecurityController> {
             headerTitle: 'Verification',
             children: [
               Obx(
-                    () => _SecurityTile(
+                () => _SecurityTile(
                   icon: Icons.smartphone_outlined,
-                  title: 'Mobile Verification',
-                  trailing: _VerifiedBadge(isVerified: controller.isMobileVerified.value),
+                  title: "Mobile Verification".tr,
+                  trailing: _VerifiedBadge(
+                    isVerified: controller.isMobileVerified.value,
+                  ),
                   onTap: () {},
                 ),
               ),
               _SecurityDivider(),
               Obx(
-                    () => _SecurityTile(
+                () => _SecurityTile(
                   icon: Icons.mail_outline,
-                  title: 'Email Verification',
-                  trailing: _VerifiedBadge(isVerified: controller.isEmailVerified.value),
+                  title: "Email Verification".tr,
+                  trailing: _VerifiedBadge(
+                    isVerified: controller.isEmailVerified.value,
+                  ),
                   onTap: () {},
                 ),
               ),
@@ -88,7 +92,7 @@ class SecurityScreen extends GetView<SecurityController> {
             children: [
               _SecurityTile(
                 icon: Icons.smartphone_outlined,
-                title: 'Current Device',
+                title: "Current Device".tr,
                 subtitle: controller.currentDevice,
                 trailing: const Icon(
                   Icons.chevron_right,
@@ -100,7 +104,7 @@ class SecurityScreen extends GetView<SecurityController> {
               _SecurityDivider(),
               _SecurityTile(
                 icon: Icons.history,
-                title: 'Last Login',
+                title: "Last Login".tr,
                 subtitle: controller.lastLogin,
                 onTap: () {},
               ),
@@ -148,7 +152,7 @@ class _SecurityCard extends StatelessWidget {
                 _IconBox(icon: headerIcon),
                 const SizedBox(width: 12),
                 Text(
-                  headerTitle,
+                  (headerTitle).tr,
                   style: AppTextStyle.titleSmallSemiBold.copyWith(
                     color: AppColor.blackShade1,
                     fontSize: 16,
@@ -196,7 +200,7 @@ class _SecurityTile extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    title,
+                    (title).tr,
                     style: AppTextStyle.titleSmallSemiBold.copyWith(
                       color: AppColor.coolGrayText,
                       fontSize: 14,
@@ -205,7 +209,7 @@ class _SecurityTile extends StatelessWidget {
                   if (subtitle != null) ...[
                     const SizedBox(height: 2),
                     Text(
-                      subtitle!,
+                      (subtitle!).tr,
                       style: AppTextStyle.bodySmallRegular.copyWith(
                         color: AppColor.coolGrayText,
                       ),
@@ -233,7 +237,7 @@ class _VerifiedBadge extends StatelessWidget {
   Widget build(BuildContext context) {
     if (!isVerified) {
       return Text(
-        'Not Verified',
+        "Not Verified".tr,
         style: AppTextStyle.bodySmallMedium.copyWith(color: Colors.redAccent),
       );
     }
@@ -241,17 +245,13 @@ class _VerifiedBadge extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         Text(
-          'Verified',
+          "Verified".tr,
           style: AppTextStyle.bodySmallMedium.copyWith(
             color: AppColor.green2Color,
           ),
         ),
         const SizedBox(width: 4),
-        Icon(
-          Icons.check_circle,
-          size: 16,
-          color: AppColor.green2Color,
-        ),
+        Icon(Icons.check_circle, size: 16, color: AppColor.green2Color),
       ],
     );
   }
@@ -297,7 +297,7 @@ class _DeleteAccountCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Delete Account',
+                    "Delete Account".tr,
                     style: AppTextStyle.titleSmallSemiBold.copyWith(
                       color: Colors.redAccent,
                       fontSize: 15,
@@ -305,7 +305,7 @@ class _DeleteAccountCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 2),
                   Text(
-                    'Permanently remove account',
+                    "Permanently remove account".tr,
                     style: AppTextStyle.bodySmallRegular.copyWith(
                       color: AppColor.coolGrayText,
                     ),
@@ -313,11 +313,7 @@ class _DeleteAccountCard extends StatelessWidget {
                 ],
               ),
             ),
-            const Icon(
-              Icons.chevron_right,
-              color: Colors.redAccent,
-              size: 20,
-            ),
+            const Icon(Icons.chevron_right, color: Colors.redAccent, size: 20),
           ],
         ),
       ),
@@ -332,11 +328,7 @@ class _IconBox extends StatelessWidget {
   final double size;
   final double iconSize;
 
-  const _IconBox({
-    required this.icon,
-    this.size = 40,
-    this.iconSize = 20,
-  });
+  const _IconBox({required this.icon, this.size = 40, this.iconSize = 20});
 
   @override
   Widget build(BuildContext context) {

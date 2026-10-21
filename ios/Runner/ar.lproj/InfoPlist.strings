@@ -1,0 +1,3 @@
+"NSCameraUsageDescription" = "يستخدم SquadOnSite الكاميرا لتمكينك من التقاط صورة لملفك الشخصي.";
+"NSLocationWhenInUseUsageDescription" = "يستخدم SquadOnSite موقعك أثناء استخدام التطبيق لإظهار موضعك على الخريطة ومساعدتك في اختيار عنوان حجز خدمة ميدانية.";
+"NSPhotoLibraryUsageDescription" = "يصل SquadOnSite إلى الصور التي تختارها لتحديث صورة ملفك الشخصي.";

@@ -9,7 +9,7 @@ import 'package:squadonsite/constant/app_color/app_color.dart';
 /// ```dart
 /// CommonCountryCodePicker(
 ///   onChanged: controller.onCountryChanged,
-///   initialSelection: 'IN',
+///   initialSelection: 'US',
 /// )
 /// ```
 ///
@@ -20,11 +20,11 @@ class CommonCountryCodePicker extends StatelessWidget {
   final ValueChanged<CountryCode> onChanged;
 
   /// ISO 3166-1 alpha-2 code or dial-code for the default country.
-  /// Defaults to India ('IN').
+  /// Defaults to United States ('US').
   final String initialSelection;
 
   /// List of countries to pin at the top of the dialog.
-  /// Defaults to India.
+  /// Defaults to United States.
   final List<String> favorite;
 
   /// Background fill of the picker container. Defaults to [Colors.white].
@@ -57,8 +57,8 @@ class CommonCountryCodePicker extends StatelessWidget {
   const CommonCountryCodePicker({
     super.key,
     required this.onChanged,
-    this.initialSelection = 'IN',
-    this.favorite = const ['+91', 'IN'],
+    this.initialSelection = 'US',
+    this.favorite = const ['US'],
     this.backgroundColor = Colors.white,
     this.borderColor = AppColor.lightGreyColor,
     this.borderWidth = 1.2,
@@ -72,28 +72,24 @@ class CommonCountryCodePicker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final resolvedTextStyle = textStyle ??
+    final resolvedTextStyle =
+        textStyle ??
         const TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.w600,
           color: AppColor.blackShade1,
         );
 
-    final resolvedDialogTextStyle = dialogTextStyle ??
-        const TextStyle(
-          fontSize: 14,
-          color: AppColor.blackShade1,
-        );
+    final resolvedDialogTextStyle =
+        dialogTextStyle ??
+        const TextStyle(fontSize: 14, color: AppColor.blackShade1);
 
     return Container(
       height: height,
       decoration: BoxDecoration(
         color: backgroundColor,
         borderRadius: BorderRadius.circular(borderRadius),
-        border: Border.all(
-          color: borderColor,
-          width: borderWidth,
-        ),
+        border: Border.all(color: borderColor, width: borderWidth),
       ),
       child: CountryCodePicker(
         onChanged: onChanged,

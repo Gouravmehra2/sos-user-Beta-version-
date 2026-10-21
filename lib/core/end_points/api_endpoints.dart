@@ -5,16 +5,16 @@ class ApiEndpoints {
   /// Production: --dart-define=API_BASE_URL=https://your-host/api
 
   //LOCAL URL
-  static const String apiBaseUrl = String.fromEnvironment(
-    'API_BASE_URL',
-    defaultValue: 'http://192.168.1.41:5001/api',
-  );
-
-  // LIVE URL
   // static const String apiBaseUrl = String.fromEnvironment(
   //   'API_BASE_URL',
-  //   defaultValue: 'https://1oneapp.com/api',
+  //   defaultValue: 'http://192.168.1.41:5001/api',
   // );
+
+  // LIVE URL
+  static const String apiBaseUrl = String.fromEnvironment(
+    'API_BASE_URL',
+    defaultValue: 'https://1oneapp.com/api',
+  );
 
   /// All existing /api/... routes and sockets share the configured origin.
   static final String baseUrl = Uri.parse(
@@ -26,6 +26,8 @@ class ApiEndpoints {
   static const String startRegister = '/api/auth/start-register';
   static const String verifyRegister = '/api/auth/verify-register';
   static const String googleLogin = '/api/auth/google';
+  static const String appleChallenge = '/api/auth/apple/challenge';
+  static const String appleLogin = '/api/auth/apple';
   static const String googleSignup = '/api/auth/google-signup';
   static const String login = '/api/auth/login';
   static const String forgotPassword = '/auth/forgot-password';

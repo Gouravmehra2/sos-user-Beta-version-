@@ -14,7 +14,7 @@ class CommonSoftBlobGradient extends StatelessWidget {
     this.width = 100,
     this.height = 100,
     this.opacity = 0.20,
-    this.boxShape
+    this.boxShape,
   });
 
   @override

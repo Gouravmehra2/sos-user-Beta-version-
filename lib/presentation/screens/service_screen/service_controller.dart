@@ -136,7 +136,7 @@ class ServiceController extends GetxController {
       }
     } catch (e) {
       if (!isClosed && version == _categoryVersion)
-        AppSnackbar.show('Error', 'Failed to load subcategories.');
+        AppSnackbar.show("Error".tr, "Failed to load subcategories.".tr);
     } finally {
       if (!isClosed && version == _categoryVersion)
         isLoadingSubcategories.value = false;
@@ -168,7 +168,7 @@ class ServiceController extends GetxController {
       hasMoreSubcategories.value = res.hasMore && newItems.isNotEmpty;
     } catch (e) {
       if (!isClosed && version == _categoryVersion) {
-        AppSnackbar.show('Error', 'Failed to load more subcategories.');
+        AppSnackbar.show("Error".tr, "Failed to load more subcategories.".tr);
       }
     } finally {
       if (!isClosed && version == _categoryVersion) {
@@ -196,7 +196,7 @@ class ServiceController extends GetxController {
       _servicePage = 1;
     } catch (e) {
       if (!isClosed && version == _servicesVersion) {
-        AppSnackbar.show('Error', 'Failed to load services.');
+        AppSnackbar.show("Error".tr, "Failed to load services.".tr);
       }
     } finally {
       if (!isClosed && version == _servicesVersion) {
@@ -231,7 +231,7 @@ class ServiceController extends GetxController {
       hasMoreServices.value = res.hasMore && newItems.isNotEmpty;
     } catch (_) {
       if (!isClosed && version == _servicesVersion) {
-        AppSnackbar.show('Error', 'Failed to load more services.');
+        AppSnackbar.show("Error".tr, "Failed to load more services.".tr);
       }
     } finally {
       if (!isClosed && version == _servicesVersion) {

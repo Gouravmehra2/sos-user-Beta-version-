@@ -11,14 +11,9 @@ class CommonBottomSheet {
       Container(
         decoration: const BoxDecoration(
           color: Color(0xffF6F6F6),
-          borderRadius: BorderRadius.vertical(
-            top: Radius.circular(30),
-          ),
+          borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
         ),
-        child: SafeArea(
-          top: false,
-          child: child,
-        ),
+        child: SafeArea(top: false, child: child),
       ),
       isDismissible: isDismissible,
       enableDrag: enableDrag,
@@ -35,4 +30,3 @@ class CommonBottomSheet {
     }
   }
 }
-

@@ -65,13 +65,13 @@ class _CircularOrbitWidgetState extends State<CircularOrbitWidget>
     final screenWidth = MediaQuery.sizeOf(context).width;
     // base size drives all proportions; clamped so it looks good on tiny & large screens
     final double s = (screenWidth * 0.85).clamp(260.0, 420.0);
-    final double outerR = s * 0.5;       // orbit radius (centre to icon centre)
-    final double middleR = s * 0.343;    // ~120/350 ratio
-    final double outerRingD = s;         // outer ring diameter
+    final double outerR = s * 0.5; // orbit radius (centre to icon centre)
+    final double middleR = s * 0.343; // ~120/350 ratio
+    final double outerRingD = s; // outer ring diameter
     final double middleRingD = s * 0.686;
     final double centerD = s * 0.40;
     final double logoD = centerD * 0.71;
-    final double itemSize = s * 0.143;   // ~50/350
+    final double itemSize = s * 0.143; // ~50/350
 
     return Center(
       child: SizedBox(
@@ -112,8 +112,7 @@ class _CircularOrbitWidgetState extends State<CircularOrbitWidget>
                     shape: BoxShape.circle,
                     boxShadow: [
                       BoxShadow(
-                        color: const Color(0xFF000000
-                        ).withValues(alpha: 0.60),
+                        color: const Color(0xFF000000).withValues(alpha: 0.60),
                         blurStyle: BlurStyle.outer,
                         blurRadius: 20.0,
                       ),
@@ -137,7 +136,8 @@ class _CircularOrbitWidgetState extends State<CircularOrbitWidget>
 
                 /// OUTER ORBIT
                 ...List.generate(outerIcons.length, (index) {
-                  final angle = (2 * pi / outerIcons.length) * index +
+                  final angle =
+                      (2 * pi / outerIcons.length) * index +
                       controller.value * 2 * pi;
                   return Transform.translate(
                     offset: Offset(outerR * cos(angle), outerR * sin(angle)),
@@ -147,7 +147,8 @@ class _CircularOrbitWidgetState extends State<CircularOrbitWidget>
 
                 /// INNER ORBIT
                 ...List.generate(middleIcons.length, (index) {
-                  final angle = (2 * pi / middleIcons.length) * index -
+                  final angle =
+                      (2 * pi / middleIcons.length) * index -
                       controller.value * 2 * pi;
                   return Transform.translate(
                     offset: Offset(middleR * cos(angle), middleR * sin(angle)),

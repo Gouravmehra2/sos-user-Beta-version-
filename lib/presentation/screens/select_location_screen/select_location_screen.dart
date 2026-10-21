@@ -231,8 +231,8 @@ class _QuickActionTile extends StatelessWidget {
                 : Image.asset(icon, height: 30, fit: BoxFit.cover),
             const SizedBox(height: 8),
             Text(
-              label,
-              textAlign: TextAlign.left,
+              (label).tr,
+              textAlign: TextAlign.start,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
               style: AppTextStyle.bodySmallMedium.copyWith(
@@ -443,7 +443,7 @@ class _ErrorCard extends StatelessWidget {
           ),
           const SizedBox(height: 6),
           Text(
-            message,
+            (message).tr,
             style: AppTextStyle.bodySmallRegular.copyWith(
               color: AppColor.coolGrayText,
             ),
@@ -622,10 +622,7 @@ class _AddressTile extends StatelessWidget {
       behavior: HitTestBehavior.opaque,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.symmetric(
-          horizontal: 14,
-          vertical: 14,
-        ),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
         decoration: BoxDecoration(
           color: isSelected
               ? AppColor.lightGreen1Color.withValues(alpha: 0.25)
@@ -655,14 +652,10 @@ class _AddressTile extends StatelessWidget {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      SvgPicture.asset(
-                        iconPath,
-                        height: 24,
-                        color: iconColor,
-                      ),
+                      SvgPicture.asset(iconPath, height: 24, color: iconColor),
                       const SizedBox(height: 5),
                       Text(
-                        address.label,
+                        (address.label).tr,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         textAlign: TextAlign.center,
@@ -687,7 +680,7 @@ class _AddressTile extends StatelessWidget {
                         runSpacing: 4,
                         children: [
                           Text(
-                            address.label,
+                            (address.label).tr,
                             style: AppTextStyle.titleSmallSemiBold.copyWith(
                               color: AppColor.blackShade1,
                               fontSize: 15,
@@ -726,7 +719,7 @@ class _AddressTile extends StatelessWidget {
                       ),
                       const SizedBox(height: 6),
                       Text(
-                        address.displayAddress,
+                        (address.displayAddress).tr,
                         maxLines: 3,
                         overflow: TextOverflow.ellipsis,
                         style: AppTextStyle.bodySmallRegular.copyWith(
@@ -748,7 +741,7 @@ class _AddressTile extends StatelessWidget {
                 Expanded(
                   child: _buildActionButton(
                     imagePath: AppAssets.shareIcon,
-                    label: 'Share',
+                    label: "Share".tr,
                     color: AppColor.primaryGrey,
                     onTap: onShare,
                   ),
@@ -757,7 +750,7 @@ class _AddressTile extends StatelessWidget {
                 Expanded(
                   child: _buildActionButton(
                     imagePath: AppAssets.editIcon,
-                    label: 'Edit',
+                    label: "Edit".tr,
                     color: const Color(0xFF333333),
                     onTap: onEdit,
                   ),
@@ -766,7 +759,7 @@ class _AddressTile extends StatelessWidget {
                 Expanded(
                   child: _buildActionButton(
                     imagePath: AppAssets.deleteIcon,
-                    label: 'Delete',
+                    label: "Delete".tr,
                     color: Colors.red,
                     onTap: onDelete,
                   ),
@@ -793,10 +786,7 @@ class _AddressTile extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
         child: Container(
           constraints: const BoxConstraints(minHeight: 40),
-          padding: const EdgeInsets.symmetric(
-            horizontal: 8,
-            vertical: 9,
-          ),
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 9),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
             border: Border.all(
@@ -806,16 +796,11 @@ class _AddressTile extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Image.asset(
-                imagePath,
-                height: 16,
-                width: 16,
-                color: color,
-              ),
+              Image.asset(imagePath, height: 16, width: 16, color: color),
               const SizedBox(width: 6),
               Flexible(
                 child: Text(
-                  label,
+                  (label).tr,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: AppTextStyle.bodySmallMedium.copyWith(
@@ -886,5 +871,3 @@ class _ViewAllButton extends StatelessWidget {
     );
   }
 }
-
-

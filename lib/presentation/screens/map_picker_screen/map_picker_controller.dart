@@ -251,7 +251,7 @@ class MapPickerController extends GetxController {
     unawaited(
       _animateTo(centerLatLng.value, zoom: initialCameraZoom).catchError((_) {
         if (!isClosed) {
-          geocodeError.value = 'Could not move the map. Please try again.';
+          geocodeError.value = "Could not move the map. Please try again.".tr;
         }
       }),
     );
@@ -359,7 +359,7 @@ class MapPickerController extends GetxController {
       await _moveToLocation(latLng);
     } catch (e) {
       AppSnackbar.show(
-        'Location Error',
+        "Location Error".tr,
         e.toString(),
         margin: const EdgeInsets.all(16),
       );
@@ -423,7 +423,7 @@ class MapPickerController extends GetxController {
       }
       final data = _asJsonMap(json['data']);
       final list = data['suggestions'] ?? [];
-      if (list is! List) throw const FormatException('Invalid suggestions');
+      if (list is! List) throw FormatException("Invalid suggestions".tr);
       final results = <PlacePrediction>[];
       for (final item in list) {
         if (item is! Map) continue;
@@ -507,7 +507,7 @@ class MapPickerController extends GetxController {
       }
       final result = _asJsonMap(json['data']);
       if (result['lat'] is! num || result['lng'] is! num) {
-        throw const FormatException('Missing place coordinates');
+        throw FormatException("Missing place coordinates".tr);
       }
       final lat = (result['lat'] as num).toDouble();
       final lng = (result['lng'] as num).toDouble();
@@ -517,7 +517,7 @@ class MapPickerController extends GetxController {
           lat > 90 ||
           lng < -180 ||
           lng > 180) {
-        throw const FormatException('Invalid place coordinates');
+        throw FormatException("Invalid place coordinates".tr);
       }
       final placeResult = _placeAddressResult(result, prediction.fullText);
       _queryUnresolved = false;
@@ -650,7 +650,7 @@ class MapPickerController extends GetxController {
       _resolvedPlaceResult = null;
       _programmaticCameraTarget = null;
       isGeocoding.value = false;
-      geocodeError.value = 'Could not move the map. Please try again.';
+      geocodeError.value = "Could not move the map. Please try again.".tr;
       rethrow;
     }
     if (isClosed || (version != null && version != _searchVersion)) return;
@@ -679,7 +679,7 @@ class MapPickerController extends GetxController {
   Map<String, dynamic> _asJsonMap(dynamic data) {
     if (data is Map<String, dynamic>) return data;
     if (data is Map) return Map<String, dynamic>.from(data);
-    throw const FormatException('Invalid Places API response');
+    throw FormatException("Invalid Places API response".tr);
   }
 
   // ── Reverse geocoding ─────────────────────────────────────────────────────
@@ -696,7 +696,7 @@ class MapPickerController extends GetxController {
         latLng.longitude,
       ).timeout(const Duration(seconds: 15));
       if (isClosed || version != _geocodeVersion) return;
-      if (placemarks.isEmpty) throw const FormatException('No address found');
+      if (placemarks.isEmpty) throw FormatException("No address found".tr);
       final p = placemarks.first;
 
       // Build a structured result from the placemark components.
@@ -728,7 +728,8 @@ class MapPickerController extends GetxController {
       if (isClosed || version != _geocodeVersion) return;
       geocodeResult.value = _committedResult;
       geocodeError.value =
-          'Could not find an address here. Retry or enter the address manually.';
+          "Could not find an address here. Retry or enter the address manually."
+              .tr;
     } finally {
       if (!isClosed && version == _geocodeVersion) isGeocoding.value = false;
     }

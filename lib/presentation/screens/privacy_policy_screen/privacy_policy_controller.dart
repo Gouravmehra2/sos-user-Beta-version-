@@ -73,8 +73,8 @@ class PrivacyPolicyController extends GetxController {
       if (!isClosed) _parsePolicy(source);
     } catch (_) {
       if (!isClosed) {
-        errorMessage.value =
-            'The $documentName could not be loaded. Please try again.';
+        errorMessage.value = "The @p0 could not be loaded. Please try again."
+            .trParams({"p0": (documentName).toString()});
       }
     } finally {
       _loadInProgress = false;
@@ -84,7 +84,7 @@ class PrivacyPolicyController extends GetxController {
 
   void _parsePolicy(String source) {
     final body = html_parser.parse(source).body;
-    if (body == null) throw const FormatException('Missing policy body.');
+    if (body == null) throw FormatException("Missing policy body.".tr);
 
     final parsedSections = <PrivacyPolicySection>[];
     final parsedHeaderBlocks = <PrivacyPolicyBlock>[];
@@ -180,7 +180,7 @@ class PrivacyPolicyController extends GetxController {
         parsedSections.any(
           (section) => section.title.isEmpty || section.blocks.isEmpty,
         )) {
-      throw const FormatException('Privacy policy content is incomplete.');
+      throw FormatException("Privacy policy content is incomplete.".tr);
     }
     pageTitle.value = parsedTitle;
     subtitle.value = parsedSubtitle;

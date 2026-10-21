@@ -1,3 +1,5 @@
+import 'package:get/get.dart' hide Response;
+
 /// Catalog transcribed from the supplied plan references. Prices are strings
 /// to preserve quoted amounts rather than infer a billing formula.
 class PlanPrice {
@@ -33,11 +35,11 @@ class SupportPlan {
   ];
 }
 
-const residentialPlans = [
+final residentialPlans = [
   SupportPlan(
     id: 'smart',
     name: 'Smart SOS',
-    description: 'Everyday support for primary & peripheral devices.',
+    description: "Everyday support for primary & peripheral devices.".tr,
     prices: {
       1: PlanPrice('1,125', '112.50'),
       2: PlanPrice('2,250', '225'),
@@ -55,7 +57,7 @@ const residentialPlans = [
     id: 'pro',
     name: 'Pro SOS',
     description:
-        'Covers 3 devices: laptops, desktops, printers, phones & more.',
+        "Covers 3 devices: laptops, desktops, printers, phones & more.".tr,
     bestDeal: true,
     prices: {
       1: PlanPrice('1,725', '172.50'),
@@ -74,7 +76,7 @@ const residentialPlans = [
     id: 'advanced',
     name: 'Advanced SOS',
     description:
-        'Covers 5 devices: laptops, desktops, printers, phones & routers.',
+        "Covers 5 devices: laptops, desktops, printers, phones & routers.".tr,
     prices: {
       1: PlanPrice('2,325', '232.50'),
       2: PlanPrice('5,280', '528'),
@@ -90,11 +92,11 @@ const residentialPlans = [
   ),
 ];
 
-const businessPlans = [
+final businessPlans = [
   SupportPlan(
     id: 'starter',
     name: 'Business Starter',
-    description: 'Essential internet security & backup for your business.',
+    description: "Essential internet security & backup for your business.".tr,
     prices: {1: PlanPrice('3,450', '345'), 2: PlanPrice('6,900', '690')},
     features: [
       'Office 365 included',
@@ -107,7 +109,7 @@ const businessPlans = [
   SupportPlan(
     id: 'professional',
     name: 'Business Professional',
-    description: 'Carbonite unlimited backup & Office for your team.',
+    description: "Carbonite unlimited backup & Office for your team.".tr,
     prices: {1: PlanPrice('6,150', '615'), 2: PlanPrice('12,300', '1,230')},
     features: [
       'Office Pro Plus · 3 devices',
@@ -120,7 +122,7 @@ const businessPlans = [
   SupportPlan(
     id: 'enterprise',
     name: 'Business Enterprise',
-    description: 'Server protection & encrypted backup for your business.',
+    description: "Server protection & encrypted backup for your business.".tr,
     prices: {
       1: PlanPrice('16,665', '1,666.50'),
       2: PlanPrice('33,330', '3,333'),

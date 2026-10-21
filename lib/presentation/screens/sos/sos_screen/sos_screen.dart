@@ -32,7 +32,7 @@ class SosScreen extends GetView<SosController> {
           ),
         ),
         title: Text(
-          'Emergency Assistance',
+          "Emergency Assistance".tr,
           style: AppTextStyle.titleLargeBold.copyWith(color: Colors.black),
         ),
       ),
@@ -44,7 +44,7 @@ class SosScreen extends GetView<SosController> {
           const SizedBox(height: 20),
           Center(
             child: Text(
-              'Tap & Hold for 3 Seconds',
+              "Tap & Hold for 3 Seconds".tr,
               style: AppTextStyle.titleLargeBold.copyWith(
                 color: AppColor.blackColor,
                 fontSize: 20,
@@ -54,7 +54,7 @@ class SosScreen extends GetView<SosController> {
           const SizedBox(height: 4),
           Center(
             child: Text(
-              'TO PREVENT ACCIDENTAL TRIGGERS',
+              "TO PREVENT ACCIDENTAL TRIGGERS".tr,
               style: AppTextStyle.bodySmallMedium.copyWith(
                 color: AppColor.blackShade1,
                 letterSpacing: 0.5,
@@ -65,13 +65,13 @@ class SosScreen extends GetView<SosController> {
 
           // ── Emergency Services Card ────────────────────────────────────
           _ServiceCard(
-            title: 'Emergency Services',
-            subtitle: 'Contact local police, ambulance, or fire services.',
+            title: "Emergency Services".tr,
+            subtitle: "Contact local police, ambulance, or fire services.".tr,
             icon: Icons.local_police_outlined,
             iconColor: Colors.red,
             actions: [
               _ActionButton(
-                label: 'Call Emergency Services',
+                label: "Call Emergency Services".tr,
                 icon: Icons.phone_outlined,
                 onTap: controller.callEmergencyServices,
                 isDark: true,
@@ -80,22 +80,22 @@ class SosScreen extends GetView<SosController> {
           ),
           const SizedBox(height: 16),
 
-          // ── 1App Safety Team Card ──────────────────────────────────────
+          // ── SOS Safety Team Card ──────────────────────────────────────
           _ServiceCard(
-            title: '1App Safety Team',
-            subtitle: '24/7 priority assistance for marketplace safety.',
+            title: "SOS Safety Team".tr,
+            subtitle: "24/7 priority assistance for marketplace safety.".tr,
             icon: Icons.verified_user_outlined,
             iconColor: AppColor.blackColor,
             actions: [
               _ActionButton(
-                label: 'Call Safety Team',
+                label: "Call Safety Team".tr,
                 icon: Icons.phone_outlined,
                 onTap: controller.callSafetyTeam,
                 isDark: true,
               ),
               const SizedBox(height: 12),
               _ActionButton(
-                label: 'Live Chat',
+                label: "Live Chat".tr,
                 icon: Icons.chat_bubble_outline,
                 onTap: controller.openLiveChat,
                 isDark: false,
@@ -106,13 +106,13 @@ class SosScreen extends GetView<SosController> {
 
           // ── Share Live Location Card ───────────────────────────────────
           _ServiceCard(
-            title: 'Share Live Location',
-            subtitle: 'Update contacts and safety team on your movement.',
+            title: "Share Live Location".tr,
+            subtitle: "Update contacts and safety team on your movement.".tr,
             icon: Icons.my_location_outlined,
             iconColor: AppColor.blackColor,
             actions: [
               CommonButton(
-                label: 'Share Location',
+                label: "Share Location".tr,
                 onTap: controller.shareLocation,
                 backgroundColor: AppColor.blackColor,
                 foregroundColor: Colors.white,
@@ -130,7 +130,7 @@ class SosScreen extends GetView<SosController> {
 
           // ── Currently Assigned Technician ──────────────────────────────
           Text(
-            'Currently Assigned Technician',
+            "Currently Assigned Technician".tr,
             style: AppTextStyle.titleLargeBold,
           ),
           const SizedBox(height: 12),
@@ -142,13 +142,13 @@ class SosScreen extends GetView<SosController> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Your Emergency Contacts',
+                "Your Emergency Contacts".tr,
                 style: AppTextStyle.titleLargeBold,
               ),
               GestureDetector(
                 onTap: controller.addEmergencyContact,
                 child: Text(
-                  '+ Add',
+                  "+ Add".tr,
                   style: AppTextStyle.bodyMediumMedium.copyWith(
                     color: AppColor.blackColor,
                   ),
@@ -173,7 +173,7 @@ class SosScreen extends GetView<SosController> {
                     ),
                     const SizedBox(height: 6),
                     Text(
-                      c.name,
+                      (c.name).tr,
                       style: AppTextStyle.bodySmallMedium.copyWith(
                         color: AppColor.blackShade1,
                       ),
@@ -191,7 +191,8 @@ class SosScreen extends GetView<SosController> {
               borderRadius: BorderRadius.circular(10),
             ),
             child: Text(
-              '"When SOS is triggered, location and booking details are shared automatically with these contacts."',
+              "\"When SOS is triggered, location and booking details are shared automatically with these contacts.\""
+                  .tr,
               style: AppTextStyle.bodySmallRegular.copyWith(
                 color: AppColor.coolGrayText,
                 fontStyle: FontStyle.italic,
@@ -201,7 +202,7 @@ class SosScreen extends GetView<SosController> {
           const SizedBox(height: 24),
 
           // ── Quick Actions ──────────────────────────────────────────────
-          Text('Quick Actions', style: AppTextStyle.titleLargeBold),
+          Text("Quick Actions".tr, style: AppTextStyle.titleLargeBold),
           const SizedBox(height: 16),
           GridView.count(
             crossAxisCount: 2,
@@ -213,25 +214,25 @@ class SosScreen extends GetView<SosController> {
             children: [
               _QuickActionTile(
                 icon: Icons.block,
-                label: 'Report\nMisconduct',
+                label: "Report\nMisconduct".tr,
                 iconColor: Colors.red,
                 onTap: controller.reportMisconduct,
               ),
               _QuickActionTile(
                 icon: Icons.camera_alt_outlined,
-                label: 'Upload Evidence',
+                label: "Upload Evidence".tr,
                 iconColor: AppColor.blackColor,
                 onTap: controller.uploadEvidence,
               ),
               _QuickActionTile(
                 icon: Icons.my_location,
-                label: 'Share Location',
+                label: "Share Location".tr,
                 iconColor: Colors.blue,
                 onTap: controller.shareLocation,
               ),
               _QuickActionTile(
                 icon: Icons.call_missed_outgoing,
-                label: 'Request Call Back',
+                label: "Request Call Back".tr,
                 iconColor: AppColor.greenColor,
                 onTap: controller.requestCallBack,
               ),
@@ -330,7 +331,7 @@ class _SosButtonState extends State<_SosButton>
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      'EMERGENCY SOS',
+                      "EMERGENCY SOS".tr,
                       style: AppTextStyle.labelMediumSemiBold.copyWith(
                         color: Colors.white,
                         letterSpacing: 1.2,
@@ -384,10 +385,10 @@ class _ServiceCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(title, style: AppTextStyle.titleLargeBold),
+                    Text((title).tr, style: AppTextStyle.titleLargeBold),
                     const SizedBox(height: 4),
                     Text(
-                      subtitle,
+                      (subtitle).tr,
                       style: AppTextStyle.bodyMediumRegular.copyWith(
                         color: AppColor.coolGrayText,
                       ),
@@ -491,7 +492,7 @@ class _TechnicianCard extends StatelessWidget {
                     Row(
                       children: [
                         Text(
-                          'Gourav Dev',
+                          ('Gourav Dev').tr,
                           style: AppTextStyle.titleMediumSemiBold,
                         ),
                         const SizedBox(width: 8),
@@ -505,7 +506,7 @@ class _TechnicianCard extends StatelessWidget {
                             borderRadius: BorderRadius.circular(6),
                           ),
                           child: Text(
-                            'EXPERT',
+                            "EXPERT".tr,
                             style: AppTextStyle.labelSmallMedium.copyWith(
                               color: AppColor.blackColor,
                               letterSpacing: 0.5,
@@ -516,7 +517,7 @@ class _TechnicianCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      'Booking ID: #A12345',
+                      "Booking ID: #A12345".tr,
                       style: AppTextStyle.bodySmallRegular.copyWith(
                         color: AppColor.coolGrayText,
                       ),
@@ -531,7 +532,7 @@ class _TechnicianCard extends StatelessWidget {
                         ),
                         const SizedBox(width: 4),
                         Text(
-                          'White Tesla Model 3 • ABC-123',
+                          "White Tesla Model 3 • ABC-123".tr,
                           style: AppTextStyle.bodySmallRegular.copyWith(
                             color: AppColor.coolGrayText,
                           ),
@@ -548,7 +549,7 @@ class _TechnicianCard extends StatelessWidget {
             children: [
               Expanded(
                 child: CommonButton(
-                  label: 'Call',
+                  label: "Call".tr,
                   onTap: controller.callTechnician,
                   backgroundColor: AppColor.blackColor,
                   foregroundColor: Colors.white,
@@ -565,7 +566,7 @@ class _TechnicianCard extends StatelessWidget {
               const SizedBox(width: 12),
               Expanded(
                 child: CommonButton(
-                  label: 'Message',
+                  label: "Message".tr,
                   onTap: controller.messageTechnician,
                   backgroundColor: const Color(0xffF5F5F5),
                   foregroundColor: AppColor.blackShade1,
@@ -618,7 +619,7 @@ class _QuickActionTile extends StatelessWidget {
             Icon(icon, color: iconColor, size: 28),
             const SizedBox(height: 8),
             Text(
-              label,
+              (label).tr,
               textAlign: TextAlign.center,
               style: AppTextStyle.bodySmallMedium.copyWith(
                 color: AppColor.blackShade1,

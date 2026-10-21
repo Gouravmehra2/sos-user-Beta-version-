@@ -22,7 +22,7 @@ class BookServiceScreen extends GetView<BookServiceController> {
         children: [
           _buildContent(context),
           if (controller.isVerifyingPayment.value)
-            const Positioned.fill(
+            Positioned.fill(
               child: Material(
                 color: Colors.white,
                 child: SafeArea(
@@ -35,7 +35,7 @@ class BookServiceScreen extends GetView<BookServiceController> {
                           CircularProgressIndicator(color: Colors.black),
                           SizedBox(height: 20),
                           Text(
-                            'Confirming your booking…',
+                            "Confirming your booking…".tr,
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontSize: 18,
@@ -44,7 +44,7 @@ class BookServiceScreen extends GetView<BookServiceController> {
                           ),
                           SizedBox(height: 8),
                           Text(
-                            'Please wait while we verify your payment.',
+                            "Please wait while we verify your payment.".tr,
                             textAlign: TextAlign.center,
                           ),
                         ],
@@ -66,7 +66,7 @@ class BookServiceScreen extends GetView<BookServiceController> {
         backgroundColor: AppColor.blackColor,
         iconTheme: const IconThemeData(color: Colors.white),
         title: Text(
-          'Book Service',
+          "Book Service".tr,
           style: AppTextStyle.titleLargeBold.copyWith(color: Colors.white),
         ),
       ),
@@ -123,10 +123,10 @@ class BookServiceScreen extends GetView<BookServiceController> {
                               padding: const EdgeInsets.only(bottom: 16),
                               child: Column(
                                 children: [
-                                  Text(controller.profileError.value),
+                                  Text((controller.profileError.value).tr),
                                   TextButton(
                                     onPressed: controller.loadProfile,
-                                    child: const Text('Retry'),
+                                    child: Text("Retry".tr),
                                   ),
                                 ],
                               ),
@@ -141,7 +141,15 @@ class BookServiceScreen extends GetView<BookServiceController> {
                       () => Padding(
                         padding: const EdgeInsets.only(top: 8),
                         child: Text(
-                          'Service date: ${MaterialLocalizations.of(context).formatMediumDate(controller.serviceDate.value)}',
+                          "Service date: @p0".trParams({
+                            "p0":
+                                (MaterialLocalizations.of(
+                                      context,
+                                    ).formatMediumDate(
+                                      controller.serviceDate.value,
+                                    ))
+                                    .toString(),
+                          }),
                         ),
                       ),
                     ),
@@ -154,7 +162,7 @@ class BookServiceScreen extends GetView<BookServiceController> {
                     TextButton.icon(
                       onPressed: controller.enterNewAddress,
                       icon: const Icon(Icons.add_location_alt_outlined),
-                      label: const Text('Enter a new address'),
+                      label: Text("Enter a new address".tr),
                     ),
                     const SizedBox(height: 20),
 
@@ -174,7 +182,7 @@ class BookServiceScreen extends GetView<BookServiceController> {
                       () => SwitchListTile(
                         contentPadding: EdgeInsets.zero,
                         title: Text(
-                          'Booking for someone else',
+                          "Booking for someone else".tr,
                           style: AppTextStyle.bodyMediumRegular.copyWith(
                             color: AppColor.blackShade1,
                           ),
@@ -220,7 +228,7 @@ class BookServiceScreen extends GetView<BookServiceController> {
                     _SectionTitle('Special Instructions'),
                     const SizedBox(height: 4),
                     Text(
-                      'Optional — share anything the pro should know',
+                      "Optional — share anything the pro should know".tr,
                       style: AppTextStyle.bodySmallRegular.copyWith(
                         color: AppColor.coolGrayText,
                       ),
@@ -263,7 +271,7 @@ class _SectionTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(
-      title,
+      (title).tr,
       style: AppTextStyle.titleMediumSemiBold.copyWith(
         color: AppColor.blackShade1,
       ),
@@ -304,7 +312,7 @@ class _ServiceSummaryCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  controller.service.name,
+                  (controller.service.name).tr,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: AppTextStyle.titleSmallSemiBold.copyWith(
@@ -322,7 +330,13 @@ class _ServiceSummaryCard extends StatelessWidget {
                     const SizedBox(width: 3),
                     Flexible(
                       child: Text(
-                        '${controller.service.ratingsAverage.toStringAsFixed(1)} (${controller.service.ratingsQuantity} reviews)',
+                        "@p0 (@p1 reviews)".trParams({
+                          "p0":
+                              (controller.service.ratingsAverage
+                                      .toStringAsFixed(1))
+                                  .toString(),
+                          "p1": (controller.service.ratingsQuantity).toString(),
+                        }),
                         style: AppTextStyle.bodySmallRegular.copyWith(
                           color: AppColor.coolGrayText,
                         ),
@@ -333,7 +347,7 @@ class _ServiceSummaryCard extends StatelessWidget {
                 const SizedBox(height: 6),
                 Obx(
                   () => Text(
-                    '\$${controller.serviceFee.toStringAsFixed(2)}',
+                    ('\$${controller.serviceFee.toStringAsFixed(2)}').tr,
                     style: AppTextStyle.titleSmallSemiBold.copyWith(
                       color: AppColor.blackColor,
                       fontSize: 16,
@@ -437,7 +451,7 @@ class _VariantSelector extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          v.name,
+                          (v.name).tr,
                           style: AppTextStyle.titleSmallSemiBold.copyWith(
                             color: selected
                                 ? Colors.white
@@ -455,7 +469,7 @@ class _VariantSelector extends StatelessWidget {
                               ),
                               const SizedBox(width: 3),
                               Text(
-                                _formatDuration(v.duration),
+                                (_formatDuration(v.duration)).tr,
                                 style: AppTextStyle.labelSmallRegular.copyWith(
                                   color: selected
                                       ? Colors.white60
@@ -473,7 +487,7 @@ class _VariantSelector extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Text(
-                        '\$${v.offerPrice}',
+                        ('\$${v.offerPrice}').tr,
                         style: AppTextStyle.titleSmallSemiBold.copyWith(
                           color: selected ? Colors.white : AppColor.blackColor,
                           fontSize: 15,
@@ -482,7 +496,7 @@ class _VariantSelector extends StatelessWidget {
                       if (hasDiscount) ...[
                         const SizedBox(height: 2),
                         Text(
-                          '\$${v.actualPrice}',
+                          ('\$${v.actualPrice}').tr,
                           style: AppTextStyle.labelSmallRegular.copyWith(
                             color: selected
                                 ? Colors.white60
@@ -503,7 +517,9 @@ class _VariantSelector extends StatelessWidget {
                             borderRadius: BorderRadius.circular(4),
                           ),
                           child: Text(
-                            '${v.discountPercentage.toInt()}% off',
+                            "@p0% off".trParams({
+                              "p0": (v.discountPercentage.toInt()).toString(),
+                            }),
                             style: AppTextStyle.labelSmallMedium.copyWith(
                               color: selected
                                   ? Colors.white
@@ -562,7 +578,7 @@ class _BookingPeriodSelector extends StatelessWidget {
                 ),
               ),
               child: Text(
-                _labels[period] ?? period,
+                (_labels[period] ?? period).tr,
                 style: AppTextStyle.bodySmallMedium.copyWith(
                   color: selected ? Colors.white : AppColor.blackShade1,
                 ),
@@ -613,7 +629,7 @@ class _AddressField extends StatelessWidget {
                       controller.selectedAddress.value;
                       final text = controller.addressController.text;
                       return Text(
-                        text.isNotEmpty ? text : 'No address selected',
+                        (text.isNotEmpty ? text : "No address selected".tr).tr,
                         style: AppTextStyle.bodyMediumRegular.copyWith(
                           color: text.isNotEmpty
                               ? AppColor.blackShade1
@@ -646,7 +662,7 @@ class _AddressField extends StatelessWidget {
                   ),
                   const SizedBox(width: 6),
                   Text(
-                    'Change service address',
+                    "Change service address".tr,
                     style: AppTextStyle.bodySmallMedium.copyWith(
                       color: AppColor.blackColor,
                     ),
@@ -920,7 +936,7 @@ class _PaymentBreakout extends StatelessWidget {
 
             // Estimated total
             _BreakdownRow(
-              label: 'Total',
+              label: "Total".tr,
               value: '\$${controller.total.toStringAsFixed(2)}',
               isBold: true,
             ),
@@ -936,7 +952,8 @@ class _PaymentBreakout extends StatelessWidget {
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Text(
-                'Includes your service and selected add-ons. Charged in USD.',
+                "Includes your service and selected add-ons. Charged in USD."
+                    .tr,
                 textAlign: TextAlign.center,
                 style: AppTextStyle.bodySmallRegular.copyWith(
                   color: AppColor.coolGrayText,
@@ -983,7 +1000,7 @@ class _BreakdownRow extends StatelessWidget {
           ),
         Expanded(
           child: Text(
-            label,
+            (label).tr,
             style: isBold
                 ? AppTextStyle.titleSmallSemiBold.copyWith(
                     color: AppColor.blackShade1,
@@ -995,7 +1012,7 @@ class _BreakdownRow extends StatelessWidget {
         ),
         const SizedBox(width: 12),
         Text(
-          value,
+          (value).tr,
           style: isBold
               ? AppTextStyle.titleSmallSemiBold.copyWith(
                   color: AppColor.blackColor,
@@ -1019,7 +1036,7 @@ class _CancellationPolicy extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'CANCELLATION POLICY',
+          "CANCELLATION POLICY".tr,
           style: AppTextStyle.labelMediumSemiBold.copyWith(
             color: AppColor.coolGrayText,
             letterSpacing: 1,
@@ -1027,7 +1044,8 @@ class _CancellationPolicy extends StatelessWidget {
         ),
         const SizedBox(height: 6),
         Text(
-          'Help us reduce the time of a technician by avoiding service cancellation. A 100% cancellation charge will be applied if the technician is assigned.',
+          "Help us reduce the time of a technician by avoiding service cancellation. A 100% cancellation charge will be applied if the technician is assigned."
+              .tr,
           style: AppTextStyle.bodySmallRegular.copyWith(
             color: AppColor.coolGrayText,
             height: 1.5,
@@ -1063,13 +1081,13 @@ class _BottomBar extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    '\$${controller.total.toStringAsFixed(2)}',
+                    ('\$${controller.total.toStringAsFixed(2)}').tr,
                     style: AppTextStyle.headlineSmallSemiBold.copyWith(
                       color: AppColor.blackColor,
                     ),
                   ),
                   Text(
-                    'Total (USD)',
+                    "Total (USD)".tr,
                     style: AppTextStyle.bodySmallRegular.copyWith(
                       color: AppColor.coolGrayText,
                     ),
@@ -1083,8 +1101,8 @@ class _BottomBar extends StatelessWidget {
               flex: 2,
               child: CommonButton(
                 label: controller.isLoading.value
-                    ? 'Processing...'
-                    : 'Confirm & Book',
+                    ? "Processing...".tr
+                    : "Confirm & Book".tr,
                 onTap:
                     controller.isLoading.value ||
                         controller.isLoadingProfile.value ||

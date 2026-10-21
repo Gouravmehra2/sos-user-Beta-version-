@@ -11,7 +11,7 @@ class PrivacyPolicyScreen extends GetView<PrivacyPolicyController> {
   @override
   Widget build(BuildContext context) => PolicyDocumentView(
     controller: controller,
-    title: 'Privacy Policy',
+    title: "profile_settings_privacy".tr,
     icon: Icons.privacy_tip_outlined,
   );
 }
@@ -38,14 +38,18 @@ class PolicyDocumentView extends StatelessWidget {
         backgroundColor: AppColor.blackColor,
         iconTheme: const IconThemeData(color: Colors.white),
         title: Text(
-          title,
+          (title).tr,
           style: AppTextStyle.titleLargeBold.copyWith(color: Colors.white),
         ),
       ),
       body: Obx(() {
         if (controller.isLoading.value) {
           return Center(
-            child: CircularProgressIndicator(semanticsLabel: 'Loading $title'),
+            child: CircularProgressIndicator(
+              semanticsLabel: "Loading @p0".trParams({
+                "p0": (title).toString(),
+              }),
+            ),
           );
         }
         if (controller.errorMessage.value.isNotEmpty) {
@@ -60,7 +64,7 @@ class PolicyDocumentView extends StatelessWidget {
                   Semantics(
                     liveRegion: true,
                     child: Text(
-                      controller.errorMessage.value,
+                      (controller.errorMessage.value).tr,
                       textAlign: TextAlign.center,
                       style: AppTextStyle.bodyMediumRegular,
                     ),
@@ -69,7 +73,7 @@ class PolicyDocumentView extends StatelessWidget {
                   OutlinedButton.icon(
                     onPressed: controller.loadPolicy,
                     icon: const Icon(Icons.refresh_rounded),
-                    label: const Text('Retry'),
+                    label: Text("Retry".tr),
                   ),
                 ],
               ),
@@ -98,7 +102,7 @@ class PolicyDocumentView extends StatelessWidget {
                             Semantics(
                               header: true,
                               child: Text(
-                                controller.pageTitle.value,
+                                (controller.pageTitle.value).tr,
                                 style: AppTextStyle.headlineLargeBold.copyWith(
                                   color: AppColor.blackShade1,
                                   height: 1.25,
@@ -108,7 +112,7 @@ class PolicyDocumentView extends StatelessWidget {
                             if (controller.subtitle.value.isNotEmpty) ...[
                               const SizedBox(height: 8),
                               Text(
-                                controller.subtitle.value,
+                                (controller.subtitle.value).tr,
                                 style: AppTextStyle.titleSmallSemiBold.copyWith(
                                   height: 1.5,
                                 ),
@@ -144,7 +148,7 @@ class PolicyDocumentView extends StatelessWidget {
                                 const SizedBox(width: 12),
                                 Expanded(
                                   child: Text(
-                                    section.title,
+                                    (section.title).tr,
                                     style: AppTextStyle.titleLargeBold.copyWith(
                                       color: AppColor.blackShade1,
                                       height: 1.35,
@@ -205,7 +209,7 @@ class _PolicyBlockView extends StatelessWidget {
         return Padding(
           padding: const EdgeInsets.only(top: 14, bottom: 6),
           child: Text(
-            block.text,
+            (block.text).tr,
             style: AppTextStyle.titleSmallSemiBold.copyWith(
               color: AppColor.blackColor,
               fontSize: 14,
@@ -214,7 +218,7 @@ class _PolicyBlockView extends StatelessWidget {
         );
       case PrivacyPolicyBlockType.paragraph:
         final text = Text(
-          block.text,
+          (block.text).tr,
           textAlign: block.centered ? TextAlign.center : TextAlign.start,
           style: AppTextStyle.bodyMediumRegular.copyWith(
             color: const Color(0xff454B54),
@@ -254,7 +258,7 @@ class _PolicyBlockView extends StatelessWidget {
                             MediaQuery.textScalerOf(context).scale(14) /
                             14,
                         child: Text(
-                          block.ordered ? '${index + 1}.' : '\u2022',
+                          (block.ordered ? '${index + 1}.' : '\u2022').tr,
                           style: AppTextStyle.bodyMediumMedium.copyWith(
                             color: AppColor.blackColor,
                           ),
@@ -262,7 +266,7 @@ class _PolicyBlockView extends StatelessWidget {
                       ),
                       Expanded(
                         child: Text(
-                          block.items[index],
+                          (block.items[index]).tr,
                           style: AppTextStyle.bodyMediumRegular.copyWith(
                             color: const Color(0xff454B54),
                             height: 1.6,

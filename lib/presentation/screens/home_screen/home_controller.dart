@@ -238,7 +238,7 @@ class HomeController extends GetxController {
   /// details or booking so variants and add-ons are available in both flows.
   Future<ServiceItem> loadFeaturedService(FeaturedServiceItem featured) async {
     if (featured.id.isEmpty) {
-      throw StateError('Service ID is missing.');
+      throw StateError("Service ID is missing.".tr);
     }
     final services = await Get.find<ApiRepo>().searchServices(
       featured.name,
@@ -248,7 +248,7 @@ class HomeController extends GetxController {
     for (final service in services.items) {
       if (service.id == featured.id) return service;
     }
-    throw StateError('This service is currently unavailable.');
+    throw StateError("This service is currently unavailable.".tr);
   }
 
   Future<void> fetchFeaturedServices() => _fetchFeaturedServices(reset: true);
@@ -304,7 +304,7 @@ class HomeController extends GetxController {
       address = user.defaultAddress?.displayAddress ?? 'Your location';
       update();
     } catch (error) {
-      AppSnackbar.show('Profile', 'Unable to load profile details.');
+      AppSnackbar.show("nav_profile".tr, "Unable to load profile details.".tr);
     } finally {
       isProfileLoading.value = false;
     }
@@ -359,17 +359,17 @@ class HomeController extends GetxController {
   List<PopularService> get popularServices => [
     PopularService(
       imagePath: AppAssets.serviceImage,
-      title: 'TV Mount AC',
+      title: "TV Mount AC".tr,
       buttonLabel: 'home_popular_book_service'.tr,
     ),
     PopularService(
       imagePath: AppAssets.serviceImage,
-      title: 'TV Mount AC',
+      title: "TV Mount AC".tr,
       buttonLabel: 'home_popular_book_service'.tr,
     ),
     PopularService(
       imagePath: AppAssets.serviceImage,
-      title: 'TV Mount AC',
+      title: "TV Mount AC".tr,
       buttonLabel: 'home_popular_book_service'.tr,
     ),
   ];

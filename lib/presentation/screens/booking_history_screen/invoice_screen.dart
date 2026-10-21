@@ -1,3 +1,4 @@
+import 'package:intl/intl.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -61,10 +62,7 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
     final invoice = _invoice;
 
     if (invoice == null || invoice.download.url.trim().isEmpty) {
-      _showMessage(
-        'Invoice URL is unavailable.',
-        error: true,
-      );
+      _showMessage('Invoice URL is unavailable.', error: true);
       return;
     }
 
@@ -83,17 +81,11 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
       );
 
       if (!launched && mounted) {
-        _showMessage(
-          'Unable to open invoice.',
-          error: true,
-        );
+        _showMessage('Unable to open invoice.', error: true);
       }
     } catch (error) {
       if (mounted) {
-        _showMessage(
-          _invoiceErrorMessage(error),
-          error: true,
-        );
+        _showMessage(_invoiceErrorMessage(error), error: true);
       }
     }
   }
@@ -103,7 +95,7 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
       ..hideCurrentSnackBar()
       ..showSnackBar(
         SnackBar(
-          content: Text(message),
+          content: Text((message).tr),
           backgroundColor: error ? const Color(0xFFA83B3B) : bookingInk,
         ),
       );
@@ -125,15 +117,15 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
           ..addAll(
             elements
                 .map((element) {
-              final text = element.text
-                  .replaceAll(RegExp(r'\s+'), ' ')
-                  .trim();
-              return _InvoiceTerm(
-                text: text,
-                heading:
-                element.localName == 'h2' || element.localName == 'h3',
-              );
-            })
+                  final text = element.text
+                      .replaceAll(RegExp(r'\s+'), ' ')
+                      .trim();
+                  return _InvoiceTerm(
+                    text: text,
+                    heading:
+                        element.localName == 'h2' || element.localName == 'h3',
+                  );
+                })
                 .where((term) => term.text.isNotEmpty),
           );
       });
@@ -167,22 +159,9 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
 
   String _date(DateTime? date) {
     if (date == null) return '—';
-    const months = [
-      'January',
-      'February',
-      'March',
-      'April',
-      'May',
-      'June',
-      'July',
-      'August',
-      'September',
-      'October',
-      'November',
-      'December',
-    ];
-    final utc = date.toUtc();
-    return '${months[utc.month - 1]} ${utc.day}, ${utc.year}';
+    return DateFormat.yMMMMd(
+      Get.locale?.toLanguageTag() ?? 'en-US',
+    ).format(date.toUtc());
   }
 
   String _money(num value) {
@@ -209,7 +188,7 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
         Icon(icon, size: 16, color: Colors.black87),
         const SizedBox(width: 8),
         Text(
-          title,
+          (title).tr,
           style: const TextStyle(
             color: Colors.black,
             fontSize: 12,
@@ -234,8 +213,7 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
       ),
       child: Table(
         columnWidths: {
-          for (var i = 0; i < flex.length; i++)
-            i: FlexColumnWidth(flex[i]),
+          for (var i = 0; i < flex.length; i++) i: FlexColumnWidth(flex[i]),
         },
         border: const TableBorder(
           horizontalInside: BorderSide(color: _line),
@@ -246,10 +224,7 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
             TableRow(
               children: [
                 for (var i = 0; i < row.length; i++)
-                  _tableCell(
-                    row[i],
-                    label: i == 0,
-                  ),
+                  _tableCell(row[i], label: i == 0),
               ],
             ),
         ],
@@ -262,7 +237,7 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
     color: label ? const Color(0xFFF7F7F7) : Colors.white,
     padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 8),
     child: Text(
-      value.isEmpty ? '—' : value,
+      (value.isEmpty ? '—' : value).tr,
       style: TextStyle(
         color: label ? bookingMuted : bookingInk,
         fontSize: 10,
@@ -329,10 +304,7 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
         borderRadius: BorderRadius.circular(4),
       ),
       child: Table(
-        columnWidths: const {
-          0: FlexColumnWidth(4),
-          1: FlexColumnWidth(2),
-        },
+        columnWidths: const {0: FlexColumnWidth(4), 1: FlexColumnWidth(2)},
         border: const TableBorder(
           horizontalInside: BorderSide(color: _line),
           verticalInside: BorderSide(color: _line),
@@ -343,17 +315,17 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
   }
 
   TableRow _totalTableRow(
-      String label,
-      String value, {
-        bool strong = false,
-        Color? background,
-      }) => TableRow(
+    String label,
+    String value, {
+    bool strong = false,
+    Color? background,
+  }) => TableRow(
     children: [
       Container(
         color: background ?? Colors.white,
         padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 8),
         child: Text(
-          label,
+          (label).tr,
           style: TextStyle(
             color: bookingInk,
             fontSize: 11,
@@ -365,7 +337,7 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
         color: background ?? Colors.white,
         padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 8),
         child: Text(
-          value,
+          (value).tr,
           textAlign: TextAlign.right,
           style: TextStyle(
             color: bookingInk,
@@ -400,20 +372,16 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
             ),
             children: [
               _serviceHeaderRow(),
-              for (final service in invoice.services)
-                _serviceDataRow(service),
+              for (final service in invoice.services) _serviceDataRow(service),
               if (invoice.services.isEmpty)
-                const TableRow(
+                TableRow(
                   children: [
                     SizedBox.shrink(),
                     Padding(
                       padding: EdgeInsets.all(12),
                       child: Text(
-                        'No service lines are available.',
-                        style: TextStyle(
-                          color: bookingMuted,
-                          fontSize: 10,
-                        ),
+                        "No service lines are available.".tr,
+                        style: TextStyle(color: bookingMuted, fontSize: 10),
                       ),
                     ),
                     SizedBox.shrink(),
@@ -441,10 +409,7 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
 
   TableRow _serviceDataRow(dynamic service) => TableRow(
     children: [
-      _serviceTableCell(
-        '${service.lineNumber}',
-        center: true,
-      ),
+      _serviceTableCell('${service.lineNumber}', center: true),
       _serviceTableCell(
         [
           service.name,
@@ -453,32 +418,23 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
             'Add-ons: ${service.addons.map((addon) => addon.name).join(', ')}',
         ].join('\n'),
       ),
-      _serviceTableCell(
-        'x${_quantity(service.quantity)}',
-        center: true,
-      ),
-      _serviceTableCell(
-        _money(service.unitPrice),
-        center: true,
-      ),
-      _serviceTableCell(
-        _money(service.amount),
-        center: true,
-      ),
+      _serviceTableCell('x${_quantity(service.quantity)}', center: true),
+      _serviceTableCell(_money(service.unitPrice), center: true),
+      _serviceTableCell(_money(service.amount), center: true),
     ],
   );
 
   Widget _serviceTableCell(
-      String text, {
-        bool header = false,
-        bool center = false,
-      }) => Container(
+    String text, {
+    bool header = false,
+    bool center = false,
+  }) => Container(
     width: double.infinity,
     padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 9),
     alignment: center ? Alignment.center : Alignment.centerLeft,
     child: Text(
-      text,
-      textAlign: center ? TextAlign.center : TextAlign.left,
+      (text).tr,
+      textAlign: center ? TextAlign.center : TextAlign.start,
       softWrap: true,
       style: TextStyle(
         color: Colors.black87,
@@ -491,10 +447,10 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
 
   Widget _termsContent(double width) {
     if (_terms.isEmpty) {
-      return const Padding(
+      return Padding(
         padding: EdgeInsets.all(12),
         child: Text(
-          'Terms of Service are available in the app’s Terms & Conditions.',
+          "Terms of Service are available in the app’s Terms & Conditions.".tr,
           style: TextStyle(color: bookingMuted, fontSize: 10),
         ),
       );
@@ -516,7 +472,7 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
                     Padding(
                       padding: const EdgeInsets.only(bottom: 7),
                       child: Text(
-                        term.heading ? term.text : '•  ${term.text}',
+                        (term.heading ? term.text : '•  ${term.text}').tr,
                         style: TextStyle(
                           color: bookingInk,
                           fontSize: 9,
@@ -542,8 +498,8 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
     return Scaffold(
       backgroundColor: bookingBackground,
       appBar: AppBar(
-        title: const Text(
-          'Invoice',
+        title: Text(
+          "Invoice".tr,
           style: TextStyle(fontWeight: FontWeight.w700),
         ),
         backgroundColor: Colors.black,
@@ -552,18 +508,18 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
         centerTitle: true,
         actions: [
           IconButton(
-            tooltip: 'Download invoice',
+            tooltip: "Download invoice".tr,
             onPressed: _isDownloading || invoice == null
                 ? null
                 : _downloadInvoice,
             icon: _isDownloading
                 ? const SizedBox.square(
-              dimension: 20,
-              child: CircularProgressIndicator(
-                strokeWidth: 2,
-                color: Colors.white,
-              ),
-            )
+                    dimension: 20,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: Colors.white,
+                    ),
+                  )
                 : const Icon(Icons.download_outlined),
           ),
         ],
@@ -575,32 +531,32 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
             constraints: const BoxConstraints(maxWidth: 900),
             child: _isLoading
                 ? const Center(
-              child: CircularProgressIndicator(color: bookingInk),
-            )
+                    child: CircularProgressIndicator(color: bookingInk),
+                  )
                 : _error != null
                 ? _loadError()
                 : invoice == null
                 ? _loadError()
                 : SingleChildScrollView(
-              padding: const EdgeInsets.all(12),
-              child: Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  border: Border.all(color: _line),
-                  borderRadius: BorderRadius.circular(24),
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Color(0x14000000),
-                      blurRadius: 12,
-                      offset: Offset(0, 3),
+                    padding: const EdgeInsets.all(12),
+                    child: Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        border: Border.all(color: _line),
+                        borderRadius: BorderRadius.circular(24),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Color(0x14000000),
+                            blurRadius: 12,
+                            offset: Offset(0, 3),
+                          ),
+                        ],
+                      ),
+                      child: _invoiceBody(invoice),
                     ),
-                  ],
-                ),
-                child: _invoiceBody(invoice),
-              ),
-            ),
+                  ),
           ),
         ),
       ),
@@ -620,7 +576,7 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
           ),
           const SizedBox(height: 12),
           Text(
-            _error ?? 'Invoice details are unavailable.',
+            (_error ?? "Invoice details are unavailable.".tr).tr,
             textAlign: TextAlign.center,
             style: const TextStyle(color: bookingMuted),
           ),
@@ -628,7 +584,7 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
           OutlinedButton.icon(
             onPressed: _loadInvoice,
             icon: const Icon(Icons.refresh),
-            label: const Text('Try again'),
+            label: Text("Try again".tr),
           ),
         ],
       ),
@@ -668,10 +624,11 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
                           Row(
                             children: [
                               Flexible(
-                                child: Text('SOS'
+                                child: Text(
+                                  ('SOS').tr,
                                   /*invoice.company.name.isEmpty
                                       ? 'APP'
-                                      : invoice.company.name*/,
+                                      : invoice.company.name*/
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                   style: const TextStyle(
@@ -698,8 +655,8 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          const Text(
-                            'INVOICE',
+                          Text(
+                            "INVOICE".tr,
                             style: TextStyle(
                               color: Colors.black,
                               fontSize: 22,
@@ -708,7 +665,7 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
                           ),
                           const SizedBox(height: 5),
                           Text(
-                            '# ${invoice.invoiceNumber}',
+                            ('# ${invoice.invoiceNumber}').tr,
                             textAlign: TextAlign.right,
                             style: const TextStyle(
                               color: bookingInk,
@@ -774,13 +731,13 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
               children: [
                 TableRow(
                   children: [
-                    const Padding(
+                    Padding(
                       padding: EdgeInsets.all(10),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Thank you for choosing us!',
+                            "Thank you for choosing us!".tr,
                             style: TextStyle(
                               color: bookingInk,
                               fontSize: 12,
@@ -789,11 +746,8 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
                           ),
                           SizedBox(height: 4),
                           Text(
-                            'All services, one app.',
-                            style: TextStyle(
-                              color: bookingMuted,
-                              fontSize: 10,
-                            ),
+                            "All services, one app.".tr,
+                            style: TextStyle(color: bookingMuted, fontSize: 10),
                           ),
                         ],
                       ),
@@ -801,9 +755,12 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
                     Padding(
                       padding: const EdgeInsets.all(10),
                       child: Text(
-                        invoice.currency.isEmpty
-                            ? ''
-                            : 'All fees are listed in ${invoice.currency}.',
+                        (invoice.currency.isEmpty
+                                ? ''
+                                : "All fees are listed in @p0.".trParams({
+                                    "p0": (invoice.currency).toString(),
+                                  }))
+                            .tr,
                         textAlign: TextAlign.end,
                         style: const TextStyle(
                           color: bookingMuted,
@@ -829,7 +786,7 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
         SizedBox(
           width: 52,
           child: Text(
-            label,
+            (label).tr,
             style: const TextStyle(
               color: bookingMuted,
               fontSize: 9,
@@ -837,24 +794,17 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
             ),
           ),
         ),
-        const Text(
-          ':',
-          style: TextStyle(color: bookingMuted, fontSize: 9),
-        ),
+        Text((':').tr, style: TextStyle(color: bookingMuted, fontSize: 9)),
         const SizedBox(width: 6),
         Expanded(
           child: Text(
-            value,
-            style: const TextStyle(
-              color: bookingInk,
-              fontSize: 9,
-            ),
+            (value).tr,
+            style: const TextStyle(color: bookingInk, fontSize: 9),
           ),
         ),
       ],
     ),
   );
-
 }
 
 class _InvoiceTerm {

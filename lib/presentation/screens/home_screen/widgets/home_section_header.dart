@@ -15,21 +15,25 @@ class HomeSectionHeader extends StatelessWidget {
     this.fontSize,
   });
 
-  static const _categories = [
-    (title: 'PC', description: 'Repair & care', icon: Icons.computer_outlined),
+  static final _categories = [
     (
-      title: 'Printer',
-      description: 'Setup & repair',
+      title: "PC".tr,
+      description: "Repair & care".tr,
+      icon: Icons.computer_outlined,
+    ),
+    (
+      title: "Printer".tr,
+      description: "Setup & repair".tr,
       icon: Icons.print_outlined,
     ),
     (
-      title: 'Home Appliances',
-      description: 'Repair',
+      title: "Home Appliances".tr,
+      description: "Repair".tr,
       icon: Icons.home_work_outlined,
     ),
     (
-      title: 'Networking',
-      description: 'Network Setup',
+      title: "Networking".tr,
+      description: "Network Setup".tr,
       icon: Icons.router_outlined,
     ),
   ];
@@ -66,12 +70,15 @@ class HomeSectionHeader extends StatelessWidget {
         var contentHeight = iconSize;
         for (final category in _categories) {
           final titlePainter = TextPainter(
-            text: TextSpan(text: category.title, style: textStyle),
+            text: TextSpan(text: (category.title).tr, style: textStyle),
             textDirection: Directionality.of(context),
             textScaler: MediaQuery.textScalerOf(context),
           )..layout(maxWidth: availableTextWidth);
           final subtitlePainter = TextPainter(
-            text: TextSpan(text: category.description, style: descriptionStyle),
+            text: TextSpan(
+              text: (category.description).tr,
+              style: descriptionStyle,
+            ),
             textDirection: Directionality.of(context),
             textScaler: MediaQuery.textScalerOf(context),
           )..layout(maxWidth: availableTextWidth);
@@ -142,9 +149,13 @@ class HomeSectionHeader extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(category.title, softWrap: true, style: textStyle),
+        Text((category.title).tr, softWrap: true, style: textStyle),
         const SizedBox(height: 4),
-        Text(category.description, softWrap: true, style: descriptionStyle),
+        Text(
+          (category.description).tr,
+          softWrap: true,
+          style: descriptionStyle,
+        ),
       ],
     );
     final chevron = Container(

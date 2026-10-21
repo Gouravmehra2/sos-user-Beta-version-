@@ -206,7 +206,7 @@ class PlansController extends GetxController {
     final purchase = await api.verify(saved['purchaseId']!, saved['intentId']!);
     if (purchase.id != saved['purchaseId'] || purchase.status != 'active') {
       throw StateError(
-        'Payment is not confirmed yet. Check payment again shortly.',
+        "Payment is not confirmed yet. Check payment again shortly.".tr,
       );
     }
     if (customerId() != owner) return;

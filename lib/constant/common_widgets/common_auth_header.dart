@@ -30,12 +30,7 @@ class CommonAuthHeader extends StatelessWidget {
         clipBehavior: Clip.none,
         children: [
           /// TOP IMAGE
-          Positioned.fill(
-            child: Image.asset(
-              imagePath,
-              fit: BoxFit.cover,
-            ),
-          ),
+          Positioned.fill(child: Image.asset(imagePath, fit: BoxFit.cover)),
 
           /// TOP LEFT BLOB
           Positioned(
@@ -88,11 +83,7 @@ class AuthLayout extends StatelessWidget {
   final String imagePath;
   final Widget body;
 
-  const AuthLayout({
-    super.key,
-    required this.imagePath,
-    required this.body,
-  });
+  const AuthLayout({super.key, required this.imagePath, required this.body});
 
   @override
   Widget build(BuildContext context) {

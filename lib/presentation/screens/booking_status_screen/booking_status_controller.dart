@@ -2,7 +2,13 @@ import 'package:get/get.dart';
 import 'package:squadonsite/constant/routes/app_routes.dart';
 import 'package:squadonsite/presentation/screens/service_screen/service_controller.dart';
 
-enum BookingStep { findingTechnician, technicinaAssigned, technicianOnWay, serviceInProgress, completed }
+enum BookingStep {
+  findingTechnician,
+  technicinaAssigned,
+  technicianOnWay,
+  serviceInProgress,
+  completed,
+}
 
 class BookingStatusController extends GetxController {
   late ServiceModel service;
@@ -27,5 +33,6 @@ class BookingStatusController extends GetxController {
   bool isCompleted(BookingStep step) => step.index < currentStep.value.index;
   bool isCurrent(BookingStep step) => step == currentStep.value;
 
-  void trackNow() => Get.toNamed(AppRoutes.liveTrackingScreen, arguments: service);
+  void trackNow() =>
+      Get.toNamed(AppRoutes.liveTrackingScreen, arguments: service);
 }

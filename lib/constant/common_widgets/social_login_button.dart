@@ -1,3 +1,4 @@
+import 'package:get/get.dart' hide Response;
 import 'package:flutter/material.dart';
 import 'package:squadonsite/constant/app_color/app_color.dart';
 
@@ -264,13 +265,14 @@ class _SocialLoginButtonState extends State<SocialLoginButton> {
         iconWidget,
         SizedBox(width: widget.iconLabelSpacing),
         Text(
-          widget.label!,
-          style: (widget.labelStyle ??
-                  const TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w500,
-                  ))
-              .copyWith(color: widget.foregroundColor),
+          (widget.label!).tr,
+          style:
+              (widget.labelStyle ??
+                      const TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w500,
+                      ))
+                  .copyWith(color: widget.foregroundColor),
         ),
       ],
     );
@@ -278,16 +280,16 @@ class _SocialLoginButtonState extends State<SocialLoginButton> {
 
   @override
   Widget build(BuildContext context) {
-    final resolvedBorderRadius = widget.customBorderRadius ??
-        BorderRadius.circular(widget.borderRadius);
+    final resolvedBorderRadius =
+        widget.customBorderRadius ?? BorderRadius.circular(widget.borderRadius);
 
     final double opacity = !widget.enabled
         ? 0.45
         : widget.isLoading
-            ? 0.75
-            : _pressed
-                ? 0.82
-                : 1.0;
+        ? 0.75
+        : _pressed
+        ? 0.82
+        : 1.0;
 
     final double scale = _pressed && _isInteractive ? 0.975 : 1.0;
 

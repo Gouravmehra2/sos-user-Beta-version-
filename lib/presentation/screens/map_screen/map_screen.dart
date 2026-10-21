@@ -162,9 +162,10 @@ class MapScreen extends StatelessWidget {
             Obx(() {
               final pos = controller.selectedPosition.value;
               return Text(
-                pos != null
-                    ? '${pos.latitude.toStringAsFixed(5)}, ${pos.longitude.toStringAsFixed(5)}'
-                    : 'map_tap_hint'.tr,
+                (pos != null
+                        ? '${pos.latitude.toStringAsFixed(5)}, ${pos.longitude.toStringAsFixed(5)}'
+                        : 'map_tap_hint'.tr)
+                    .tr,
                 style: AppTextStyle.titleMediumSemiBold.copyWith(
                   color: AppColor.blackShade1,
                 ),

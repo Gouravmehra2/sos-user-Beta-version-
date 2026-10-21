@@ -54,7 +54,6 @@ class OnboardingScreen extends StatelessWidget {
             title: Center(
               child: DropdownButtonHideUnderline(
                 child: DropdownButton<AppLanguage>(
-
                   value: current,
 
                   // Keep the dropdown content compact.
@@ -87,7 +86,7 @@ class OnboardingScreen extends StatelessWidget {
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            const Text('🇺🇸', style: TextStyle(fontSize: 16)),
+                            Text(('🇺🇸').tr, style: TextStyle(fontSize: 16)),
 
                             const SizedBox(width: 8),
 
@@ -112,7 +111,7 @@ class OnboardingScreen extends StatelessWidget {
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            const Text('🇪🇸', style: TextStyle(fontSize: 16)),
+                            Text(('🇪🇸').tr, style: TextStyle(fontSize: 16)),
 
                             const SizedBox(width: 8),
 
@@ -261,7 +260,7 @@ class OnboardingScreen extends StatelessWidget {
                             key: ValueKey(index),
                             children: [
                               Text(
-                                data.titleKey?.tr ?? '',
+                                (data.titleKey?.tr ?? '').tr,
                                 textAlign: TextAlign.center,
                                 style: AppTextStyle.titleLargeBold.copyWith(
                                   fontSize: (size.width * 0.068).clamp(22, 32),
@@ -269,7 +268,7 @@ class OnboardingScreen extends StatelessWidget {
                               ),
                               SizedBox(height: constraints.maxHeight * 0.018),
                               Text(
-                                data.descriptionKey?.tr ?? '',
+                                (data.descriptionKey?.tr ?? '').tr,
                                 textAlign: TextAlign.center,
                                 style: AppTextStyle.titleSmallMedium.copyWith(
                                   fontSize: (size.width * 0.038).clamp(13, 18),

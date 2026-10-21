@@ -17,7 +17,7 @@ class TipTechnicianScreen extends GetView<TipTechnicianController> {
         backgroundColor: AppColor.blackColor,
         iconTheme: const IconThemeData(color: Colors.white),
         title: Text(
-          'Tip your Technician',
+          "Tip your Technician".tr,
           style: AppTextStyle.titleLargeBold.copyWith(color: Colors.white),
         ),
       ),
@@ -28,7 +28,7 @@ class TipTechnicianScreen extends GetView<TipTechnicianController> {
           children: [
             const SizedBox(height: 40),
             Text(
-              'Thank Michael for a\ngreat service!',
+              "Thank Michael for a\ngreat service!".tr,
               textAlign: TextAlign.center,
               style: AppTextStyle.headlineLargeBold.copyWith(
                 color: AppColor.blackShade1,
@@ -38,7 +38,7 @@ class TipTechnicianScreen extends GetView<TipTechnicianController> {
             ),
             const SizedBox(height: 12),
             Text(
-              '100% of your tips goes to our\ntechnicians only.',
+              "100% of your tips goes to our\ntechnicians only.".tr,
               textAlign: TextAlign.center,
               style: AppTextStyle.bodyMediumRegular.copyWith(
                 color: AppColor.coolGrayText,
@@ -72,7 +72,7 @@ class TipTechnicianScreen extends GetView<TipTechnicianController> {
                           ),
                         ),
                         child: Text(
-                          '\$$amount',
+                          ('\$$amount').tr,
                           style: AppTextStyle.titleSmallSemiBold.copyWith(
                             color: selected
                                 ? Colors.white
@@ -106,7 +106,7 @@ class TipTechnicianScreen extends GetView<TipTechnicianController> {
                           ),
                         ),
                         child: Text(
-                          'Other',
+                          "location_detail_save_other".tr,
                           style: AppTextStyle.titleSmallSemiBold.copyWith(
                             color: selected
                                 ? Colors.white
@@ -127,13 +127,13 @@ class TipTechnicianScreen extends GetView<TipTechnicianController> {
                 text: TextSpan(
                   children: [
                     TextSpan(
-                      text: 'Add a Note ',
+                      text: "Add a Note ".tr,
                       style: AppTextStyle.titleSmallSemiBold.copyWith(
                         color: AppColor.blackShade1,
                       ),
                     ),
                     TextSpan(
-                      text: '(Optional)',
+                      text: "(Optional)".tr,
                       style: AppTextStyle.bodySmallRegular.copyWith(
                         color: AppColor.coolGrayText,
                       ),
@@ -155,7 +155,7 @@ class TipTechnicianScreen extends GetView<TipTechnicianController> {
                 decoration: InputDecoration(
                   border: InputBorder.none,
                   contentPadding: const EdgeInsets.all(14),
-                  hintText: 'Write a note for the technician...',
+                  hintText: "Write a note for the technician...".tr,
                   hintStyle: AppTextStyle.bodySmallRegular.copyWith(
                     color: AppColor.coolGrayText,
                   ),
@@ -170,7 +170,7 @@ class TipTechnicianScreen extends GetView<TipTechnicianController> {
               children: [
                 Expanded(
                   child: CommonButton(
-                    label: 'SKIP',
+                    label: "SKIP".tr,
                     onTap: controller.skip,
                     backgroundColor: Colors.white,
                     foregroundColor: AppColor.blackColor,
@@ -181,7 +181,7 @@ class TipTechnicianScreen extends GetView<TipTechnicianController> {
                 const SizedBox(width: 12),
                 Expanded(
                   child: CommonButton(
-                    label: 'SEND TIP',
+                    label: "SEND TIP".tr,
                     onTap: controller.sendTip,
                     backgroundColor: AppColor.blackColor,
                     foregroundColor: Colors.white,

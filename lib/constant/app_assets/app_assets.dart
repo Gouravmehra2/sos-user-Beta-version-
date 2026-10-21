@@ -64,24 +64,33 @@ class AppAssets {
   static String wifiFilledImage = 'assets/images/wifi_filled_icon.svg';
   static String tvOutlineImage = 'assets/images/tv_outline_icon.svg';
   static String tvFilledImage = 'assets/images/tv_filled_icon.svg';
-  static String smartHomeOutlineImage = 'assets/images/smart_home_outline_icon.svg';
-  static String smartHomeFilledImage = 'assets/images/smart_home_filled_icon.svg';
-  static String computerDeviceOutlineImage = 'assets/images/computer_outline_icon.svg';
-  static String computerDeviceFilledImage = 'assets/images/computer_filled_icon.svg';
+  static String smartHomeOutlineImage =
+      'assets/images/smart_home_outline_icon.svg';
+  static String smartHomeFilledImage =
+      'assets/images/smart_home_filled_icon.svg';
+  static String computerDeviceOutlineImage =
+      'assets/images/computer_outline_icon.svg';
+  static String computerDeviceFilledImage =
+      'assets/images/computer_filled_icon.svg';
   static String videoOutlineImage = 'assets/images/video_outline_icon.svg';
   static String videoFilledImage = 'assets/images/video_filled_icon.svg';
-    static String securityOutlineImage = 'assets/images/security_outline_icon.svg';
+  static String securityOutlineImage =
+      'assets/images/security_outline_icon.svg';
   static String securityFilledImage = 'assets/images/security_filled_icon.svg';
 
   static String customerImage = 'assets/images/customer_image.png';
   static String offerIcon = 'assets/images/offer_icon.svg';
   static String splashAppIcon = 'assets/images/splash_app_icon.png';
-  static String lottieAppLogo = 'assets/images/squad-onsite-figma-motion-lottie.json';
+  static String lottieAppLogo =
+      'assets/images/squad-onsite-figma-motion-lottie.json';
 
-  static String authScreenBackground = 'assets/images/signup_background_image.png';
-  static String personSignupImage = 'assets/images/person_image_auth_location.png';
+  static String authScreenBackground =
+      'assets/images/signup_background_image.png';
+  static String personSignupImage =
+      'assets/images/person_image_auth_location.png';
 
-  static String printerInstallationOffer1  = 'assets/images/printer_installation_offer.png';
-  static String printerInstallationOffer2  = 'assets/images/printer_installation_offer_2.png';
-
+  static String printerInstallationOffer1 =
+      'assets/images/printer_installation_offer.png';
+  static String printerInstallationOffer2 =
+      'assets/images/printer_installation_offer_2.png';
 }

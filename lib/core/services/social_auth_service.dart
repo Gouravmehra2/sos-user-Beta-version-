@@ -1,9 +1,6 @@
 import 'dart:io';
 
-import 'firebase_notification_service.dart';
-
 import 'package:flutter/foundation.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
@@ -27,7 +24,7 @@ import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 /// );
 ///
 /// // Apple
-/// final result = await _auth.signInWithApple();
+/// final result = await _auth.signInWithApple(nonce: serverChallenge.nonce);
 /// ```
 class SocialAuthService extends GetxService {
   // ── Lifecycle ─────────────────────────────────────────────────────────────
@@ -36,7 +33,13 @@ class SocialAuthService extends GetxService {
 
   Future<SocialAuthService> init() async {
     try {
-      await (_googleInitialization ??= GoogleSignIn.instance.initialize());
+      await (_googleInitialization ??= GoogleSignIn.instance.initialize(
+        serverClientId: const String.fromEnvironment(
+          'GOOGLE_WEB_CLIENT_ID',
+          defaultValue:
+              '957547435039-9c74psr8j7h9ijve5adc438ktphmqom3.apps.googleusercontent.com',
+        ),
+      ));
     } catch (_) {
       _googleInitialization = null;
       rethrow;
@@ -53,50 +56,31 @@ class SocialAuthService extends GetxService {
   Future<SocialAuthResult> signInWithGoogle() async {
     try {
       await init();
-      // authenticate() triggers the interactive sign-in UI.
-      final googleUser = await GoogleSignIn.instance.authenticate();
-
-      final googleIdToken = googleUser.authentication.idToken;
-
-      print('--=-=->> ${googleIdToken}');
-      if (googleIdToken == null || googleIdToken.isEmpty) {
+      const scopes = <String>[
+        'https://www.googleapis.com/auth/userinfo.email',
+        'https://www.googleapis.com/auth/userinfo.profile',
+      ];
+      final googleUser = await GoogleSignIn.instance.authenticate(
+        scopeHint: scopes,
+      );
+      final authorization =
+          await googleUser.authorizationClient.authorizationForScopes(scopes) ??
+          await googleUser.authorizationClient.authorizeScopes(scopes);
+      if (authorization.accessToken.trim().isEmpty) {
         return SocialAuthResult.failure(
-          'Google did not return an identity token. Please try again.',
+          'Google did not return an access token. Please try again.',
         );
       }
-      await FirebaseNotificationService.ensureFirebase();
-      final credential = await FirebaseAuth.instance.signInWithCredential(
-        GoogleAuthProvider.credential(idToken: googleIdToken),
+      return SocialAuthResult.success(
+        SocialAuthUser(
+          provider: SocialProvider.google,
+          uid: googleUser.id,
+          email: googleUser.email,
+          displayName: googleUser.displayName,
+          photoUrl: googleUser.photoUrl,
+          accessToken: authorization.accessToken,
+        ),
       );
-      final firebaseUser = credential.user;
-      final firebaseIdToken = await firebaseUser?.getIdToken(true);
-      if (firebaseUser == null ||
-          firebaseIdToken == null ||
-          firebaseIdToken.isEmpty) {
-        return SocialAuthResult.failure(
-          'Unable to verify your Google account. Please try again.',
-        );
-      }
-      final user = SocialAuthUser(
-        provider: SocialProvider.google,
-        uid: firebaseUser.uid,
-        email: firebaseUser.email,
-        displayName: firebaseUser.displayName,
-        photoUrl: firebaseUser.photoURL,
-        firebaseIdToken: firebaseIdToken,
-      );
-      return SocialAuthResult.success(user);
-    } on FirebaseAuthException catch (e) {
-      return SocialAuthResult.failure(switch (e.code) {
-        'network-request-failed' => 'No internet connection. Please try again.',
-        'user-disabled' => 'This account has been disabled.',
-        'account-exists-with-different-credential' =>
-          'This email uses a different sign-in method. Please use that method.',
-        'operation-not-allowed' =>
-          'Google sign-in is not enabled. Please contact support.',
-        'too-many-requests' => 'Too many attempts. Please try again later.',
-        _ => 'Unable to verify your Google account. Please try again.',
-      });
     } on GoogleSignInException catch (e) {
       debugPrint(
         '[SocialAuth] Google sign-in error: ${e.code} – ${e.description}',
@@ -113,11 +97,6 @@ class SocialAuthService extends GetxService {
 
   /// Signs out of Google (clears cached credentials).
   Future<void> signOutGoogle() async {
-    try {
-      await FirebaseAuth.instance.signOut();
-    } catch (e) {
-      debugPrint('[SocialAuth] Firebase sign-out failed: $e');
-    }
     if (_googleInitialization == null) return;
     try {
       await _googleInitialization;
@@ -139,17 +118,28 @@ class SocialAuthService extends GetxService {
     if (Platform.isIOS || Platform.isMacOS) {
       return SignInWithApple.isAvailable();
     }
-    // Android: always allow — the package handles the web-based flow.
-    return Platform.isAndroid;
+    // Android needs a registered Services ID and callback, not configured here.
+    return false;
   }
 
   /// Signs in with Apple.
   ///
   /// Returns a [SocialAuthResult] — check [SocialAuthResult.isSuccess]
   /// before reading [SocialAuthResult.user].
-  Future<SocialAuthResult> signInWithApple() async {
+  Future<SocialAuthResult> signInWithApple({required String nonce}) async {
     try {
+      if (!Platform.isIOS && !Platform.isMacOS) {
+        return SocialAuthResult.failure(
+          'Apple sign-in is currently available on Apple devices only.',
+        );
+      }
+      if (!await SignInWithApple.isAvailable()) {
+        return SocialAuthResult.failure(
+          'Apple sign-in is unavailable on this device.',
+        );
+      }
       final credential = await SignInWithApple.getAppleIDCredential(
+        nonce: nonce,
         scopes: [
           AppleIDAuthorizationScopes.email,
           AppleIDAuthorizationScopes.fullName,
@@ -169,7 +159,7 @@ class SocialAuthService extends GetxService {
         displayName: displayName.isEmpty ? null : displayName,
         photoUrl: null,
         idToken: credential.identityToken,
-        accessToken: credential.authorizationCode,
+        authorizationCode: credential.authorizationCode,
       );
 
       debugPrint('[SocialAuth] Apple sign-in success: ${user.uid}');
@@ -206,6 +196,8 @@ enum SocialProvider { google, apple }
 
 /// The authenticated user returned after a successful social sign-in.
 class SocialAuthUser {
+  /// Apple's single-use authorization code, kept only for the backend exchange.
+  final String? authorizationCode;
   final SocialProvider provider;
 
   /// Provider-specific unique user ID.
@@ -226,10 +218,8 @@ class SocialAuthUser {
   /// OAuth access / authorization code.
   final String? accessToken;
 
-  /// Firebase ID token for the Firebase-aware backend contract.
-  final String? firebaseIdToken;
-
   const SocialAuthUser({
+    this.authorizationCode,
     required this.provider,
     required this.uid,
     this.email,
@@ -237,7 +227,6 @@ class SocialAuthUser {
     this.photoUrl,
     this.idToken,
     this.accessToken,
-    this.firebaseIdToken,
   });
 }
 
@@ -245,14 +234,13 @@ class SocialAuthUser {
 class SocialAuthResult {
   final SocialAuthUser? user;
   final String? errorMessage;
-  // ignore: prefer_initializing_formals
   final _SocialAuthStatus _status;
 
   const SocialAuthResult._({
     required _SocialAuthStatus status,
     this.user,
     this.errorMessage,
-  }) : _status = status;
+  }) : _status = status; // ignore: prefer_initializing_formals
 
   factory SocialAuthResult.success(SocialAuthUser user) =>
       SocialAuthResult._(status: _SocialAuthStatus.success, user: user);

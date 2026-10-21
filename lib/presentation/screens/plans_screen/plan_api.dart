@@ -1,9 +1,10 @@
+import 'package:get/get.dart' hide Response;
 import 'package:squadonsite/core/end_points/api_endpoints.dart';
 import 'package:squadonsite/core/services/api_repo.dart';
 
 Map<String, dynamic> planData(dynamic body) {
   if (body is! Map || body['success'] != true || body['data'] is! Map) {
-    throw const FormatException('Invalid plan response');
+    throw FormatException("Invalid plan response".tr);
   }
   return Map<String, dynamic>.from(body['data'] as Map);
 }

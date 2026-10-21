@@ -59,14 +59,14 @@ class _SplashScreenState extends State<SplashScreen>
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
-                          controller.error.value,
+                          (controller.error.value).tr,
                           textAlign: TextAlign.center,
                           style: const TextStyle(color: Colors.white),
                         ),
                         TextButton(
                           onPressed: controller.checkAuthState,
-                          child: const Text(
-                            'Retry',
+                          child: Text(
+                            "Retry".tr,
                             style: TextStyle(color: Colors.white),
                           ),
                         ),

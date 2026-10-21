@@ -34,7 +34,7 @@ class SupportThankYouScreen extends StatelessWidget {
             ),
             const SizedBox(height: 32),
             Text(
-              title,
+              (title).tr,
               style: AppTextStyle.headlineLargeBold.copyWith(
                 color: AppColor.blackShade1,
                 fontSize: 22,
@@ -43,7 +43,7 @@ class SupportThankYouScreen extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             Text(
-              subtitle,
+              (subtitle).tr,
               style: AppTextStyle.bodyMediumRegular.copyWith(
                 color: AppColor.coolGrayText,
                 height: 1.6,
@@ -52,7 +52,7 @@ class SupportThankYouScreen extends StatelessWidget {
             ),
             const Spacer(),
             CommonButton(
-              label: 'Close',
+              label: "Close".tr,
               onTap: () => Get.back(),
               backgroundColor: AppColor.blackColor,
               foregroundColor: Colors.white,
